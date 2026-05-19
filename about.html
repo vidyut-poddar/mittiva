@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>About — Mittiva</title>
+  <meta name="description" content="The story of two brothers who refused to let AI stay a luxury for big companies. Mittiva is built for Chennai's small and mid-sized businesses." />
+  <link rel="canonical" href="https://mittiva.io/about.html" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="intro-mask" data-intro-mask><span class="intro-mask__label">ABOUT · LOADING</span></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <canvas class="constellation-bg" data-constellation aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="nav" aria-label="Primary">
+    <a href="index.html" class="nav__brand" aria-label="Mittiva home">
+      <img src="assets/mittiva-icon-dark.svg" alt="" class="logo-dark" />
+      <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
+      <span>Mittiva</span>
+    </a>
+    <div class="nav__actions">
+      <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="nav__pill nav__pill--menu" data-menu-btn aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="label-open">Menu</span>
+        <span class="label-close">Close</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="menu-overlay" aria-label="Main menu">
+    <ul class="menu-overlay__links">
+      <li><a href="index.html"><span class="num">01</span>Home</a></li>
+      <li><a href="about.html"><span class="num">02</span>About</a></li>
+      <li><a href="services.html"><span class="num">03</span>Services</a></li>
+      <li><a href="founders.html"><span class="num">04</span>Founders</a></li>
+      <li><a href="contact.html"><span class="num">05</span>Contact</a></li>
+    </ul>
+    <aside class="menu-overlay__aside">
+      <p class="menu-overlay__quote">"AI shouldn't only belong to big companies. It should belong to the tailor, the tutor, the salon — anyone with the courage to run their own thing."</p>
+      <div class="menu-overlay__meta">
+        <span>Mittiva · Estd. 2026</span>
+        <span>Chennai · India</span>
+        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+      </div>
+    </aside>
+  </nav>
+
+  <!-- PAGE HEAD -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__head">
+        <div class="hero__caption reveal">
+          <span>About</span>
+          <span>Our Story</span>
+          <span>Chapter 01</span>
+        </div>
+        <h1 class="stacked-title">
+          <span>Two</span>
+          <span>Brothers.</span>
+          <span>One</span>
+          <span><em>Stubborn</em></span>
+          <span>Idea.</span>
+        </h1>
+      </div>
+      <p class="lede reveal" style="max-width:60ch;">
+        AI shouldn't only belong to companies with eight-figure budgets and a floor full of engineers.
+        It should belong to the tailor, the tutor, the dentist, the salon, the supplier —
+        anyone with the courage to run their own thing.
+      </p>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section>
+    <div class="container">
+      <div class="story__inner">
+        <aside class="story__rail">
+          <p class="story__rail-num text-titanium">01</p>
+          <span class="eyebrow">Chapter</span>
+        </aside>
+        <div>
+          <article class="story__chapter reveal">
+            <span class="story__chapter-eyebrow">The corner</span>
+            <h3>We grew up on a street that ran on small businesses.</h3>
+            <p>
+              On the way home from school, there was a chai-stall that opened at five.
+              Two doors down, an electrician who knew every wiring quirk on the block.
+              At the end of the lane, a tailor whose ledger was a single notebook he kept
+              under the cash drawer. Names, deadlines, owed amounts — all of it in handwriting.
+            </p>
+            <p>
+              These weren't startups. They were <strong>institutions</strong>. They sent kids to college.
+              They paid rent through pandemics. They were the reason the lights came back on
+              when something broke at 9pm on a Sunday.
+            </p>
+          </article>
+
+          <article class="story__chapter reveal">
+            <span class="story__chapter-eyebrow">The shift</span>
+            <h3>Then the world changed — and nobody told them.</h3>
+            <p>
+              AI showed up. Suddenly the news was full of agents and copilots and
+              voice models that could hold a conversation. Companies in Bangalore and
+              San Francisco poured billions into making it work for billion-dollar problems.
+            </p>
+            <p>
+              Meanwhile our tailor still wrote names under the cash drawer. The salon
+              owner across the road still missed calls on a Tuesday because she was elbow-deep
+              in someone's hair. The tutor still chased fees over WhatsApp because that's
+              all he had time for between classes.
+            </p>
+            <blockquote class="story__pull text-titanium">
+              "AI was being built for boardrooms.
+              It was passing by the people who actually built our neighbourhood."
+            </blockquote>
+          </article>
+
+          <article class="story__chapter reveal">
+            <span class="story__chapter-eyebrow">The workshop</span>
+            <h3>So we started building the AI we wished they had.</h3>
+            <p>
+              Mittiva started as a Sunday workshop between two brothers — Vidyut and Sanskar —
+              with a single rule: <strong>nothing leaves until a real business owner uses it
+              without us in the room.</strong> Not a demo. Not a deck. Actual use.
+            </p>
+            <p>
+              That rule changed how we work. Every product we ship — voice agents, conversation
+              AI, automations, websites, CRMs — has to do one job: take an hour, a missed call,
+              or a salary off the owner's plate. If it doesn't, we cut it.
+            </p>
+          </article>
+
+          <article class="story__chapter reveal">
+            <span class="story__chapter-eyebrow">The mission</span>
+            <h3>AI for the business that doesn't have a tech team.</h3>
+            <p>
+              We're not here to sell you a platform. We're here to sit across from you,
+              understand what's broken, and walk out with one fewer thing on your list.
+              Sometimes that's a voice agent that answers your phone at midnight.
+              Sometimes it's a website that finally ranks. Sometimes it's an automation
+              that ends a daily 30-minute task.
+            </p>
+            <p>
+              We're building Mittiva so that ten years from now, the corner-shop owner,
+              the studio founder, and the second-generation supplier all have the same
+              technology edge that today only the giants enjoy. <strong>That's the work.</strong>
+            </p>
+          </article>
+
+          <article class="story__chapter reveal">
+            <span class="story__chapter-eyebrow">The invitation</span>
+            <h3>If you run a business — small, mid-size, just starting — this is for you.</h3>
+            <p>
+              You don't need to know what an LLM is. You don't need to "be ready for AI."
+              You need a tool that picks up the phone, replies to the customer,
+              follows up on the invoice, and gives you back your weekend.
+            </p>
+            <p>That's all we're doing here. Talk to us.</p>
+            <p style="margin-top:32px;">
+              <a href="contact.html" class="btn btn--primary">Start a conversation
+                <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </a>
+            </p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section>
+    <div class="container">
+      <div class="section-head-stacked">
+        <h2 class="stacked-title stacked-title--md">
+          <span>How</span>
+          <span>We</span>
+          <span><em>Work.</em></span>
+        </h2>
+        <p class="section-head-stacked__lede reveal">
+          Three things we promise — and one thing we don't.
+        </p>
+      </div>
+      <div class="info-grid reveal-stagger">
+        <div class="info-card">
+          <span class="eyebrow">01 · CLARITY</span>
+          <h3>No jargon.</h3>
+          <p>If we can't explain what a tool does in one sentence to your accountant, we haven't built it right.</p>
+        </div>
+        <div class="info-card">
+          <span class="eyebrow">02 · OWNERSHIP</span>
+          <h3>It's yours.</h3>
+          <p>Data, workflows, configurations — all of it lives in systems you control. We don't lock you in.</p>
+        </div>
+        <div class="info-card">
+          <span class="eyebrow">03 · STAYING POWER</span>
+          <h3>We're local.</h3>
+          <p>Chennai-based. Same time zone, same streets. When something breaks at 7pm, we're an auto-ride away.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="big-closer">
+    <div class="container">
+      <h2 class="stacked-title big-closer__title">
+        <span>We</span>
+        <span>Don't</span>
+        <span>Sell</span>
+        <span>AI</span>
+        <span>For</span>
+        <span>AI's</span>
+        <span><em>Sake.</em></span>
+      </h2>
+      <p class="lede">If a spreadsheet solves your problem, we'll send you a spreadsheet. Hand on heart.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="assets/mittiva-logo-dark.svg" alt="Mittiva" class="logo-dark" />
+          <img src="assets/mittiva-logo-light.svg" alt="Mittiva" class="logo-light" />
+          <p>Practical AI for the businesses that built our neighbourhoods. Made in Chennai.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Build</h4>
+          <ul>
+            <li><a href="services.html#voice">Voice AI</a></li>
+            <li><a href="services.html#conversation">Conversation AI</a></li>
+            <li><a href="services.html#crm">CRM</a></li>
+            <li><a href="services.html#web">Websites</a></li>
+            <li><a href="services.html#automations">Automations</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Reach Us</h4>
+          <ul>
+            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a href="contact.html">Send a brief</a></li>
+            <li>Chennai · India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+        <span>v0.2 · EDITORIAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

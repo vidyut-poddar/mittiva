@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs / temp
+*.log
+.tmp/
+node_modules/
+
+# Local dev artifacts that shouldn't ship
+.env
+.env.local

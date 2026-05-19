@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>Contact — Mittiva</title>
+  <meta name="description" content="Get in touch with Mittiva. We're based in Chennai and build practical AI for SMBs. Drop a brief — we respond within 24 hours." />
+  <link rel="canonical" href="https://mittiva.io/contact.html" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="intro-mask" data-intro-mask><span class="intro-mask__label">CONTACT · LOADING</span></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <canvas class="constellation-bg" data-constellation aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="nav" aria-label="Primary">
+    <a href="index.html" class="nav__brand" aria-label="Mittiva home">
+      <img src="assets/mittiva-icon-dark.svg" alt="" class="logo-dark" />
+      <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
+      <span>Mittiva</span>
+    </a>
+    <div class="nav__actions">
+      <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="nav__pill nav__pill--menu" data-menu-btn aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="label-open">Menu</span>
+        <span class="label-close">Close</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="menu-overlay" aria-label="Main menu">
+    <ul class="menu-overlay__links">
+      <li><a href="index.html"><span class="num">01</span>Home</a></li>
+      <li><a href="about.html"><span class="num">02</span>About</a></li>
+      <li><a href="services.html"><span class="num">03</span>Services</a></li>
+      <li><a href="founders.html"><span class="num">04</span>Founders</a></li>
+      <li><a href="contact.html"><span class="num">05</span>Contact</a></li>
+    </ul>
+    <aside class="menu-overlay__aside">
+      <p class="menu-overlay__quote">"A paragraph is enough. We'll come back inside 24 hours with a 15-minute idea — no pitch."</p>
+      <div class="menu-overlay__meta">
+        <span>Mittiva · Estd. 2026</span>
+        <span>Chennai · India</span>
+        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+      </div>
+    </aside>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero__head">
+        <div class="hero__caption reveal">
+          <span>Contact</span>
+          <span>Send a brief</span>
+          <span>24-hr reply</span>
+        </div>
+        <h1 class="stacked-title">
+          <span>Tell us</span>
+          <span>What's</span>
+          <span><em>Eating</em></span>
+          <span>Your Time.</span>
+        </h1>
+      </div>
+      <p class="lede reveal" style="max-width:60ch;">
+        A paragraph is enough. We'll come back inside 24 hours with a 15-minute idea —
+        no pitch, no obligation. If it's a fit, we book a call. If it's not, we'll point
+        you to the right tool.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="contact-grid">
+        <div class="reveal">
+          <span class="eyebrow">Send a brief</span>
+          <h2 style="margin:0 0 32px;">Drop us a note.</h2>
+          <form class="form" data-contact-form action="https://formspree.io/f/PASTE_FORMSPREE_ENDPOINT_HERE" method="POST">
+            <div class="form__row">
+              <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" required autocomplete="name" /></div>
+              <div class="field"><label for="business">Business name</label><input id="business" name="business" type="text" autocomplete="organization" /></div>
+            </div>
+            <div class="form__row">
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></div>
+              <div class="field"><label for="phone">Phone / WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" /></div>
+            </div>
+            <div class="field">
+              <label for="interest">What are you interested in?</label>
+              <select id="interest" name="interest">
+                <option value="">Pick one — or leave it blank</option>
+                <option>Voice AI (Inbound + Outbound)</option>
+                <option>Conversation AI (WhatsApp / Chat)</option>
+                <option>Automations</option>
+                <option>CRM, Forms &amp; Funnels</option>
+                <option>Website Development</option>
+                <option>Email Marketing Design Kit</option>
+                <option>Social Media Automations</option>
+                <option>AI Changing Room</option>
+                <option>I'm not sure — help me figure it out</option>
+              </select>
+            </div>
+            <div class="field"><label for="message">Tell us about your business</label><textarea id="message" name="message" required placeholder="What do you do? What's the one thing taking the most time right now?"></textarea></div>
+            <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+              <button type="submit" class="btn btn--primary">Send brief
+                <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </button>
+              <span class="form__hint">Response within 24 hours.</span>
+            </div>
+            <div class="form__msg" data-form-msg role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <aside class="reveal">
+          <span class="eyebrow">Other ways</span>
+          <h3 style="margin:0 0 32px;">Find us here.</h3>
+          <div class="info-grid" style="grid-template-columns: 1fr; gap:16px;">
+            <div class="info-card"><span class="eyebrow">Email</span><h3>hello@mittiva.io</h3><p><a href="mailto:hello@mittiva.io">Send an email</a></p></div>
+            <div class="info-card"><span class="eyebrow">Studio</span><h3>Chennai, India</h3><p>By appointment — we run a workshop, not a showroom.</p></div>
+            <div class="info-card"><span class="eyebrow">Hours</span><h3>Mon — Sat</h3><p>10:00 to 19:00 IST · Voice agents work 24/7</p></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <style>
+      .contact-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:80px; align-items:start; }
+      @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; gap:48px; } }
+    </style>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head-stacked">
+        <h2 class="stacked-title stacked-title--md">
+          <span>What</span>
+          <span><em>Happens</em></span>
+          <span>Next.</span>
+        </h2>
+        <p class="section-head-stacked__lede reveal">Three steps. No pitch deck. No 30-day waiting room.</p>
+      </div>
+      <div class="info-grid reveal-stagger">
+        <div class="info-card"><span class="eyebrow">Within 24 hrs</span><h3>We reply.</h3><p>A real reply from Vidyut or Sanskar — not a chatbot, ironically.</p></div>
+        <div class="info-card"><span class="eyebrow">Within 3 days</span><h3>We call.</h3><p>20 minutes. We listen, ask questions, propose one or two ideas.</p></div>
+        <div class="info-card"><span class="eyebrow">Within 1 week</span><h3>You decide.</h3><p>If it makes sense we scope and quote. If not, we send you elsewhere — no hard feelings.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="assets/mittiva-logo-dark.svg" alt="Mittiva" class="logo-dark" />
+          <img src="assets/mittiva-logo-light.svg" alt="Mittiva" class="logo-light" />
+          <p>Practical AI for the businesses that built our neighbourhoods. Made in Chennai.</p>
+        </div>
+        <div class="footer__col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="founders.html">Founders</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+        <div class="footer__col"><h4>Build</h4><ul><li><a href="services.html#voice">Voice AI</a></li><li><a href="services.html#conversation">Conversation AI</a></li><li><a href="services.html#crm">CRM</a></li><li><a href="services.html#web">Websites</a></li><li><a href="services.html#automations">Automations</a></li></ul></div>
+        <div class="footer__col"><h4>Reach Us</h4><ul><li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li><li><a href="contact.html">Send a brief</a></li><li>Chennai · India</li></ul></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+        <span>v0.2 · EDITORIAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

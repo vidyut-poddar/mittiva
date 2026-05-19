@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>Mittiva — AI shouldn't only belong to big companies</title>
+  <meta name="description" content="Mittiva brings practical AI to small and mid-sized businesses in Chennai. Voice AI, automations, conversational agents, CRM, websites — built for the everyday business." />
+  <link rel="canonical" href="https://mittiva.io/" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+  <meta property="og:title" content="Mittiva — AI for the everyday business" />
+  <meta property="og:description" content="Practical AI for Chennai's small and mid-sized businesses." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mittiva.io/" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- INTRO MASK -->
+  <div class="intro-mask" data-intro-mask>
+    <span class="intro-mask__label">MITTIVA · LOADING</span>
+  </div>
+
+
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+
+  <!-- BACKGROUND -->
+  <canvas class="constellation-bg" data-constellation aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <!-- FLOATING NAV -->
+  <header class="nav" aria-label="Primary">
+    <a href="index.html" class="nav__brand" aria-label="Mittiva home">
+      <img src="assets/mittiva-icon-dark.svg" alt="" class="logo-dark" />
+      <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
+      <span>Mittiva</span>
+    </a>
+    <div class="nav__actions">
+      <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="nav__pill nav__pill--menu" data-menu-btn aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="label-open">Menu</span>
+        <span class="label-close">Close</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- FULL-SCREEN MENU OVERLAY -->
+  <nav class="menu-overlay" aria-label="Main menu">
+    <ul class="menu-overlay__links">
+      <li><a href="index.html"><span class="num">01</span>Home</a></li>
+      <li><a href="about.html"><span class="num">02</span>About</a></li>
+      <li><a href="services.html"><span class="num">03</span>Services</a></li>
+      <li><a href="founders.html"><span class="num">04</span>Founders</a></li>
+      <li><a href="contact.html"><span class="num">05</span>Contact</a></li>
+    </ul>
+    <aside class="menu-overlay__aside">
+      <p class="menu-overlay__quote">"AI shouldn't only belong to big companies. It should belong to the tailor, the tutor, the salon — anyone with the courage to run their own thing."</p>
+      <div class="menu-overlay__meta">
+        <span>Mittiva · Estd. 2026</span>
+        <span>Chennai · India</span>
+        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+      </div>
+    </aside>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__head">
+        <div class="hero__caption reveal">
+          <span>Chennai · 2026</span>
+          <span>AI Studio</span>
+          <span>For SMBs</span>
+        </div>
+        <h1 class="stacked-title">
+          <span>AI</span>
+          <span>For the</span>
+          <span><em>Everyday</em></span>
+          <span>Business.</span>
+        </h1>
+      </div>
+
+      <div class="reveal" style="max-width:560px;">
+        <p class="hero__sub">
+          Mittiva builds practical AI for small and mid-sized businesses
+          in Chennai — voice agents that answer your phone, automations
+          that run while you sleep, websites that actually convert.
+        </p>
+        <div class="hero__actions">
+          <a href="contact.html" class="btn btn--primary">Start a conversation
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+          <a href="services.html" class="btn btn--ghost">See what we build</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── SCROLL-JACKED HORIZONTAL SERVICES SECTION ──── -->
+  <section class="h-scroll" aria-label="What we build">
+    <div class="h-scroll__pin">
+
+      <span class="h-scroll__label" aria-hidden="true">What we build</span>
+
+      <div class="h-scroll__track">
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">01 · Social</span><span>Always-on</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">01</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Social Media Automations.</h3>
+              <p class="h-card__copy">Captions, scheduling and replies on autopilot — keeping your brand alive across platforms without a team.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Instagram</span><span class="h-card__tag">LinkedIn</span><span class="h-card__tag">YouTube</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Always-on brand</span><span><strong>01</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">02 · Retail</span><span>Try-on</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">02</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">AI Changing Room.</h3>
+              <p class="h-card__copy">Customers try on your clothes from their phone. Cut returns. Raise conversion. Sell beyond your store.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Boutiques</span><span class="h-card__tag">Designers</span><span class="h-card__tag">WhatsApp</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>For boutiques &amp; brands</span><span><strong>02</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">03 · Voice</span><span>24/7 inbound + outbound</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">03</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Voice AI.</h3>
+              <p class="h-card__copy">Calling agents that book appointments, qualify leads, take orders, follow up. Tamil, English, Hindi.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Inbound</span><span class="h-card__tag">Outbound</span><span class="h-card__tag">Multi-lingual</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Never miss a call</span><span><strong>03</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">04 · Chat</span><span>WhatsApp · Web · DM</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">04</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Conversation AI.</h3>
+              <p class="h-card__copy">Your business in a chat window — answering questions about products, hours and policies the moment they're asked.</p>
+              <div class="h-card__tags"><span class="h-card__tag">WhatsApp Business</span><span class="h-card__tag">Web chat</span><span class="h-card__tag">Instagram DM</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Customers don't wait</span><span><strong>04</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">05 · Web</span><span>&lt; 1s load</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">05</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Website Development.</h3>
+              <p class="h-card__copy">Fast, conversion-first sites — sub-second load, baked-in SEO, ready to rank from launch day one.</p>
+              <div class="h-card__tags"><span class="h-card__tag">HTML / CSS / JS</span><span class="h-card__tag">SEO baked in</span><span class="h-card__tag">PageSpeed 90+</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Built lean, ranks fast</span><span><strong>05</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">06 · Email</span><span>Templated · branded</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">06</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Email Design Kit.</h3>
+              <p class="h-card__copy">Newsletters, drips, broadcasts and transactional — designed once, used forever. Looks like a brand, not a blast.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Mailchimp</span><span class="h-card__tag">Brevo</span><span class="h-card__tag">Klaviyo</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>10+ templates</span><span><strong>06</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">07 · Ops</span><span>Cross-tool workflows</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">07</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Automations.</h3>
+              <p class="h-card__copy">The 30-minute task you do every morning — gone. We connect your tools so the boring work runs on its own.</p>
+              <div class="h-card__tags"><span class="h-card__tag">CRM ↔ WhatsApp</span><span class="h-card__tag">Invoicing</span><span class="h-card__tag">Inventory</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Done before you sit down</span><span><strong>07</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">08 · CRM</span><span>One source of truth</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">08</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">CRM, Forms &amp; Funnels.</h3>
+              <p class="h-card__copy">Forms, surveys, sales pipeline, reporting — one place for leads, conversations, and revenue numbers.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Pipeline</span><span class="h-card__tag">Surveys</span><span class="h-card__tag">Reporting</span></div>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Used daily, not on demand</span><span><strong>08</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card h-card--cta">
+          <div class="h-card__stamp"><span class="cat">09 · Talk to us</span><span>20 minutes · no pitch</span></div>
+          <div class="h-card__main">
+            <div class="h-card__text" style="text-align:center;max-width:48ch;">
+              <h3 class="h-card__title text-titanium">Want a custom mix?</h3>
+              <p class="h-card__copy" style="margin-left:auto;margin-right:auto;">Every business needs a different combination. We scope, we quote, we ship in weeks — not quarters.</p>
+              <p style="margin-top:32px;">
+                <a href="contact.html" class="btn btn--primary">Start a conversation
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Chennai · India</span><span><strong>09</strong> / 09</span></div>
+        </article>
+
+      </div>
+
+      <!-- Zoom-in preview shown after the CTA card pans out to a dot. The
+           pin stays sticky while this block scales from 0.04 → 1, so the
+           user doesn't "scroll past" the rail — the next chapter appears
+           in place. -->
+      <div class="h-scroll__preview" aria-hidden="true">
+        <h2 class="stacked-title is-in">
+          <span>Two</span>
+          <span><em>Brothers.</em></span>
+          <span>One</span>
+          <span>Workshop.</span>
+        </h2>
+        <p class="h-scroll__preview-copy">
+          We grew up watching family-run businesses do real work for real people.
+          They built our neighbourhood. AI was passing them by. So we started building
+          the AI we wished they had.
+        </p>
+        <a href="about.html" class="btn btn--ghost h-scroll__preview-cta">Read the full story
+          <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- Overlay UI: counter + progress bar that float above all cards -->
+      <div class="h-scroll__overlay" aria-hidden="true">
+        <span class="h-scroll__counter" data-h-counter>01 / 09</span>
+        <span class="h-scroll__bar"></span>
+        <span>Scroll ↓ to advance →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDERS · EDITORIAL SPREAD -->
+  <section aria-labelledby="founders-h">
+    <div class="container">
+      <div class="section-head-stacked">
+        <h2 id="founders-h" class="stacked-title stacked-title--md">
+          <span>The</span>
+          <span>People</span>
+          <span><em>Behind</em></span>
+          <span>It.</span>
+        </h2>
+        <p class="section-head-stacked__lede reveal">
+          Mittiva started at a kitchen table between Vidyut and Sanskar Poddar.
+          Two brothers from Chennai who decided to build, not wait.
+        </p>
+      </div>
+
+      <div class="founders-editorial">
+
+        <!-- 01 · VIDYUT -->
+        <article class="founder-feature reveal">
+          <span class="founder-feature__rail" data-label="No. 01 · Founder Feature"></span>
+
+          <figure class="founder-feature__media">
+            <span class="founder-feature__media-stamp">
+              <span>Portrait · 01</span>
+              <span>Chennai · 2026</span>
+            </span>
+            <span class="founder-feature__media-placeholder">[ Vidyut · photo coming soon ]</span>
+            <span class="founder-feature__media-foot">
+              <span class="num">01</span>
+              <span class="caption">Vidyut Poddar<br/>Co-Founder</span>
+            </span>
+          </figure>
+
+          <div class="founder-feature__body">
+            <div class="founder-feature__eyebrow">
+              <span>No. 01</span>
+              <span>Build &amp; Systems</span>
+              <span>Chennai · IN</span>
+            </div>
+            <h3 class="founder-feature__name">Vidyut<br/><em>Poddar.</em></h3>
+            <p class="founder-feature__quote">
+              If we can't explain it to your accountant in one sentence, we haven't built it right.
+            </p>
+            <p class="founder-feature__copy">
+              The systems half of Mittiva. Spends weekends sketching workflow diagrams on napkins,
+              then turning them into things small businesses can actually run without us in the room.
+              Believes that good software is invisible — you only notice the hour it gave you back.
+            </p>
+            <dl class="founder-feature__meta">
+              <dt>Role</dt>      <dd>Co-Founder</dd>
+              <dt>Owns</dt>      <dd>Build, Systems &amp; Architecture</dd>
+              <dt>Based</dt>     <dd>Chennai, India</dd>
+              <dt>Reach him</dt> <dd><a href="mailto:vidyut@mittiva.io">vidyut@mittiva.io</a></dd>
+            </dl>
+          </div>
+        </article>
+
+        <!-- 02 · SANSKAR (reversed) -->
+        <article class="founder-feature founder-feature--rev reveal">
+          <span class="founder-feature__rail" data-label="No. 02 · Founder Feature"></span>
+
+          <figure class="founder-feature__media">
+            <span class="founder-feature__media-stamp">
+              <span>Portrait · 02</span>
+              <span>Chennai · 2026</span>
+            </span>
+            <span class="founder-feature__media-placeholder">[ Sanskar · photo coming soon ]</span>
+            <span class="founder-feature__media-foot">
+              <span class="num">02</span>
+              <span class="caption">Sanskar Poddar<br/>Co-Founder</span>
+            </span>
+          </figure>
+
+          <div class="founder-feature__body">
+            <div class="founder-feature__eyebrow">
+              <span>No. 02</span>
+              <span>Customers &amp; Story</span>
+              <span>Chennai · IN</span>
+            </div>
+            <h3 class="founder-feature__name">Sanskar<br/><em>Poddar.</em></h3>
+            <p class="founder-feature__quote">
+              A tool nobody understands is a tool that doesn't exist.
+            </p>
+            <p class="founder-feature__copy">
+              The empathy half. Talks to every customer before we ship anything — because if the
+              salon owner across the road can't run it on a Tuesday afternoon between appointments,
+              it doesn't matter how clever the engineering is. Shapes the voice, the story, and
+              decides what gets built next.
+            </p>
+            <dl class="founder-feature__meta">
+              <dt>Role</dt>      <dd>Co-Founder</dd>
+              <dt>Owns</dt>      <dd>Customers, Brand &amp; Story</dd>
+              <dt>Based</dt>     <dd>Chennai, India</dd>
+              <dt>Reach him</dt> <dd><a href="mailto:sanskar@mittiva.io">sanskar@mittiva.io</a></dd>
+            </dl>
+          </div>
+        </article>
+
+        <div style="text-align:center;padding-top:24px;" class="reveal">
+          <a href="founders.html" class="btn btn--ghost">Read the full founders page
+            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIG CLOSER -->
+  <section class="big-closer">
+    <div class="container">
+      <h2 class="stacked-title big-closer__title">
+        <span>What</span>
+        <span>Would</span>
+        <span>You</span>
+        <span><em>Build</em></span>
+        <span>Next?</span>
+      </h2>
+      <a href="contact.html" class="btn btn--primary">Start a conversation
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="assets/mittiva-logo-dark.svg" alt="Mittiva" class="logo-dark" />
+          <img src="assets/mittiva-logo-light.svg" alt="Mittiva" class="logo-light" />
+          <p>Practical AI for the businesses that built our neighbourhoods. Made in Chennai.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Build</h4>
+          <ul>
+            <li><a href="services.html#voice">Voice AI</a></li>
+            <li><a href="services.html#conversation">Conversation AI</a></li>
+            <li><a href="services.html#crm">CRM</a></li>
+            <li><a href="services.html#web">Websites</a></li>
+            <li><a href="services.html#automations">Automations</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Reach Us</h4>
+          <ul>
+            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a href="contact.html">Send a brief</a></li>
+            <li>Chennai · India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+        <span>v0.3 · SCROLL-JACK</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

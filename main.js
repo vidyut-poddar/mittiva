@@ -449,6 +449,173 @@
     document.addEventListener('scroll', onScroll, { passive: true });
   });
 
+  /* ───── SERVICE DECK — playing-card flip + ambient shuffle ───
+     Cards are face-down by default. Clicking a card flips it (3D
+     rotateY) to reveal the front. Only one card flipped at a time.
+     A shuffle animation runs every 15s when no card is flipped —
+     each card lifts and settles in sequence, like a dealer fanning
+     a hand. Escape key flips the active card back. */
+  const deckCards = document.querySelectorAll('[data-deck-card]');
+  if (deckCards.length) {
+
+    // ── SEQUENCED FLIP / UNFLIP ────────────────────────────────
+    // Three phases, each does ONE thing to avoid 3D render artefacts:
+    //   1. is-elevated  → card lifts above the deck     (280ms)
+    //   2. is-rotated   → flipper rotates 180° in place (480ms)
+    //   3. is-flipped   → card settles to centre + zoom (280ms)
+    // Total 1040ms either direction. Reverses cleanly.
+    const T_ELEVATE = 280;
+    const T_ROTATE = 480;
+
+    // Deck-wrap class that JS toggles SYNCHRONOUSLY on flip-in. CSS uses
+    // it (plain class selector, no :has()) to kill all hover effects the
+    // instant a flip begins — guaranteed to apply before the next paint.
+    const deckWrap = document.querySelector('.service-deck-wrap');
+    const lockDeck = () => deckWrap && deckWrap.classList.add('is-locked');
+    const unlockDeck = () => deckWrap && deckWrap.classList.remove('is-locked');
+
+    function flipIn(card) {
+      // Clear any leftover state
+      card.classList.remove('is-flipped', 'is-rotated', 'is-elevated', 'is-dropping');
+      // Lock + elevate in the SAME tick so the deck never has a frame
+      // where it's locked but has no card driving the fan position. No
+      // collapse-to-stack flicker between locking and elevating.
+      lockDeck();
+      card.classList.add('is-elevated');
+      // Phase 2: rotate (while elevated)
+      setTimeout(() => {
+        if (!card.classList.contains('is-elevated')) return;
+        card.classList.add('is-rotated');
+      }, T_ELEVATE);
+      // Phase 3: settle to centre
+      setTimeout(() => {
+        if (!card.classList.contains('is-elevated')) return;
+        card.classList.remove('is-elevated');
+        card.classList.add('is-flipped');
+      }, T_ELEVATE + T_ROTATE);
+    }
+
+    function flipOut(card) {
+      // Reverse sequence — walk back from whatever state we're in.
+      // Deck stays locked until ALL phases finish, then unlocks if no
+      // other card is still active.
+      const finish = () => { if (!anyFlipped()) unlockDeck(); };
+
+      // Helper: phase 3 drop. is-dropping keeps z-index high during the
+      // descent back to fan position, so the card never visually passes
+      // BEHIND its siblings as it lands. Cleared after 280ms.
+      const startDrop = () => {
+        card.classList.remove('is-elevated');
+        card.classList.add('is-dropping');
+        setTimeout(() => {
+          card.classList.remove('is-dropping');
+          finish();
+        }, T_ELEVATE);
+      };
+
+      if (card.classList.contains('is-flipped')) {
+        card.classList.remove('is-flipped');
+        card.classList.add('is-elevated');
+        setTimeout(() => {
+          if (!card.classList.contains('is-elevated')) return;
+          card.classList.remove('is-rotated');
+        }, T_ELEVATE);
+        setTimeout(() => {
+          if (!card.classList.contains('is-elevated')) return;
+          startDrop();
+        }, T_ELEVATE + T_ROTATE);
+      } else if (card.classList.contains('is-rotated')) {
+        card.classList.remove('is-rotated');
+        setTimeout(startDrop, T_ROTATE);
+      } else if (card.classList.contains('is-elevated')) {
+        startDrop();
+      } else {
+        finish();
+      }
+    }
+
+    function isCardActive(card) {
+      return card.classList.contains('is-elevated') ||
+             card.classList.contains('is-rotated') ||
+             card.classList.contains('is-flipped');
+    }
+    const anyFlipped = () => Array.from(deckCards).some(isCardActive);
+
+    // Click on a card → toggle. Closes any other active card first.
+    deckCards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a, button, input, textarea, select')) return;
+        if (isCardActive(card)) {
+          // Already active → close this one
+          flipOut(card);
+        } else {
+          // Close any other active card first
+          deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
+          // Open this one
+          flipIn(card);
+        }
+      });
+    });
+
+    // Esc closes whatever's open
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
+      }
+    });
+
+    // Click outside any card → close. CSS then collapses the deck.
+    document.addEventListener('click', (e) => {
+      if (!anyFlipped()) return;
+      if (e.target.closest('.service-deck__card')) return;
+      deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
+    });
+
+    // Ambient riffle shuffle — every 10 seconds, animate each card through
+    // the dealer-style lift-sway-spin-land arc, staggered so the deck looks
+    // like a wave passing through it. Suspended when:
+    //   • any card is flipped (don't disturb a reader)
+    //   • the cursor is over an actual card (matches the CSS fan-trigger)
+    // Hovering the section's empty padding does NOT suspend the shuffle.
+    const isCardHovered = () => !!document.querySelector('.service-deck__card:hover');
+
+    function runShuffle() {
+      if (anyFlipped() || isCardHovered()) return;
+      deckCards.forEach((card, i) => {
+        setTimeout(() => {
+          // Re-check at each stagger tick so if the user hovers a card
+          // mid-wave the remaining cards abort instead of swooping around.
+          if (anyFlipped() || isCardHovered()) return;
+          card.classList.add('is-shuffling');
+          // 1300ms matches the keyframe duration; remove just after end
+          setTimeout(() => card.classList.remove('is-shuffling'), 1320);
+        }, i * 140);
+      });
+    }
+    setInterval(runShuffle, 10000);
+
+    // Hovering any card immediately stops any in-progress shuffle so the
+    // fanned view is stable and the user can pick a card cleanly. Listener
+    // on each card so we react to actual card contact, not section padding.
+    deckCards.forEach((card) => {
+      card.addEventListener('mouseenter', () => {
+        deckCards.forEach((c) => c.classList.remove('is-shuffling'));
+      });
+    });
+
+    // If the page loaded with a hash like #voice, auto-flip that card
+    if (location.hash) {
+      const target = document.querySelector(location.hash);
+      if (target && target.matches('[data-deck-card]')) {
+        // Tiny delay so the intro mask / fonts settle before the flip
+        setTimeout(() => {
+          target.classList.add('is-flipped');
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 400);
+      }
+    }
+  }
+
   /* ───── ACTIVE NAV ───── */
   const path = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.menu-overlay__links a').forEach((a) => {

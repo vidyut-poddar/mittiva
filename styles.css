@@ -562,6 +562,16 @@ section { padding: var(--section-y) 0; position: relative; }
   position: relative;
   overflow: hidden;
 }
+
+/* Compact variant — for pages where the hero shouldn't dominate the
+   viewport (e.g. services, where the deck below is the real attraction).
+   Tighter top padding + smaller hero-head bottom margin. */
+.hero.hero--compact {
+  padding-top: clamp(112px, 10vw, 152px);
+}
+.hero.hero--compact .hero__head {
+  margin-bottom: 32px;
+}
 .hero__head {
   display: grid;
   grid-template-columns: 1fr;
@@ -1900,6 +1910,893 @@ footer {
   .h-scroll__label { display: none; }
 }
 
+/* ============================================================
+   CULTURE CODE / CAREERS PAGE
+   Editorial layout: founding philosophy, mission/vision pair,
+   numbered culture codes with paired do/don't examples.
+   ============================================================ */
+
+/* Founding-philosophy block — large pull-quote treatment with
+   the मिट्टी glyph as a decorative anchor. */
+.philosophy {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+.philosophy__glyph {
+  /* Devanagari-first font stack — Noto Sans Devanagari has proper matra
+     metrics and the same modern-sans feel as Inter Tight. Fallback to a
+     generic Indian-script font, then sans-serif. */
+  font-family: 'Noto Sans Devanagari', 'Hind', 'Mukta', sans-serif;
+  font-size: clamp(96px, 13vw, 200px);
+  font-weight: 700;
+  /* Devanagari needs vertical room — line-height 0.9 (which is fine for
+     Latin display caps) clips the top matra. 1.25 gives diacritics breathing
+     room without making the glyph feel disconnected from the body copy. */
+  line-height: 1.25;
+  letter-spacing: 0;
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  position: sticky;
+  top: 120px;
+  /* Extra top padding so the topmost matra (e.g., the chandrabindu/anusvara)
+     has air above it inside any parent that crops via overflow. */
+  padding: 0.15em 0 0;
+}
+.philosophy__body { max-width: 60ch; }
+.philosophy__body .eyebrow { margin-bottom: 28px; }
+.philosophy__body h2 {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: var(--fs-h1);
+  font-weight: 800;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
+  margin: 0 0 32px;
+  text-transform: uppercase;
+}
+.philosophy__body h2 em {
+  font-style: normal;
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.philosophy__body p {
+  font-size: var(--fs-lede);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  margin: 0 0 1.2em;
+}
+.philosophy__body p strong { color: var(--text); font-weight: 600; }
+@media (max-width: 900px) {
+  .philosophy { grid-template-columns: 1fr; gap: 32px; }
+  .philosophy__glyph { position: static; }
+}
+
+/* Mission + Vision pair — side-by-side editorial blocks */
+.statements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 80px);
+}
+.statement {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+}
+.statement__eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-mid);
+  display: block;
+  margin-bottom: 20px;
+}
+.statement__quote {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: var(--fs-quote);
+  font-weight: 600;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+.statement__body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 48ch;
+}
+@media (max-width: 800px) {
+  .statements { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* Six Culture Codes — numbered editorial blocks with paired examples */
+.codes-list {
+  display: grid;
+  gap: clamp(72px, 9vw, 128px);
+}
+.code-block {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+  border-top: 1px solid var(--border);
+  padding-top: clamp(40px, 5vw, 64px);
+}
+.code-block__head {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.code-block__num {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: clamp(64px, 8vw, 120px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: var(--tr-display);
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.code-block__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--accent-mid);
+}
+.code-block__title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-display);
+  margin: 0 0 24px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.code-block__body {
+  font-size: var(--fs-lede);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  margin: 0 0 36px;
+  max-width: 60ch;
+}
+.code-block__examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.code-block__example {
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  padding: 24px 24px 20px;
+  background: var(--card-bg);
+  position: relative;
+}
+.code-block__example-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.code-block__example-tag::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.code-block__example--yes .code-block__example-tag {
+  color: var(--accent-light);
+}
+.code-block__example--yes .code-block__example-tag::before {
+  background: var(--accent-light);
+  box-shadow: inset 0 0 0 2px var(--bg);
+}
+.code-block__example--yes {
+  border-color: var(--accent-mid);
+}
+.code-block__example--no .code-block__example-tag { color: var(--text-muted); }
+.code-block__example--no .code-block__example-tag::before {
+  background: transparent;
+  border: 1px dashed var(--text-muted);
+}
+.code-block__example p {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  margin: 0;
+}
+.code-block__example--yes p { color: var(--text); }
+@media (max-width: 900px) {
+  .code-block { grid-template-columns: 1fr; gap: 24px; }
+  .code-block__head { position: static; flex-direction: row; align-items: baseline; gap: 20px; }
+  .code-block__examples { grid-template-columns: 1fr; }
+}
+
+/* Careers closing CTA — mantra + how to apply */
+.mantra {
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: clamp(56px, 7vw, 96px);
+}
+.mantra__quote {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: clamp(32px, 4.5vw, 60px);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-display);
+  margin: 0 auto 28px;
+  max-width: 18ch;
+}
+.mantra__quote em {
+  font-style: normal;
+  background: var(--gradient-heading);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.mantra__lede {
+  font-size: var(--fs-lede);
+  line-height: var(--lh-body);
+  color: var(--text-muted);
+  max-width: 50ch;
+  margin: 0 auto 40px;
+}
+.mantra__actions {
+  display: inline-flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ============================================================
+   SERVICE DECK — PLAYING CARDS as a TRUE STACK (services page)
+   Cards are tightly piled at center like a real deck on a table.
+   Hovering the deck FANS them out into a hand so each card is
+   reachable. Clicking a fanned card flips it (3D rotateY) and
+   scales it up for reading. Shuffle animation runs every 15s.
+   ============================================================ */
+.service-deck-wrap {
+  perspective: 2600px;
+  perspective-origin: center 55%;
+  /* Tight padding — the deck IS the focal point; no need for a
+     hundred-pixel runway above it. */
+  padding: 24px 0 80px;
+  position: relative;
+}
+
+/* Section containing the deck gets reduced top padding so the hint +
+   deck sit immediately under the hero, eliminating the dead zone. */
+section:has(.service-deck-wrap) {
+  padding-top: 0;
+}
+
+.service-deck {
+  position: relative;
+  height: 680px;
+  display: block;
+  /* preserve-3d propagates the wrapper's perspective into child cards so
+     translateZ on individual cards actually moves them in 3D space and
+     they stack by Z depth (not by document order or z-index). */
+  transform-style: preserve-3d;
+}
+
+/* Custom properties for shuffle motion — declared so they animate
+   smoothly alongside the existing transform without overriding it.
+   Each card gets a lift (Y translate), sway (X translate), and a
+   spin (Z rotation) so the shuffle reads as 3 simultaneous motions. */
+@property --shuffle-lift {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --shuffle-sway {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --shuffle-spin {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --shuffle-z {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.service-deck__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Bigger cards — closer to real playing-card scale */
+  width: clamp(260px, 24vw, 340px);
+  aspect-ratio: 5 / 7;
+  /* Per-card variables drive stacked vs fanned vs flipped states */
+  --stack-x: 0px;
+  --stack-y: 0px;
+  --stack-r: 0deg;
+  --fan-x: 0px;
+  --fan-r: 0deg;
+  --shuffle-lift: 0px;
+  --shuffle-sway: 0px;
+  --shuffle-spin: 0deg;
+  --shuffle-z: 0px;
+  /* Default state: stacked tightly at center with subtle variations.
+     Shuffle vars get added to the existing stack offsets at animation time.
+     translateZ pushes the shuffling card toward the viewer in 3D space so
+     it visibly passes OVER other cards during the lift. */
+  transform:
+    translate3d(
+      calc(-50% + var(--stack-x) + var(--shuffle-sway)),
+      calc(-50% + var(--stack-y) + var(--shuffle-lift)),
+      var(--shuffle-z)
+    )
+    rotateZ(calc(var(--stack-r) + var(--shuffle-spin)));
+  transform-style: preserve-3d;
+  cursor: pointer;
+  /* Promote each card to its own GPU layer so animations don't trigger
+     repaints of neighbouring cards. backface-visibility hidden avoids
+     a Safari sub-pixel jitter on rotated transforms. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    transform 760ms cubic-bezier(0.45, 0, 0.55, 1),
+    opacity 480ms var(--ease),
+    filter 480ms var(--ease);
+}
+
+/* Per-card variations — VERY TIGHT stack (almost aligned, like a fresh deck
+   right out of the box) and wider fan-out targets for the bigger cards.
+   z-index runs 8→1 so card 01 is on top of the stack, card 08 at the back. */
+.service-deck__card:nth-child(1) { --stack-x: 0px;  --stack-y: 0px;  --stack-r: -0.4deg; --fan-x: -385px; --fan-r: -10deg;  z-index: 8; }
+.service-deck__card:nth-child(2) { --stack-x: 1px;  --stack-y: 0.5px;--stack-r: 0.3deg;  --fan-x: -275px; --fan-r: -7deg;   z-index: 7; }
+.service-deck__card:nth-child(3) { --stack-x: -0.5px;--stack-y: 1px; --stack-r: -0.2deg; --fan-x: -165px; --fan-r: -4deg;   z-index: 6; }
+.service-deck__card:nth-child(4) { --stack-x: 1.5px;--stack-y: -0.5px;--stack-r: 0.5deg; --fan-x: -55px;  --fan-r: -1.2deg; z-index: 5; }
+.service-deck__card:nth-child(5) { --stack-x: -1px; --stack-y: 1.5px;--stack-r: 0.15deg; --fan-x: 55px;   --fan-r: 1.2deg;  z-index: 4; }
+.service-deck__card:nth-child(6) { --stack-x: 0.5px;--stack-y: -1px; --stack-r: -0.35deg;--fan-x: 165px;  --fan-r: 4deg;    z-index: 3; }
+.service-deck__card:nth-child(7) { --stack-x: -1.5px;--stack-y: 0.5px;--stack-r: 0.25deg;--fan-x: 275px;  --fan-r: 7deg;    z-index: 2; }
+.service-deck__card:nth-child(8) { --stack-x: 2px;  --stack-y: 0px;  --stack-r: -0.15deg;--fan-x: 385px;  --fan-r: 10deg;   z-index: 1; }
+
+/* ── FAN-OUT TRIGGER A: hover-driven (only when no card is active) ──
+   When the user is browsing the deck (no card flipped), hovering any
+   card fans the whole deck out. Disabled the moment a card enters the
+   flip sequence — at that point the active-state rule below drives
+   the fan instead, and hover stops doing anything. */
+.service-deck:not(:has(.is-elevated, .is-rotated, .is-flipped)):has(.service-deck__card:hover) .service-deck__card {
+  transform:
+    translate3d(
+      calc(-50% + var(--fan-x) + var(--shuffle-sway)),
+      calc(-50% + var(--shuffle-lift)),
+      var(--shuffle-z)
+    )
+    rotateZ(calc(var(--fan-r) + var(--shuffle-spin)));
+}
+
+/* ── FAN-OUT TRIGGER B: active/locked-state-driven (always while in
+   any flip phase). Critically, .is-locked is added by JS the same tick
+   the user clicks — BEFORE any card has an active class. So the fan
+   keeps holding during the brief window before is-elevated lands. No
+   collapse-to-stack flicker. */
+.service-deck-wrap.is-locked .service-deck__card,
+.service-deck-wrap:has(.is-elevated, .is-rotated, .is-flipped) .service-deck__card {
+  transform:
+    translate3d(
+      calc(-50% + var(--fan-x) + var(--shuffle-sway)),
+      calc(-50% + var(--shuffle-lift)),
+      var(--shuffle-z)
+    )
+    rotateZ(calc(var(--fan-r) + var(--shuffle-spin)));
+}
+
+/* ── HOVER LIFT — only fires when NO card is active.
+   Two-layer gate:
+     1) .service-deck-wrap.is-locked → JS adds this synchronously on
+        flip-in, so hover stops mattering BEFORE the next paint frame.
+     2) :not(:has(.is-elevated, .is-rotated, .is-flipped)) → CSS-only
+        fallback in case JS hasn't run yet.
+   Either layer matching ALONE is sufficient to kill the hover effect. */
+.service-deck-wrap:not(.is-locked) .service-deck:not(:has(.is-elevated, .is-rotated, .is-flipped)):has(.service-deck__card:hover) .service-deck__card:hover {
+  transform:
+    translate3d(
+      calc(-50% + var(--fan-x) + var(--shuffle-sway)),
+      calc(-60% + var(--shuffle-lift)),
+      calc(var(--shuffle-z) + 90px)
+    )
+    rotateZ(calc(var(--fan-r) * 0.5 + var(--shuffle-spin)));
+  z-index: 50;
+}
+
+/* Hover-driven fan-out also gated by .is-locked for the same reason */
+.service-deck-wrap.is-locked .service-deck__card,
+.service-deck-wrap.is-locked .service-deck__card:hover {
+  /* Hover has no power over transform — active state wins regardless */
+  pointer-events: auto;
+}
+.service-deck-wrap.is-locked .service-deck__card:not(.is-elevated):not(.is-rotated):not(.is-flipped) {
+  pointer-events: none;
+}
+
+/* ── SEQUENCED FLIP — three discrete phases, never overlapping ──
+   The flip animation is split into three phases so each one does ONE
+   thing. No more simultaneous translate + scale + rotate causing 3D
+   render artefacts.
+
+   Phase 1 (is-elevated): card LIFTS straight up out of the deck.
+                          No rotation, no scaling.   280ms
+   Phase 2 (is-rotated):  card stays put, the FLIPPER rotates 180°.
+                          Only rotation — card position is locked.   480ms
+   Phase 3 (is-flipped):  card MOVES to the centred reading position
+                          and scales up.   280ms
+
+   Total: 1040ms each direction. Reverses cleanly for un-flip. */
+
+/* Phase 1 transform: card hovers above the deck */
+.service-deck__card.is-elevated {
+  transform: translate(-50%, -180%) scale(1.05) rotateZ(0) !important;
+  z-index: 200 !important;
+  transition: transform 280ms cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* Phase 3 transform: card settles into centred reading position */
+.service-deck__card.is-flipped {
+  transform: translate(-50%, -52%) scale(1.25) rotateZ(0) !important;
+  z-index: 200 !important;
+  transition: transform 280ms cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* "Dropping" — the descent phase of un-flip. Card no longer has any
+   positional class so it transitions BACK to the fan position, but
+   z-index stays at 200 throughout the 280ms drop so the card doesn't
+   visually slip behind its neighbours mid-descent. Removed by JS once
+   the drop completes. */
+.service-deck__card.is-dropping {
+  z-index: 200 !important;
+  transition: transform 280ms cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* Belt-and-suspenders: any card with an active class explicitly opts
+   out of cursor interactions that would re-trigger transforms. Even if
+   the hover lift rule somehow matched, the active state's transform
+   stays locked because its :hover variant points back to the active
+   value. */
+.service-deck__card.is-elevated:hover {
+  transform: translate(-50%, -180%) scale(1.05) rotateZ(0) !important;
+  z-index: 200 !important;
+}
+.service-deck__card.is-rotated:hover {
+  /* No transform change for is-rotated — flipper handles rotation */
+}
+.service-deck__card.is-flipped:hover {
+  transform: translate(-50%, -52%) scale(1.25) rotateZ(0) !important;
+  z-index: 200 !important;
+}
+
+/* Phase 2 — flipper does the rotation IN PLACE while card is elevated.
+   Independent class from is-flipped so the flip and the centring are
+   driven by separate state changes at different times. */
+.service-deck__flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 480ms cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+}
+.service-deck__card.is-rotated .service-deck__flipper {
+  transform: rotateY(180deg);
+}
+
+/* Both faces */
+.service-deck__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px -16px rgba(4, 6, 14, 0.75),
+    0 10px 22px -8px rgba(4, 6, 14, 0.55);
+}
+
+/* ── BACK face — Mittiva-branded design ────────────────────── */
+.service-deck__back {
+  background:
+    radial-gradient(ellipse at center, rgba(176, 192, 216, 0.18) 0%, transparent 65%),
+    linear-gradient(135deg, var(--bg-surface-dark) 0%, var(--bg-dark) 70%, var(--bg-surface-dark) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* 4px Z separation so the compositor has unambiguous draw order */
+  transform: translateZ(4px);
+  /* Back fades out during the 480ms rotation window. Delay 180ms (~
+     just before the rotation crosses 90° edge-on), fade over 140ms.
+     Triggered by is-rotated which only applies during the rotation
+     phase — clean isolation from the move/scale phases. */
+  transition:
+    opacity 140ms ease 180ms,
+    visibility 0s 320ms;
+  visibility: visible;
+}
+.service-deck__card.is-rotated .service-deck__back {
+  opacity: 0;
+  visibility: hidden;
+}
+.service-deck__back::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(176, 192, 216, 0.18);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.service-deck__back::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  background:
+    repeating-linear-gradient(45deg,
+      transparent 0,
+      transparent 7px,
+      rgba(176, 192, 216, 0.028) 7px,
+      rgba(176, 192, 216, 0.028) 8px);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.service-deck__back-corner {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent-mid);
+  opacity: 0.75;
+  z-index: 2;
+}
+.service-deck__back-corner--tl { top: 22px; left: 22px; }
+.service-deck__back-corner--br { bottom: 22px; right: 22px; transform: rotate(180deg); }
+
+.service-deck__back-logo {
+  position: relative;
+  z-index: 2;
+  width: 48%;
+  height: auto;
+  opacity: 0.9;
+  filter: drop-shadow(0 6px 16px rgba(176, 192, 216, 0.22));
+}
+.service-deck__back-mark {
+  position: relative;
+  z-index: 2;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-top: 20px;
+  opacity: 0.85;
+}
+
+/* ── FRONT face — service content (bigger card = bigger type) ──
+   translateZ(4px) after rotateY(180°) puts the front face 4px in its OWN
+   forward direction, which (because it's rotated) means 4px in parent's
+   -Z direction. Combined with back's +4px, total separation is 8px in 3D
+   space — wide enough that no browser z-fights them. Also: explicit
+   background-color (not just gradient) ensures the front is fully opaque
+   so nothing renders through it even if backface logic fails entirely. */
+.service-deck__front {
+  background-color: var(--bg-surface-dark);
+  background-image: linear-gradient(180deg, var(--bg-surface) 0%, var(--card-bg) 100%);
+  transform: rotateY(180deg) translateZ(4px);
+  padding: 36px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.service-deck__front::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 1px solid var(--accent-mid);
+  border-radius: 6px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.service-deck__front-corner {
+  position: absolute;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--accent-mid);
+  letter-spacing: -0.01em;
+  z-index: 2;
+}
+.service-deck__front-corner--tl { top: 22px; left: 28px; }
+.service-deck__front-corner--br { bottom: 22px; right: 28px; transform: rotate(180deg); }
+
+.service-deck__cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-mid);
+  margin: 28px 0 14px;
+  display: block;
+}
+
+.service-deck__title-h {
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 0 0 16px;
+  /* Critical: no mid-word breaks or hyphens. AUTOMATIONS / DEVELOPMENT stay whole. */
+  hyphens: none;
+  -webkit-hyphens: none;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.service-deck__copy {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+.service-deck__features {
+  list-style: none;
+  padding: 0;
+  margin: auto 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+}
+.service-deck__features li {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  padding-left: 14px;
+  position: relative;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+.service-deck__features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 9px;
+  height: 1px;
+  background: var(--accent-mid);
+}
+
+/* ── Dealer-style riffle shuffle — runs every 10s on each card, staggered.
+   The card LIFTS off the stack, SWAYS sideways (adjacent cards opposite
+   directions so they cross like a real riffle), SPINS, and pushes forward
+   in Z so it visibly passes OVER its neighbours. Three-keyframe arc keeps
+   the motion smooth — browser interpolates a single graceful curve from
+   rest → peak → rest. Per-keyframe easing tunes the rise vs. fall feel. */
+
+/* Cards on the "left half" of the riffle — sweep LEFT */
+@keyframes deckRiffleLeft {
+  0% {
+    --shuffle-lift: 0px;
+    --shuffle-sway: 0px;
+    --shuffle-spin: 0deg;
+    --shuffle-z: 0px;
+    animation-timing-function: cubic-bezier(0.33, 0, 0.5, 1);
+  }
+  50% {
+    --shuffle-lift: -160px;
+    --shuffle-sway: -52px;
+    --shuffle-spin: -13deg;
+    --shuffle-z: 150px;
+    animation-timing-function: cubic-bezier(0.5, 0, 0.67, 1);
+  }
+  100% {
+    --shuffle-lift: 0px;
+    --shuffle-sway: 0px;
+    --shuffle-spin: 0deg;
+    --shuffle-z: 0px;
+  }
+}
+
+/* Cards on the "right half" — mirrored motion. Adjacent cards sweep
+   opposite directions during the shuffle, recreating two stack halves
+   crossing each other in a riffle. */
+@keyframes deckRiffleRight {
+  0% {
+    --shuffle-lift: 0px;
+    --shuffle-sway: 0px;
+    --shuffle-spin: 0deg;
+    --shuffle-z: 0px;
+    animation-timing-function: cubic-bezier(0.33, 0, 0.5, 1);
+  }
+  50% {
+    --shuffle-lift: -170px;
+    --shuffle-sway: 56px;
+    --shuffle-spin: 14deg;
+    --shuffle-z: 150px;
+    animation-timing-function: cubic-bezier(0.5, 0, 0.67, 1);
+  }
+  100% {
+    --shuffle-lift: 0px;
+    --shuffle-sway: 0px;
+    --shuffle-spin: 0deg;
+    --shuffle-z: 0px;
+  }
+}
+
+/* Master easing on the whole animation = smooth ease-in-out
+   (cubic-bezier(0.45, 0, 0.55, 1)). The per-keyframe timing functions
+   above modulate rise vs fall character: the rise from 0%→50% uses a
+   slightly snappier curve, and the fall from 50%→100% uses a gentler
+   decelerating curve, so the card "drops" softer than it rises. */
+.service-deck__card:nth-child(odd).is-shuffling {
+  animation: deckRiffleLeft 1300ms cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+}
+.service-deck__card:nth-child(even).is-shuffling {
+  animation: deckRiffleRight 1300ms cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+}
+
+/* Shuffling cards sit above neighbours so the riffle passes OVER the deck */
+.service-deck__card.is-shuffling {
+  z-index: 100 !important;
+}
+
+/* When ANY card is in the flip sequence, all other cards are locked out:
+   • dimmed and blurred (visual focus on the active card)
+   • pointer-events: none so they can't be hovered or clicked
+   • z-index locked to nth-child baseline via !important so NO rule can
+     briefly change their stacking order during cursor movement */
+.service-deck-wrap.is-locked .service-deck__card:not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping),
+.service-deck-wrap:has(.is-elevated) .service-deck__card:not(.is-elevated):not(.is-rotated):not(.is-flipped),
+.service-deck-wrap:has(.is-rotated) .service-deck__card:not(.is-elevated):not(.is-rotated):not(.is-flipped),
+.service-deck-wrap:has(.is-flipped) .service-deck__card:not(.is-elevated):not(.is-rotated):not(.is-flipped) {
+  opacity: 0.18;
+  filter: blur(3px);
+  pointer-events: none !important;
+  transition: opacity 480ms var(--ease), filter 480ms var(--ease);
+}
+
+/* Lock the z-index of every non-active card during the entire animation.
+   nth-child rules set z-index 1-8; restating them with !important under
+   the lock prevents any hover rule, focus rule, or transient state from
+   bumping them during cursor movement mid-flip. */
+.service-deck-wrap.is-locked .service-deck__card:nth-child(1):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 8 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(2):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 7 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(3):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 6 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(4):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 5 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(5):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 4 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(6):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 3 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(7):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 2 !important; }
+.service-deck-wrap.is-locked .service-deck__card:nth-child(8):not(.is-elevated):not(.is-rotated):not(.is-flipped):not(.is-dropping) { z-index: 1 !important; }
+
+/* Deck hint above the deck */
+.service-deck__hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* ── MOBILE / TABLET ─────────────────────────────────────────
+   Smaller cards + tighter fan distances so the deck fits. */
+@media (max-width: 1024px) {
+  .service-deck { height: 480px; }
+  .service-deck__card { width: clamp(160px, 22vw, 220px); }
+  .service-deck__card:nth-child(1) { --fan-x: -320px; }
+  .service-deck__card:nth-child(2) { --fan-x: -228px; }
+  .service-deck__card:nth-child(3) { --fan-x: -136px; }
+  .service-deck__card:nth-child(4) { --fan-x: -46px; }
+  .service-deck__card:nth-child(5) { --fan-x: 46px; }
+  .service-deck__card:nth-child(6) { --fan-x: 136px; }
+  .service-deck__card:nth-child(7) { --fan-x: 228px; }
+  .service-deck__card:nth-child(8) { --fan-x: 320px; }
+  .service-deck__card.is-flipped {
+    transform: translate(-50%, -52%) scale(1.4) rotateZ(0) !important;
+  }
+}
+@media (max-width: 700px) {
+  /* Bigger cards + bigger flip scale + bigger type. On mobile a flipped
+     card should fill most of the viewport so the content reads at a
+     comfortable size. */
+  .service-deck-wrap { padding: 56px 0 96px; }
+  .service-deck { min-height: 520px; height: auto; }
+  .service-deck__card { width: clamp(150px, 44vw, 180px); }
+
+  /* Tighter fan so 8 cards still fit on a narrow viewport */
+  .service-deck__card:nth-child(1) { --fan-x: -85px;  --fan-r: -7deg; }
+  .service-deck__card:nth-child(2) { --fan-x: -61px;  --fan-r: -5deg; }
+  .service-deck__card:nth-child(3) { --fan-x: -37px;  --fan-r: -3deg; }
+  .service-deck__card:nth-child(4) { --fan-x: -13px;  --fan-r: -1deg; }
+  .service-deck__card:nth-child(5) { --fan-x: 13px;   --fan-r: 1deg; }
+  .service-deck__card:nth-child(6) { --fan-x: 37px;   --fan-r: 3deg; }
+  .service-deck__card:nth-child(7) { --fan-x: 61px;   --fan-r: 5deg; }
+  .service-deck__card:nth-child(8) { --fan-x: 85px;   --fan-r: 7deg; }
+
+  /* Phase 1 — elevated lift is shorter on mobile (less vertical room) */
+  .service-deck__card.is-elevated {
+    transform: translate(-50%, -130%) scale(1.04) rotateZ(0) !important;
+  }
+
+  /* Phase 3 — flipped card scales up almost to viewport width so the
+     content is genuinely readable, not a postage stamp. */
+  .service-deck__card.is-flipped {
+    transform: translate(-50%, -50%) scale(1.9) rotateZ(0) !important;
+  }
+
+  /* Front face: smaller base type because the 1.9× scale multiplies it
+     up to readable size at view time. Calculated so 17px × 1.9 ≈ 32px
+     visible — comfortable phone reading. */
+  .service-deck__front { padding: 26px 18px 18px; }
+  .service-deck__front-corner { font-size: 13px; }
+  .service-deck__front-corner--tl { top: 16px; left: 18px; }
+  .service-deck__front-corner--br { bottom: 16px; right: 18px; }
+  .service-deck__cat {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    margin: 22px 0 8px;
+  }
+  .service-deck__title-h { font-size: 17px; margin: 0 0 10px; line-height: 1.12; }
+  .service-deck__copy { font-size: 11px; line-height: 1.5; margin: 0 0 12px; }
+  .service-deck__features { gap: 5px; }
+  .service-deck__features li { font-size: 9.5px; line-height: 1.4; padding-left: 11px; }
+  .service-deck__features li::before { top: 7px; width: 7px; }
+}
+
+/* Extra-small phones: even tighter so deck still fits comfortably */
+@media (max-width: 380px) {
+  .service-deck__card { width: 140px; }
+  .service-deck__card:nth-child(1) { --fan-x: -70px; }
+  .service-deck__card:nth-child(2) { --fan-x: -50px; }
+  .service-deck__card:nth-child(3) { --fan-x: -30px; }
+  .service-deck__card:nth-child(4) { --fan-x: -10px; }
+  .service-deck__card:nth-child(5) { --fan-x: 10px; }
+  .service-deck__card:nth-child(6) { --fan-x: 30px; }
+  .service-deck__card:nth-child(7) { --fan-x: 50px; }
+  .service-deck__card:nth-child(8) { --fan-x: 70px; }
+  .service-deck__card.is-flipped {
+    transform: translate(-50%, -50%) scale(2.05) rotateZ(0) !important;
+  }
+}
+
+
+
 /* ── ACCESSIBILITY ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1916,3 +2813,14 @@ footer {
 
 /* When menu open, prevent body scroll */
 .is-menu-open { overflow: hidden; }
+
+/* Screen-reader only — visible to assistive tech, hidden visually */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -153,18 +153,15 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">Voice AI</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--voice">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">03</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">03</span>
                 <span class="service-deck__cat">Calls · Inbound + outbound</span>
                 <h3 class="service-deck__title-h">Voice AI</h3>
-                <p class="service-deck__copy">A voice agent that picks up your phone, in your language, in your tone. 24 hours a day.</p>
-                <ul class="service-deck__features">
-                  <li>Inbound: never miss a call</li>
-                  <li>Outbound: lead follow-up &amp; reminders</li>
-                  <li>Tamil, English, Hindi, mixed</li>
-                  <li>Full transcript + summary emailed</li>
-                </ul>
+                <!-- LeadConnector chat widget gets relocated here by main.js
+                     once the loader script injects <chat-widget> at body level.
+                     Keep this element empty — main.js owns its contents. -->
+                <div class="voice-widget-host" data-voice-host aria-live="polite"></div>
               </div>
             </div>
           </article>
@@ -361,6 +358,17 @@
       </div>
     </div>
   </footer>
+
+  <!-- LeadConnector chat widget — preloaded on page load so the widget DOM
+       is hot the moment the Voice AI card flips face-up. main.js intercepts
+       the injected <chat-widget> and relocates it into #voice. Hidden by
+       default via styles.css to keep the deck clean. async + late-in-body
+       keeps it off the critical render path for PageSpeed. -->
+  <script
+    src="https://beta.leadconnectorhq.com/loader.js"
+    data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js"
+    data-widget-id="6a0fd05bb47a945bd7d13bd3"
+    async></script>
 
   <script src="main.js" defer></script>
 </body>

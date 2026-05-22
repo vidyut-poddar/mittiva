@@ -622,4 +622,72 @@
   document.querySelectorAll('.menu-overlay__links a').forEach((a) => {
     if (a.getAttribute('href') === path) a.classList.add('is-active');
   });
+
+  /* ───── VOICE AI WIDGET — relocate LeadConnector into the Voice AI card ───
+     The LeadConnector loader script is preloaded in services.html so the
+     <chat-widget> element gets injected at <body> level on page load.
+     We:
+       1. Watch for that injection.
+       2. Move the chat-widget into .voice-widget-host inside #voice.
+       3. Toggle body.voice-widget-on while the card is active so CSS shows
+          / hides it without remounting the iframe (which would re-load
+          the widget every time and feel laggy).
+     Hiding the widget while the card is face-down is critical — otherwise
+     the floating chat button would sit on top of every page section. */
+  (function initVoiceWidget () {
+    const voiceCard = document.getElementById('voice');
+    if (!voiceCard) return;
+    const host = voiceCard.querySelector('[data-voice-host]');
+    if (!host) return;
+
+    const LC_TAGS = ['chat-widget', 'chat-widget-floating-button', 'lc-chat-widget'];
+    let   relocated = false;
+
+    const isActive = (el) =>
+      el.classList.contains('is-elevated') ||
+      el.classList.contains('is-rotated')  ||
+      el.classList.contains('is-flipped');
+
+    function relocateOnce () {
+      if (relocated) return;
+      // LeadConnector usually appends a single <chat-widget> custom element
+      // to <body>. Be defensive: match any of the known LC element names.
+      let el = null;
+      for (const tag of LC_TAGS) {
+        el = document.querySelector(tag);
+        if (el) break;
+      }
+      if (!el) return;
+      host.appendChild(el);
+      relocated = true;
+    }
+
+    // Try immediately (script may have already finished), then keep watching
+    // body for late insertion.
+    relocateOnce();
+    if (!relocated) {
+      const bodyObs = new MutationObserver(() => {
+        relocateOnce();
+        if (relocated) bodyObs.disconnect();
+      });
+      bodyObs.observe(document.body, { childList: true, subtree: false });
+    }
+
+    function sync () {
+      if (isActive(voiceCard)) {
+        document.body.classList.add('voice-widget-on');
+      } else {
+        document.body.classList.remove('voice-widget-on');
+      }
+    }
+
+    // React to flipIn / flipOut by watching the card's class list.
+    new MutationObserver(sync).observe(voiceCard, {
+      attributes: true, attributeFilter: ['class']
+    });
+
+    // Handle deep-link case (services.html#voice) where the hash flips
+    // the card before the observer is attached.
+    sync();
+  })();
 })();

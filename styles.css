@@ -2890,3 +2890,105 @@ section:has(.service-deck-wrap) {
   white-space: nowrap;
   border: 0;
 }
+
+/* ─── VOICE AI WIDGET (LeadConnector, in-card) ─────────────────────────
+   The LC loader script is preloaded in services.html so the chat-widget
+   element exists by the time the user reaches the card. main.js moves
+   that element into .voice-widget-host inside #voice.
+
+   Default state: any LC-injected element is hidden (display:none) so it
+   doesn't show as a floating button anywhere else on the page.
+
+   Active state (body.voice-widget-on, set while the Voice AI card is
+   elevated/rotated/flipped): the widget is shown INSIDE the card,
+   anchored to the voice-widget-host. The host overrides LC's default
+   position:fixed so the widget sits inside the card's flow, not the
+   viewport corner. */
+
+/* Universally hide every LC custom element + iframe by default. */
+chat-widget,
+chat-widget-floating-button,
+lc-chat-widget,
+chat-frame,
+iframe[src*="leadconnector"],
+iframe[src*="chat-widget"] {
+  display: none !important;
+}
+
+/* Layout of the in-card host. Sits below the title with a sensible block
+   of space, doesn't push past the card edges, and gives the widget a
+   centred frame. */
+.voice-widget-host {
+  display: block;
+  margin: 18px auto 0;
+  width: 100%;
+  /* Reserve height so the card body doesn't reflow when the widget
+     mounts — the LC button is roughly 60px tall, but we leave room for
+     an expanded chat panel too. */
+  min-height: 240px;
+  position: relative;
+  /* Re-establish a positioning context so any LC fixed-positioned
+     descendants resolve INSIDE the host instead of escaping to the
+     viewport. A transform value does this without affecting layout. */
+  transform: translateZ(0);
+  /* Hidden until the card flips active. */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 320ms ease, visibility 0s linear 320ms;
+}
+
+/* Card-active state: reveal the host + every LC element inside it. */
+body.voice-widget-on .voice-widget-host {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 320ms ease 80ms, visibility 0s linear 0s;
+}
+body.voice-widget-on .voice-widget-host chat-widget,
+body.voice-widget-on .voice-widget-host chat-widget-floating-button,
+body.voice-widget-on .voice-widget-host lc-chat-widget,
+body.voice-widget-on .voice-widget-host chat-frame,
+body.voice-widget-on .voice-widget-host iframe[src*="leadconnector"],
+body.voice-widget-on .voice-widget-host iframe[src*="chat-widget"] {
+  display: block !important;
+  /* Override LC's default position:fixed bottom-right pinning. Inside the
+     host, the widget should follow normal flow + sit centred. */
+  position: relative !important;
+  inset: auto !important;
+  bottom: auto !important;
+  right: auto !important;
+  left: auto !important;
+  top: auto !important;
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  z-index: 1 !important;
+}
+
+/* Stop any inner LC iframe from being a fixed-positioned floater. */
+body.voice-widget-on .voice-widget-host iframe {
+  position: relative !important;
+  inset: auto !important;
+  max-width: 100% !important;
+  border: 0 !important;
+}
+
+/* Voice-AI front face gets a slightly tighter padding-top so the widget
+   has room to breathe under the title without overflowing the card. */
+.service-deck__front--voice {
+  padding-top: clamp(36px, 4vw, 48px);
+}
+
+/* Mobile: cards are wider on mobile (clamp(200px, 62vw, 280px)) but the
+   flip scale of 1.5 pushes the effective width to ~300–420px. The host
+   still needs to fit inside that, so trim the min-height a touch. */
+@media (max-width: 768px) {
+  .voice-widget-host {
+    margin-top: 12px;
+    min-height: 200px;
+  }
+}
+@media (max-width: 420px) {
+  .voice-widget-host {
+    margin-top: 10px;
+    min-height: 180px;
+  }
+}

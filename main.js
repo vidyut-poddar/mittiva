@@ -541,19 +541,19 @@
     }
     const anyFlipped = () => Array.from(deckCards).some(isCardActive);
 
-    // Click on a card → toggle. Closes any other active card first.
+    // Click on a card → open it (if not already active). Clicking INSIDE an
+    // already-active card does nothing — that lets the user interact with
+    // the card's content (e.g. the Voice AI widget's call button) without
+    // accidentally flipping the card back down. To close the active card,
+    // the user clicks outside it (handled below).
     deckCards.forEach((card) => {
       card.addEventListener('click', (e) => {
         if (e.target.closest('a, button, input, textarea, select')) return;
-        if (isCardActive(card)) {
-          // Already active → close this one
-          flipOut(card);
-        } else {
-          // Close any other active card first
-          deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
-          // Open this one
-          flipIn(card);
-        }
+        if (isCardActive(card)) return;     // Already open → ignore inside clicks
+        // Close any other active card first
+        deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
+        // Open this one
+        flipIn(card);
       });
     });
 
@@ -640,7 +640,15 @@
     const host = voiceCard.querySelector('[data-voice-host]');
     if (!host) return;
 
-    const LC_TAGS = ['chat-widget', 'chat-widget-floating-button', 'lc-chat-widget'];
+    const LC_WIDGET_ID = '6a0fd05bb47a945bd7d13bd3';
+    // Selectors LC might use — we try the specific widget-id first (most
+    // reliable), then fall back to known tag names.
+    const LC_SELECTORS = [
+      '[data-widget-id="' + LC_WIDGET_ID + '"]:not(script)',
+      'chat-widget',
+      'chat-widget-floating-button',
+      'lc-chat-widget',
+    ];
     let   relocated = false;
 
     const isActive = (el) =>
@@ -648,29 +656,48 @@
       el.classList.contains('is-rotated')  ||
       el.classList.contains('is-flipped');
 
+    function findWidget () {
+      for (const sel of LC_SELECTORS) {
+        const el = document.querySelector(sel);
+        if (el && el.tagName !== 'SCRIPT' && !host.contains(el)) return el;
+      }
+      return null;
+    }
+
     function relocateOnce () {
       if (relocated) return;
-      // LeadConnector usually appends a single <chat-widget> custom element
-      // to <body>. Be defensive: match any of the known LC element names.
-      let el = null;
-      for (const tag of LC_TAGS) {
-        el = document.querySelector(tag);
-        if (el) break;
-      }
+      const el = findWidget();
       if (!el) return;
+      // Strip any inline display:none / position the widget may have set
+      // on itself before we move it.
+      el.style.display = '';
       host.appendChild(el);
       relocated = true;
     }
 
-    // Try immediately (script may have already finished), then keep watching
-    // body for late insertion.
+    // Try immediately (script may have already finished).
     relocateOnce();
+
     if (!relocated) {
-      const bodyObs = new MutationObserver(() => {
+      // Watch the WHOLE document for the LC element to appear — on mobile
+      // the LC loader is slower and may inject the widget into a wrapper
+      // div, not directly under <body>. subtree:true catches both.
+      const docObs = new MutationObserver(() => {
         relocateOnce();
-        if (relocated) bodyObs.disconnect();
+        if (relocated) docObs.disconnect();
       });
-      bodyObs.observe(document.body, { childList: true, subtree: false });
+      docObs.observe(document.documentElement, { childList: true, subtree: true });
+
+      // Belt-and-suspenders: poll for up to 15s in case the observer misses
+      // a deeply-nested injection (shadow DOM, late JS, etc).
+      let polls = 0;
+      const pollId = setInterval(() => {
+        relocateOnce();
+        if (relocated || ++polls > 60) {
+          clearInterval(pollId);
+          if (relocated) docObs.disconnect();
+        }
+      }, 250);
     }
 
     function sync () {

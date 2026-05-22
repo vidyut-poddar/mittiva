@@ -92,29 +92,26 @@
       <div class="service-deck-wrap reveal">
         <div class="service-deck" data-deck>
 
-          <!-- 01 — Social Media Automations -->
-          <article class="service-deck__card" data-deck-card id="social">
+          <!-- 01 — Voice AI -->
+          <article class="service-deck__card" data-deck-card id="voice">
             <div class="service-deck__flipper">
               <!-- BACK -->
               <div class="service-deck__face service-deck__back">
                 <span class="service-deck__back-corner service-deck__back-corner--tl">01</span>
                 <span class="service-deck__back-corner service-deck__back-corner--br">01</span>
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
-                <span class="service-deck__back-mark">Social</span>
+                <span class="service-deck__back-mark">Voice AI</span>
               </div>
               <!-- FRONT -->
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--voice">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">01</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">01</span>
-                <span class="service-deck__cat">Social · Always-on brand</span>
-                <h3 class="service-deck__title-h">Social Media Automations</h3>
-                <p class="service-deck__copy">Posts that go out on time. Captions that sound like you. Comments answered before a competitor gets there.</p>
-                <ul class="service-deck__features">
-                  <li>Multi-platform scheduling</li>
-                  <li>AI-assisted captioning</li>
-                  <li>Auto-response to comments &amp; DMs</li>
-                  <li>Weekly performance digests</li>
-                </ul>
+                <span class="service-deck__cat">Calls · Inbound + outbound</span>
+                <h3 class="service-deck__title-h">Voice AI</h3>
+                <!-- LeadConnector chat widget gets relocated here by main.js
+                     once the loader script injects <chat-widget> at body level.
+                     Keep this element empty — main.js owns its contents. -->
+                <div class="voice-widget-host" data-voice-host aria-live="polite"></div>
               </div>
             </div>
           </article>
@@ -144,24 +141,27 @@
             </div>
           </article>
 
-          <!-- 03 — Voice AI -->
-          <article class="service-deck__card" data-deck-card id="voice">
+          <!-- 03 — Social Media Automations -->
+          <article class="service-deck__card" data-deck-card id="social">
             <div class="service-deck__flipper">
               <div class="service-deck__face service-deck__back">
                 <span class="service-deck__back-corner service-deck__back-corner--tl">03</span>
                 <span class="service-deck__back-corner service-deck__back-corner--br">03</span>
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
-                <span class="service-deck__back-mark">Voice AI</span>
+                <span class="service-deck__back-mark">Social</span>
               </div>
-              <div class="service-deck__face service-deck__front service-deck__front--voice">
+              <div class="service-deck__face service-deck__front">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">03</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">03</span>
-                <span class="service-deck__cat">Calls · Inbound + outbound</span>
-                <h3 class="service-deck__title-h">Voice AI</h3>
-                <!-- LeadConnector chat widget gets relocated here by main.js
-                     once the loader script injects <chat-widget> at body level.
-                     Keep this element empty — main.js owns its contents. -->
-                <div class="voice-widget-host" data-voice-host aria-live="polite"></div>
+                <span class="service-deck__cat">Social · Always-on brand</span>
+                <h3 class="service-deck__title-h">Social Media Automations</h3>
+                <p class="service-deck__copy">Posts that go out on time. Captions that sound like you. Comments answered before a competitor gets there.</p>
+                <ul class="service-deck__features">
+                  <li>Multi-platform scheduling</li>
+                  <li>AI-assisted captioning</li>
+                  <li>Auto-response to comments &amp; DMs</li>
+                  <li>Weekly performance digests</li>
+                </ul>
               </div>
             </div>
           </article>

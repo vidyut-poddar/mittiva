@@ -2915,22 +2915,24 @@ iframe[src*="chat-widget"] {
   display: none !important;
 }
 
-/* Layout of the in-card host. Sits below the title with a sensible block
-   of space, doesn't push past the card edges, and gives the widget a
-   centred frame. */
+/* Layout of the in-card host. Sits below the title with a fixed block
+   of space (NOT min-height — fixed) so the LC widget's internal layout
+   changes never reflow the parent card. contain: layout style paint
+   walls off any size / paint changes inside the host from leaking up to
+   the card; isolation: isolate creates a fresh stacking context. Both
+   together kill the sub-pixel jitter that was happening when the
+   pointer entered the widget area (LC's own hover transitions were
+   propagating into the card's preserve-3d render layer). */
 .voice-widget-host {
   display: block;
   margin: 18px auto 0;
   width: 100%;
-  /* Reserve height so the card body doesn't reflow when the widget
-     mounts — the LC button is roughly 60px tall, but we leave room for
-     an expanded chat panel too. */
-  min-height: 240px;
+  height: 260px;                 /* fixed — no growth = no parent reflow */
   position: relative;
-  /* Re-establish a positioning context so any LC fixed-positioned
-     descendants resolve INSIDE the host instead of escaping to the
-     viewport. A transform value does this without affecting layout. */
-  transform: translateZ(0);
+  contain: layout style paint;   /* isolate layout/paint from the card */
+  isolation: isolate;            /* own stacking context */
+  overflow: visible;             /* widget can overflow if it wants */
+  pointer-events: auto;
   /* Hidden until the card flips active. */
   opacity: 0;
   visibility: hidden;
@@ -2979,16 +2981,16 @@ body.voice-widget-on .voice-widget-host iframe {
 
 /* Mobile: cards are wider on mobile (clamp(200px, 62vw, 280px)) but the
    flip scale of 1.5 pushes the effective width to ~300–420px. The host
-   still needs to fit inside that, so trim the min-height a touch. */
+   still needs to fit inside that, so trim the fixed height a touch. */
 @media (max-width: 768px) {
   .voice-widget-host {
     margin-top: 12px;
-    min-height: 200px;
+    height: 220px;
   }
 }
 @media (max-width: 420px) {
   .voice-widget-host {
     margin-top: 10px;
-    min-height: 180px;
+    height: 200px;
   }
 }

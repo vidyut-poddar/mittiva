@@ -1278,10 +1278,13 @@ section { padding: var(--section-y) 0; position: relative; }
 
 /* ── BIG CLOSER (Lando-style footer headline) ────────────── */
 .big-closer {
-  padding: clamp(80px, 12vw, 180px) 0 0;
+  /* Compressed from the old 80 + 180 stack (260px lead-in) to a tight
+     32 + 72 (104px lead-in) so the closer sits closer to the preceding
+     section without losing the divider rhythm. */
+  padding: clamp(48px, 6vw, 72px) 0 0;
   text-align: left;
   border-top: 1px solid var(--border);
-  margin-top: 80px;
+  margin-top: 32px;
 }
 .big-closer__title {
   font-family: 'Inter Tight', 'Inter', sans-serif;
@@ -2175,21 +2178,27 @@ footer {
 .service-deck-wrap {
   perspective: 2600px;
   perspective-origin: center 55%;
-  /* Tight padding — the deck IS the focal point; no need for a
-     hundred-pixel runway above it. */
-  padding: 24px 0 80px;
+  /* Tight padding above + below — no decorative runway, the deck is
+     close to its neighbours on both axes. */
+  padding: 24px 0 24px;
   position: relative;
 }
 
-/* Section containing the deck gets reduced top padding so the hint +
-   deck sit immediately under the hero, eliminating the dead zone. */
+/* Section containing the deck gets ZERO top/bottom padding — the deck
+   wrap handles its own breathing room, and the next section provides
+   its own top spacing. No double-padding dead zone. */
 section:has(.service-deck-wrap) {
   padding-top: 0;
+  padding-bottom: 0;
 }
 
 .service-deck {
   position: relative;
-  height: 680px;
+  /* Reduced from 680 to 560 — cards are ~476px tall, container only
+     needs ~80px clearance for the centered positioning. The card lift
+     animation goes ABOVE the container, so the bottom half doesn't
+     need extra room. */
+  height: 560px;
   display: block;
   /* preserve-3d propagates the wrapper's perspective into child cards so
      translateZ on individual cards actually moves them in 3D space and
@@ -2596,30 +2605,67 @@ section:has(.service-deck-wrap) {
   background: var(--accent-mid);
 }
 
-/* ── Dealer-style riffle shuffle — runs every 10s on each card, staggered.
-   The card LIFTS off the stack, SWAYS sideways (adjacent cards opposite
-   directions so they cross like a real riffle), SPINS, and pushes forward
-   in Z so it visibly passes OVER its neighbours. Three-keyframe arc keeps
-   the motion smooth — browser interpolates a single graceful curve from
-   rest → peak → rest. Per-keyframe easing tunes the rise vs. fall feel. */
+/* ── Shuffle — reworked to use TRUE 3D depth instead of z-index pops.
+   The old version did z-index: 100 !important on .is-shuffling, which
+   caused an instant stacking jump (visually: cards "glitched through"
+   their neighbours). z-index can't be transitioned, so any change is
+   discrete.
 
-/* Cards on the "left half" of the riffle — sweep LEFT */
+   New approach: drive depth via translateZ on each card. Because the
+   deck has transform-style: preserve-3d, siblings sort by their 3D Z
+   position rather than by z-index. translateZ IS animatable, so the
+   card EMERGES forward from the deck rather than popping above it.
+
+   The choreography itself is also softer: shorter vertical lift, much
+   bigger forward push (Z up to 280px toward the viewer), more graceful
+   curves. Cards now feel "lifted out of the deck toward you" instead
+   of "yanked sideways through the cards above". */
+
+/* Reworked: each card now LEAVES the stack laterally before doing any
+   rotation or depth motion. Sway peaks at ±220px which is more than
+   half a card-width — the card is physically out of the overlap zone
+   with its neighbours by the time it does anything else. No z-index
+   conflict because the cards aren't touching.
+
+   Arc choreography: out → up + spin → back → settle. The card flies
+   out diagonally like a paper airplane, peaks in clear airspace where
+   it can rotate freely, and arcs back to its stack position. */
+
+/* Cards on the "left half" of the riffle — fly OUT to the LEFT */
 @keyframes deckRiffleLeft {
   0% {
     --shuffle-lift: 0px;
     --shuffle-sway: 0px;
     --shuffle-spin: 0deg;
     --shuffle-z: 0px;
-    animation-timing-function: cubic-bezier(0.33, 0, 0.5, 1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  30% {
+    /* Cleared the stack laterally — now ~half a card-width to the left */
+    --shuffle-lift: -55px;
+    --shuffle-sway: -160px;
+    --shuffle-spin: -8deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
   }
   50% {
-    --shuffle-lift: -160px;
-    --shuffle-sway: -52px;
-    --shuffle-spin: -13deg;
-    --shuffle-z: 150px;
-    animation-timing-function: cubic-bezier(0.5, 0, 0.67, 1);
+    /* Peak of the arc — fully out of the deck, free to rotate */
+    --shuffle-lift: -90px;
+    --shuffle-sway: -220px;
+    --shuffle-spin: -16deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  70% {
+    /* Returning — still clear of the deck */
+    --shuffle-lift: -55px;
+    --shuffle-sway: -160px;
+    --shuffle-spin: -8deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
   }
   100% {
+    /* Back in the stack, no rotation, Z=0 */
     --shuffle-lift: 0px;
     --shuffle-sway: 0px;
     --shuffle-spin: 0deg;
@@ -2627,23 +2673,37 @@ section:has(.service-deck-wrap) {
   }
 }
 
-/* Cards on the "right half" — mirrored motion. Adjacent cards sweep
-   opposite directions during the shuffle, recreating two stack halves
-   crossing each other in a riffle. */
+/* Right-half cards — mirrored, fly OUT to the RIGHT. Adjacent cards
+   thus diverge in opposite directions during the shuffle, doubling
+   the physical separation between any two neighbours. */
 @keyframes deckRiffleRight {
   0% {
     --shuffle-lift: 0px;
     --shuffle-sway: 0px;
     --shuffle-spin: 0deg;
     --shuffle-z: 0px;
-    animation-timing-function: cubic-bezier(0.33, 0, 0.5, 1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  30% {
+    --shuffle-lift: -55px;
+    --shuffle-sway: 165px;
+    --shuffle-spin: 9deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
   }
   50% {
-    --shuffle-lift: -170px;
-    --shuffle-sway: 56px;
-    --shuffle-spin: 14deg;
-    --shuffle-z: 150px;
-    animation-timing-function: cubic-bezier(0.5, 0, 0.67, 1);
+    --shuffle-lift: -95px;
+    --shuffle-sway: 230px;
+    --shuffle-spin: 17deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  70% {
+    --shuffle-lift: -55px;
+    --shuffle-sway: 165px;
+    --shuffle-spin: 9deg;
+    --shuffle-z: 60px;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
   }
   100% {
     --shuffle-lift: 0px;
@@ -2653,24 +2713,24 @@ section:has(.service-deck-wrap) {
   }
 }
 
-/* Master easing on the whole animation = smooth ease-in-out
-   (cubic-bezier(0.45, 0, 0.55, 1)). The per-keyframe timing functions
-   above modulate rise vs fall character: the rise from 0%→50% uses a
-   slightly snappier curve, and the fall from 50%→100% uses a gentler
-   decelerating curve, so the card "drops" softer than it rises. */
+/* Four-stage arc: rise (0-25%), peak/cross (25-55%), descent (55-80%),
+   settle (80-100%). Per-stage easing gives each phase its own
+   character — quick lift, suspended drift at the top, gravity-led drop,
+   soft landing. Total 1500ms — slightly slower than before but feels
+   more deliberate. */
 .service-deck__card:nth-child(odd).is-shuffling {
-  animation: deckRiffleLeft 1300ms cubic-bezier(0.45, 0, 0.55, 1);
+  animation: deckRiffleLeft 1500ms linear;
   will-change: transform;
 }
 .service-deck__card:nth-child(even).is-shuffling {
-  animation: deckRiffleRight 1300ms cubic-bezier(0.45, 0, 0.55, 1);
+  animation: deckRiffleRight 1500ms linear;
   will-change: transform;
 }
 
-/* Shuffling cards sit above neighbours so the riffle passes OVER the deck */
-.service-deck__card.is-shuffling {
-  z-index: 100 !important;
-}
+/* CRITICAL: no z-index override. The translateZ in --shuffle-z handles
+   depth ordering in the parent's preserve-3d context. Animating Z means
+   the card SMOOTHLY rises forward through the layers — no instant pop
+   above siblings, no glitch-through. */
 
 /* When ANY card is in the flip sequence, all other cards are locked out:
    • dimmed and blurred (visual focus on the active card)
@@ -2732,66 +2792,72 @@ section:has(.service-deck-wrap) {
   }
 }
 @media (max-width: 700px) {
-  /* Bigger cards + bigger flip scale + bigger type. On mobile a flipped
-     card should fill most of the viewport so the content reads at a
-     comfortable size. */
-  .service-deck-wrap { padding: 56px 0 96px; }
-  .service-deck { min-height: 520px; height: auto; }
-  .service-deck__card { width: clamp(150px, 44vw, 180px); }
+  /* MUCH bigger base cards on mobile — the deck container itself is the
+     focal point of the page, so the cards should actually fill the
+     viewport's horizontal real estate rather than sit as small chips. */
+  .service-deck-wrap { padding: 32px 0 96px; }
+  .service-deck { min-height: 640px; height: auto; }
+  /* Card width scales with viewport: 62vw on a 390px phone = 242px,
+     and clamped between 200-280px so it never gets too small or too big. */
+  .service-deck__card { width: clamp(200px, 62vw, 280px); }
 
-  /* Tighter fan so 8 cards still fit on a narrow viewport */
-  .service-deck__card:nth-child(1) { --fan-x: -85px;  --fan-r: -7deg; }
-  .service-deck__card:nth-child(2) { --fan-x: -61px;  --fan-r: -5deg; }
-  .service-deck__card:nth-child(3) { --fan-x: -37px;  --fan-r: -3deg; }
-  .service-deck__card:nth-child(4) { --fan-x: -13px;  --fan-r: -1deg; }
-  .service-deck__card:nth-child(5) { --fan-x: 13px;   --fan-r: 1deg; }
-  .service-deck__card:nth-child(6) { --fan-x: 37px;   --fan-r: 3deg; }
-  .service-deck__card:nth-child(7) { --fan-x: 61px;   --fan-r: 5deg; }
-  .service-deck__card:nth-child(8) { --fan-x: 85px;   --fan-r: 7deg; }
+  /* Tight fan — phone is narrow so cards must heavily overlap when fanned.
+     Even at max fan-x ±95, two cards never sit further than 190px apart
+     on centre, leaving plenty of room for the 250px-wide card body. */
+  .service-deck__card:nth-child(1) { --fan-x: -95px;  --fan-r: -8deg; }
+  .service-deck__card:nth-child(2) { --fan-x: -68px;  --fan-r: -6deg; }
+  .service-deck__card:nth-child(3) { --fan-x: -41px;  --fan-r: -3.5deg; }
+  .service-deck__card:nth-child(4) { --fan-x: -14px;  --fan-r: -1deg; }
+  .service-deck__card:nth-child(5) { --fan-x: 14px;   --fan-r: 1deg; }
+  .service-deck__card:nth-child(6) { --fan-x: 41px;   --fan-r: 3.5deg; }
+  .service-deck__card:nth-child(7) { --fan-x: 68px;   --fan-r: 6deg; }
+  .service-deck__card:nth-child(8) { --fan-x: 95px;   --fan-r: 8deg; }
 
   /* Phase 1 — elevated lift is shorter on mobile (less vertical room) */
   .service-deck__card.is-elevated {
-    transform: translate(-50%, -130%) scale(1.04) rotateZ(0) !important;
+    transform: translate(-50%, -115%) scale(1.04) rotateZ(0) !important;
   }
 
-  /* Phase 3 — flipped card scales up almost to viewport width so the
-     content is genuinely readable, not a postage stamp. */
+  /* Phase 3 — flipped scale tuned for the larger base card. On a 390px
+     phone, 242px card × 1.5 = 363px, leaving ~14px each side — fills
+     the viewport without clipping. */
   .service-deck__card.is-flipped {
-    transform: translate(-50%, -50%) scale(1.9) rotateZ(0) !important;
+    transform: translate(-50%, -50%) scale(1.5) rotateZ(0) !important;
   }
 
-  /* Front face: smaller base type because the 1.9× scale multiplies it
-     up to readable size at view time. Calculated so 17px × 1.9 ≈ 32px
-     visible — comfortable phone reading. */
-  .service-deck__front { padding: 26px 18px 18px; }
-  .service-deck__front-corner { font-size: 13px; }
-  .service-deck__front-corner--tl { top: 16px; left: 18px; }
-  .service-deck__front-corner--br { bottom: 16px; right: 18px; }
+  /* Front face: type sized so content reads comfortably at the 1.5× scale.
+     A 19px title × 1.5 ≈ 28px visible — phone-comfortable reading. */
+  .service-deck__front { padding: 30px 22px 22px; }
+  .service-deck__front-corner { font-size: 15px; }
+  .service-deck__front-corner--tl { top: 18px; left: 22px; }
+  .service-deck__front-corner--br { bottom: 18px; right: 22px; }
   .service-deck__cat {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    margin: 22px 0 8px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    margin: 24px 0 10px;
   }
-  .service-deck__title-h { font-size: 17px; margin: 0 0 10px; line-height: 1.12; }
-  .service-deck__copy { font-size: 11px; line-height: 1.5; margin: 0 0 12px; }
-  .service-deck__features { gap: 5px; }
-  .service-deck__features li { font-size: 9.5px; line-height: 1.4; padding-left: 11px; }
-  .service-deck__features li::before { top: 7px; width: 7px; }
+  .service-deck__title-h { font-size: 19px; margin: 0 0 12px; line-height: 1.15; }
+  .service-deck__copy { font-size: 12px; line-height: 1.55; margin: 0 0 14px; }
+  .service-deck__features { gap: 6px; }
+  .service-deck__features li { font-size: 11px; line-height: 1.4; padding-left: 12px; }
+  .service-deck__features li::before { top: 8px; width: 8px; }
 }
 
-/* Extra-small phones: even tighter so deck still fits comfortably */
+/* Extra-small phones (iPhone SE etc.) — tighter fan, slightly smaller
+   card so the deck still fits cleanly. */
 @media (max-width: 380px) {
-  .service-deck__card { width: 140px; }
-  .service-deck__card:nth-child(1) { --fan-x: -70px; }
-  .service-deck__card:nth-child(2) { --fan-x: -50px; }
-  .service-deck__card:nth-child(3) { --fan-x: -30px; }
-  .service-deck__card:nth-child(4) { --fan-x: -10px; }
-  .service-deck__card:nth-child(5) { --fan-x: 10px; }
-  .service-deck__card:nth-child(6) { --fan-x: 30px; }
-  .service-deck__card:nth-child(7) { --fan-x: 50px; }
-  .service-deck__card:nth-child(8) { --fan-x: 70px; }
+  .service-deck { min-height: 580px; }
+  .service-deck__card { width: clamp(180px, 66vw, 220px); }
+  .service-deck__card:nth-child(1) { --fan-x: -78px;  --fan-r: -7deg; }
+  .service-deck__card:nth-child(2) { --fan-x: -56px;  --fan-r: -5deg; }
+  .service-deck__card:nth-child(3) { --fan-x: -33px;  --fan-r: -3deg; }
+  .service-deck__card:nth-child(4) { --fan-x: -11px;  --fan-r: -1deg; }
+  .service-deck__card:nth-child(5) { --fan-x: 11px;   --fan-r: 1deg; }
+  .service-deck__card:nth-child(6) { --fan-x: 33px;   --fan-r: 3deg; }
+  .service-deck__card:nth-child(7) { --fan-x: 56px;   --fan-r: 5deg; }
+  .service-deck__card:nth-child(8) { --fan-x: 78px;   --fan-r: 7deg; }
   .service-deck__card.is-flipped {
-    transform: translate(-50%, -50%) scale(2.05) rotateZ(0) !important;
+    transform: translate(-50%, -50%) scale(1.55) rotateZ(0) !important;
   }
 }
 

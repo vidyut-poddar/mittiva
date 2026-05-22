@@ -587,9 +587,10 @@
           // mid-wave the remaining cards abort instead of swooping around.
           if (anyFlipped() || isCardHovered()) return;
           card.classList.add('is-shuffling');
-          // 1300ms matches the keyframe duration; remove just after end
-          setTimeout(() => card.classList.remove('is-shuffling'), 1320);
-        }, i * 140);
+          // 1500ms matches the keyframe duration (smoother + slower than
+          // before for the new 4-stage arc); remove just after end
+          setTimeout(() => card.classList.remove('is-shuffling'), 1520);
+        }, i * 160);
       });
     }
     setInterval(runShuffle, 10000);

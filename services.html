@@ -11,8 +11,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" /></noscript>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -27,7 +27,15 @@
       <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
       <span>Mittiva</span>
     </a>
-    <div class="nav__actions">
+    <ul class="nav__links" role="list" aria-label="Primary navigation">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html" class="is-current" aria-current="page">Services</a></li>
+      <li><a href="founders.html">Founders</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+      <div class="nav__actions">
       <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -39,6 +47,15 @@
       </button>
     </div>
   </header>
+
+  <!-- DESKTOP STICKY CTA -->
+  <div class="cta-strip" role="region" aria-label="Start a conversation">
+    <span class="cta-strip__text">Got an idea taking up your time?</span>
+    <a href="contact.html" class="cta-strip__cta">Start a conversation
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
 
   <nav class="menu-overlay" aria-label="Main menu">
     <ul class="menu-overlay__links">
@@ -175,18 +192,42 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">Conversation AI</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--conversation">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">04</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">04</span>
                 <span class="service-deck__cat">Chat · WhatsApp · Web</span>
                 <h3 class="service-deck__title-h">Conversation AI</h3>
-                <p class="service-deck__copy">Your business in a chat window — answering products, pricing, hours and policies the moment they're asked.</p>
-                <ul class="service-deck__features">
-                  <li>WhatsApp, web chat, Instagram unified</li>
-                  <li>Trained on your menu &amp; policies</li>
-                  <li>Clean escalation to a human</li>
-                  <li>Lead capture into your CRM</li>
-                </ul>
+                <!-- Editorial "cover" CTA — Mitti's portrait fills the lower half
+                     of the card, magazine style: vertical edition number, LIVE
+                     badge, italic name caption, and a thin action bar at the
+                     very bottom. The whole figure is clickable; clicking opens
+                     the floating chat panel (.mitti-panel) further down the
+                     document, which flies in from the right edge. -->
+                <button class="talk-to-mitti" data-talk-to-mitti type="button" aria-label="Talk to Mitti">
+                  <figure class="talk-to-mitti__cover">
+                    <img class="talk-to-mitti__img" src="assets/mitti-avatar.png" alt="" loading="lazy" />
+                    <span class="talk-to-mitti__grain" aria-hidden="true"></span>
+                    <span class="talk-to-mitti__vignette" aria-hidden="true"></span>
+
+                    <span class="talk-to-mitti__status" aria-hidden="true">
+                      <span class="talk-to-mitti__status-dot"></span>
+                      Live
+                    </span>
+
+                    <figcaption class="talk-to-mitti__caption">
+                      <span class="talk-to-mitti__caption-kicker">A conversation with</span>
+                      <span class="talk-to-mitti__caption-name"><em>Mitti</em><span class="talk-to-mitti__caption-dot">.</span></span>
+                      <span class="talk-to-mitti__caption-sub">Mittiva's resident AI · always on</span>
+                    </figcaption>
+                  </figure>
+
+                  <span class="talk-to-mitti__bar">
+                    <span class="talk-to-mitti__bar-label">Open the conversation</span>
+                    <span class="talk-to-mitti__bar-arrow" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    </span>
+                  </span>
+                </button>
               </div>
             </div>
           </article>
@@ -297,6 +338,29 @@
   </section>
 
 
+  <!-- FLOATING MITTI CHAT PANEL — sits off-screen right by default,
+       slides in when body.mitti-on is set. The conversation chat-widget
+       (LC loader) is relocated into this panel by main.js. -->
+  <aside class="mitti-panel" data-mitti-panel aria-hidden="true" aria-label="Chat with Mitti">
+    <header class="mitti-panel__head">
+      <div class="mitti-panel__id">
+        <span class="mitti-panel__name-line1">Mitti</span>
+        <span class="mitti-panel__name-line2">
+          <span class="mitti-panel__pulse-dot" aria-hidden="true"></span>
+          Online · Mittiva's AI
+        </span>
+      </div>
+      <button class="mitti-panel__close" data-mitti-close type="button" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="mitti-panel__body">
+      <!-- LC chat-widget gets relocated here by main.js once the loader
+           injects it. Keep this element empty — main.js owns its contents. -->
+      <div class="conversation-widget-host" data-conversation-host aria-live="polite"></div>
+    </div>
+  </aside>
+
   <section class="big-closer">
     <div class="container">
       <h2 class="stacked-title big-closer__title">
@@ -370,6 +434,16 @@
     data-widget-id="6a0fd05bb47a945bd7d13bd3"
     async></script>
 
+  <!-- NOTE: Conversation AI's LC loader is NOT injected at page load.
+       main.js (initMittiPanel) lazy-injects it the first time the user
+       clicks the Talk-to-Mitti CTA. This keeps the two LC chat-widgets
+       from racing each other at boot — the Voice card stays rock-solid. -->
+
   <script src="main.js" defer></script>
+  <!-- MOBILE STICKY CTA -->
+  <a href="contact.html" class="mobile-cta" aria-label="Contact us">Contact us
+    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+
 </body>
 </html>

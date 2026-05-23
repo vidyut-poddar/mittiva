@@ -53,7 +53,7 @@
      pick the closest token, or extend the scale here.
      2nd pass: max caps reduced for breathable desktop reading. */
   --fs-micro:    10px;                      /* nav pills, intro label */
-  --fs-eyebrow:  11px;                      /* JetBrains Mono labels  */
+  --fs-eyebrow:  11px;                      /* uppercase Inter labels */
   --fs-body-sm:  15px;                      /* small body, cards      */
   --fs-body:     16px;                      /* default body           */
   --fs-lede:     clamp(17px, 1.3vw, 19px);  /* opening paragraphs     */
@@ -128,9 +128,9 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; }
 
 /* ── TYPOGRAPHY ──────────────────────────────────────────── */
-h1, h2, h3, h4, h5, .display {
+h1, h2, h3, h4, h5, h6, .display {
   font-family: 'Inter Tight', 'Inter', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: var(--tr-heading);
   line-height: var(--lh-tight);
   margin: 0 0 0.5em;
@@ -143,8 +143,9 @@ h1, h2, h3, h4, h5, .display {
 }
 h1 { font-size: var(--fs-h1); font-weight: 800; line-height: var(--lh-display); letter-spacing: var(--tr-display); }
 h2 { font-size: var(--fs-h2); font-weight: 800; line-height: var(--lh-tight); }
-h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); }
-h4 { font-size: var(--fs-h4); line-height: var(--lh-snug); }
+h3 { font-size: var(--fs-h3); font-weight: 800; line-height: var(--lh-snug); }
+h4 { font-size: var(--fs-h4); font-weight: 800; line-height: var(--lh-snug); }
+h5, h6 { font-weight: 800; line-height: var(--lh-snug); }
 
 p { margin: 0 0 1em; color: var(--text); }
 .lede {
@@ -155,7 +156,7 @@ p { margin: 0 0 1em; color: var(--text); }
   letter-spacing: var(--tr-body);
 }
 .eyebrow {
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   font-weight: 500;
   letter-spacing: var(--tr-eyebrow);
@@ -287,7 +288,7 @@ section { padding: var(--section-y) 0; position: relative; }
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -389,7 +390,7 @@ section { padding: var(--section-y) 0; position: relative; }
   background-clip: text;
 }
 .menu-overlay__links a .num {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   vertical-align: super;
   letter-spacing: var(--tr-eyebrow);
@@ -422,7 +423,7 @@ section { padding: var(--section-y) 0; position: relative; }
 .menu-overlay__meta {
   display: grid;
   gap: 8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -542,7 +543,7 @@ section { padding: var(--section-y) 0; position: relative; }
   position: absolute;
   bottom: var(--gutter);
   left: var(--gutter);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -579,7 +580,7 @@ section { padding: var(--section-y) 0; position: relative; }
   margin-bottom: 64px;
 }
 .hero__caption {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -658,7 +659,7 @@ section { padding: var(--section-y) 0; position: relative; }
 }
 .hero-rail__card:hover::before { opacity: 1; }
 .hero-rail__card-stamp {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -693,7 +694,7 @@ section { padding: var(--section-y) 0; position: relative; }
   position: absolute;
   bottom: 16px;
   right: var(--gutter);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -811,7 +812,7 @@ section { padding: var(--section-y) 0; position: relative; }
   margin-bottom: 80px;
 }
 .service-card__num {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   color: var(--text-muted);
@@ -878,7 +879,7 @@ section { padding: var(--section-y) 0; position: relative; }
 }
 .story__chapter:last-child { margin-bottom: 0; }
 .story__chapter-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -974,7 +975,7 @@ section { padding: var(--section-y) 0; position: relative; }
 .founder-feature__media-placeholder {
   position: relative;
   z-index: 1;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -987,7 +988,7 @@ section { padding: var(--section-y) 0; position: relative; }
   right: 20px;
   display: flex;
   justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1016,7 +1017,7 @@ section { padding: var(--section-y) 0; position: relative; }
   background-clip: text;
 }
 .founder-feature__media-foot .caption {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1032,7 +1033,7 @@ section { padding: var(--section-y) 0; position: relative; }
   padding-top: 8px;
 }
 .founder-feature__eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1104,7 +1105,7 @@ section { padding: var(--section-y) 0; position: relative; }
   gap: 12px 32px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1137,7 +1138,7 @@ section { padding: var(--section-y) 0; position: relative; }
   content: attr(data-label);
   position: absolute;
   top: 0; left: -8px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1197,7 +1198,7 @@ section { padding: var(--section-y) 0; position: relative; }
   display: grid;
   place-items: center;
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1214,7 +1215,7 @@ section { padding: var(--section-y) 0; position: relative; }
 }
 .founder-card__body { padding: 32px; }
 .founder-card__role {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1323,7 +1324,7 @@ footer {
   margin: 0;
 }
 .footer__col h4 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1348,7 +1349,7 @@ footer {
   align-items: center;
   font-size: var(--fs-eyebrow);
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
 }
@@ -1399,7 +1400,7 @@ footer {
 .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1436,7 +1437,7 @@ footer {
 }
 .form__msg.is-show { display: block; }
 .form__hint {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1452,7 +1453,7 @@ footer {
   position: relative;
 }
 .page-head__crumb {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1501,7 +1502,7 @@ footer {
   background-clip: text;
 }
 .service-detail__cat {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1636,7 +1637,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 20px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1675,7 +1676,7 @@ footer {
   top: 96px;
   right: var(--gutter);
   z-index: 5;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1723,7 +1724,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1788,7 +1789,7 @@ footer {
   gap: 8px;
 }
 .h-card__tag {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-micro);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1803,7 +1804,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -1992,7 +1993,7 @@ footer {
   padding-top: 32px;
 }
 .statement__eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -2052,7 +2053,7 @@ footer {
   background-clip: text;
 }
 .code-block__label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -2088,7 +2089,7 @@ footer {
   position: relative;
 }
 .code-block__example-tag {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -2315,6 +2316,23 @@ section:has(.service-deck-wrap) {
     rotateZ(calc(var(--fan-r) + var(--shuffle-spin)));
 }
 
+/* ── FAN-OUT TRIGGER C: scroll-into-view (mobile only) ──
+   Touch devices have no hover, so Trigger A never fires — the deck
+   stays as a stack and the user can't see the eight cards. JS uses
+   IntersectionObserver to add .is-in-view to the wrap when the deck
+   enters the viewport on mobile, which fires this rule and fans the
+   deck out automatically. Gated to no-active-card so it doesn't
+   conflict with the flip sequence (Trigger B handles that). */
+.service-deck-wrap.is-in-view:not(.is-locked) .service-deck:not(:has(.is-elevated, .is-rotated, .is-flipped)) .service-deck__card {
+  transform:
+    translate3d(
+      calc(-50% + var(--fan-x) + var(--shuffle-sway)),
+      calc(-50% + var(--shuffle-lift)),
+      var(--shuffle-z)
+    )
+    rotateZ(calc(var(--fan-r) + var(--shuffle-spin)));
+}
+
 /* ── HOVER LIFT — only fires when NO card is active.
    Two-layer gate:
      1) .service-deck-wrap.is-locked → JS adds this synchronously on
@@ -2474,7 +2492,7 @@ section:has(.service-deck-wrap) {
 }
 .service-deck__back-corner {
   position: absolute;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.2em;
   color: var(--accent-mid);
@@ -2543,7 +2561,7 @@ section:has(.service-deck-wrap) {
 .service-deck__front-corner--br { bottom: 22px; right: 28px; transform: rotate(180deg); }
 
 .service-deck__cat {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -2766,7 +2784,7 @@ section:has(.service-deck-wrap) {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: var(--fs-eyebrow);
   letter-spacing: var(--tr-eyebrow);
   text-transform: uppercase;
@@ -2993,4 +3011,773 @@ body.voice-widget-on .voice-widget-host iframe {
     margin-top: 10px;
     height: 200px;
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CONVERSATION AI — "Talk to Mitti" CTA + floating chat panel
+   The widget no longer lives inside the deck card. Instead the card
+   shows an animated avatar CTA; clicking it slides the deck left and
+   flies the chat panel in from the right edge. The actual LC
+   chat-widget is hosted inside .mitti-panel.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* The front face of card 04 — flex column so the editorial CTA can pin
+   to the BOTTOM via margin-top:auto. The title stack stays at the top. */
+.service-deck__front--conversation {
+  padding: clamp(36px, 4vw, 48px) clamp(14px, 2vw, 20px) clamp(14px, 1.6vw, 18px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  gap: 0;
+}
+.service-deck__front--conversation > .service-deck__cat,
+.service-deck__front--conversation > .service-deck__title-h {
+  flex: 0 0 auto;
+}
+/* The CTA's own bottom action bar holds the arrow — having the deck's
+   bottom-right "04" corner numeral on top of it is a visual collision.
+   Suppress it just on card 04; the top-left "04" still anchors the card. */
+.service-deck__front--conversation .service-deck__front-corner--br {
+  display: none;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TALK-TO-MITTI — editorial cover CTA pinned to the bottom of the card
+   Layout: portrait image (fills the rest of the card) + thin action bar
+   ════════════════════════════════════════════════════════════════════ */
+.talk-to-mitti {
+  --mitti-accent: var(--accent-bright, #b0c0d8);
+  --mitti-ink:    #fff;
+  margin-top: auto;          /* shoves CTA to the bottom of the card */
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #0a0e1c;
+  border: 1px solid rgba(176, 192, 216, 0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  isolation: isolate;
+  text-align: left;
+  box-shadow:
+    0 14px 38px -14px rgba(4, 6, 14, 0.65),
+    0 0 0 1px rgba(176, 192, 216, 0.06) inset;
+  transition:
+    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 360ms ease,
+    border-color 320ms ease;
+  /* Entrance — slides up + fades in shortly after the card flips face-up */
+  animation: mitti-cta-in 760ms cubic-bezier(0.32, 0.72, 0, 1) 280ms both;
+}
+@keyframes mitti-cta-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.talk-to-mitti:hover {
+  transform: translateY(-3px);
+  border-color: rgba(176, 192, 216, 0.36);
+  box-shadow:
+    0 22px 52px -14px rgba(4, 6, 14, 0.80),
+    0 0 0 1px rgba(176, 192, 216, 0.20) inset;
+}
+.talk-to-mitti:active { transform: translateY(-1px); }
+.talk-to-mitti:focus-visible {
+  outline: 2px solid var(--mitti-accent);
+  outline-offset: 3px;
+}
+
+/* ── COVER — the portrait image with editorial overlays ───────────── */
+.talk-to-mitti__cover {
+  position: relative;
+  margin: 0;
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(60, 50, 40, 0.5), transparent 60%),
+    linear-gradient(180deg, #1a1228, #0a0a14);
+}
+.talk-to-mitti__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 22%;   /* show Mitti's face, not the chin */
+  /* Slow Ken Burns — barely there, but the portrait never feels static */
+  animation: mitti-kenburns 18s ease-in-out infinite alternate;
+}
+@keyframes mitti-kenburns {
+  from { transform: scale(1)     translate(0, 0); }
+  to   { transform: scale(1.06)  translate(-1.4%, -1%); }
+}
+
+/* Film grain — barely-there texture for the editorial-print feel */
+.talk-to-mitti__grain {
+  position: absolute;
+  inset: -10%;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+  background-image:
+    repeating-radial-gradient(circle at 0% 0%, rgba(255,255,255,0.06) 0 1px, transparent 1px 3px),
+    repeating-radial-gradient(circle at 100% 100%, rgba(0,0,0,0.10) 0 1px, transparent 1px 3px);
+  animation: mitti-grain 1.4s steps(6) infinite;
+}
+@keyframes mitti-grain {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-2%, 1%); }
+  40%  { transform: translate(1%, -2%); }
+  60%  { transform: translate(2%, 2%); }
+  80%  { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Bottom-darkening gradient so the caption stays legible */
+.talk-to-mitti__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgba(4, 6, 14, 0.0) 0%,
+      rgba(4, 6, 14, 0.0) 38%,
+      rgba(4, 6, 14, 0.55) 78%,
+      rgba(4, 6, 14, 0.88) 100%);
+}
+
+/* LIVE badge — top-right of the portrait */
+.talk-to-mitti__status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 8px;
+  background: rgba(4, 6, 14, 0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  z-index: 3;
+}
+.talk-to-mitti__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4a4a;
+  box-shadow: 0 0 0 0 rgba(255, 74, 74, 0.6);
+  animation: mitti-live-pulse 1.6s ease-out infinite;
+}
+@keyframes mitti-live-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(255, 74, 74, 0.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(255, 74, 74, 0);    }
+  100% { box-shadow: 0 0 0 0   rgba(255, 74, 74, 0);    }
+}
+
+/* Caption — editorial typography over the bottom of the image */
+.talk-to-mitti__caption {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  color: var(--mitti-ink);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.talk-to-mitti__caption-kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.talk-to-mitti__caption-name {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1;
+  letter-spacing: -0.020em;
+  color: #fff;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: baseline;
+  /* Tiny right pad so the closing glyph + period never kiss the cover edge */
+  padding-right: 4px;
+}
+.talk-to-mitti__caption-name em {
+  /* Upright (no italic). We only load Inter Tight 800 upright — synthesized
+     italic was widening the glyphs and clipping the period. */
+  font-style: normal;
+  font-weight: 800;
+  /* Warm "lantern" tone pulled from Mitti's portrait */
+  background: linear-gradient(180deg, #ffe7c8, #ffb678);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.talk-to-mitti__caption-dot {
+  color: var(--mitti-accent);
+  -webkit-text-fill-color: var(--mitti-accent);
+  font-style: normal;
+  margin-left: 1px;
+}
+.talk-to-mitti__caption-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+  letter-spacing: -0.003em;
+  margin-top: 3px;
+}
+
+/* ── BOTTOM ACTION BAR ────────────────────────────────────────────── */
+.talk-to-mitti__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px 11px 14px;
+  background: #0a0e1c;
+  border-top: 1px solid rgba(176, 192, 216, 0.16);
+}
+.talk-to-mitti__bar-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.talk-to-mitti__bar-arrow {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gradient-titanium, linear-gradient(135deg, #b0c0d8, #6a7889));
+  color: #04060E;
+  transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.talk-to-mitti__bar-arrow svg { width: 13px; height: 13px; }
+.talk-to-mitti:hover .talk-to-mitti__bar-arrow { transform: translateX(4px); }
+
+/* Light-mode tweaks */
+[data-theme="light"] .talk-to-mitti {
+  background: #1a1228;     /* keep portrait area dark even in light mode */
+  border-color: rgba(42, 58, 74, 0.22);
+}
+[data-theme="light"] .talk-to-mitti__bar {
+  background: #eef4fa;
+  border-top-color: rgba(42, 58, 74, 0.14);
+}
+[data-theme="light"] .talk-to-mitti__bar-label { color: var(--text); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .talk-to-mitti,
+  .talk-to-mitti__img,
+  .talk-to-mitti__grain,
+  .talk-to-mitti__status-dot { animation: none !important; }
+}
+
+/* ── FLOATING MITTI CHAT PANEL ────────────────────────────────────── */
+/* Lives off-screen right by default. body.mitti-on slides it in.
+   z-index sits ABOVE the nav (typical 100) so nothing intercepts clicks
+   on the chat surface. */
+.mitti-panel {
+  position: fixed;
+  top: 50%;
+  right: 32px;
+  z-index: 200;
+  width: clamp(360px, 30vw, 440px);
+  height: min(680px, calc(100vh - 48px));
+  background: var(--bg-elev, #0a0e1c);
+  border: 1px solid rgba(176, 192, 216, 0.18);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  box-shadow:
+    0 30px 80px -18px rgba(4, 6, 14, 0.65),
+    0 0 0 1px rgba(176, 192, 216, 0.08) inset;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(calc(100% + 64px), -50%);
+  transition:
+    transform 640ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 380ms ease,
+    visibility 0s linear 640ms;
+}
+[data-theme="light"] .mitti-panel {
+  background: #f4f7fb;
+  border-color: rgba(42, 58, 74, 0.16);
+}
+
+body.mitti-on .mitti-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+  transition:
+    transform 720ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 320ms ease 80ms,
+    visibility 0s linear 0s;
+}
+
+/* Panel header — centered name + close button on the right.
+   Grid layout with a phantom column on the left equal to the close-button
+   width, so the centre column truly centres horizontally. */
+.mitti-panel__head {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(176, 192, 216, 0.12);
+  background: linear-gradient(180deg,
+              rgba(176, 192, 216, 0.06),
+              rgba(176, 192, 216, 0));
+  flex: 0 0 auto;
+}
+.mitti-panel__id {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+.mitti-panel__name-line1 {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: -0.008em;
+  color: var(--text);
+}
+.mitti-panel__name-line2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: -0.003em;
+}
+.mitti-panel__pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4cd980;
+  box-shadow: 0 0 6px rgba(76, 217, 128, 0.7);
+  animation: mitti-dot-blink 2.2s ease-in-out infinite;
+}
+.mitti-panel__close {
+  grid-column: 3;
+  justify-self: end;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(176, 192, 216, 0.08);
+  border: 1px solid rgba(176, 192, 216, 0.16);
+  color: var(--text);
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background 200ms ease, transform 200ms ease, border-color 200ms ease;
+}
+.mitti-panel__close:hover {
+  background: rgba(176, 192, 216, 0.15);
+  border-color: rgba(176, 192, 216, 0.30);
+  transform: rotate(90deg);
+}
+.mitti-panel__close svg { width: 16px; height: 16px; }
+
+/* Panel body — holds the conversation widget.
+   overflow-y:auto so a tall LC widget can scroll inside the panel instead
+   of getting clipped at the bottom (LC widgets often have a fixed-pixel
+   internal height for header + chat area + input bar; we cannot squash
+   that, so we let the user scroll to reach the input). */
+.mitti-panel__body {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+}
+
+/* Conversation widget host — fills the panel body and centres the widget */
+.conversation-widget-host {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  pointer-events: auto;
+  /* No `contain` / `isolation` here — they were silently blocking
+     pointer events on the chat widget's inner iframe in some browsers. */
+}
+
+/* Reveal the LC chat-widget INSIDE the mitti panel.
+   The universal `chat-widget { display: none !important }` rule above
+   keeps it hidden everywhere else, so we only need to un-hide it here.
+   We DO NOT force a height — the LC widget renders at the height LC has
+   configured for it, and the panel body scrolls if that's larger. We
+   only override LC's default position:fixed (its floating-button
+   pinning) so the widget sits in the panel's flow. */
+.mitti-panel .conversation-widget-host chat-widget,
+.mitti-panel .conversation-widget-host chat-widget-floating-button,
+.mitti-panel .conversation-widget-host lc-chat-widget,
+.mitti-panel .conversation-widget-host chat-frame,
+.mitti-panel .conversation-widget-host iframe[src*="leadconnector"],
+.mitti-panel .conversation-widget-host iframe[src*="chat-widget"] {
+  display: block !important;
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  border: 0 !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+}
+.mitti-panel .conversation-widget-host iframe {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  border: 0 !important;
+  pointer-events: auto !important;
+}
+
+/* ── BODY.MITTI-ON STATE — deck shifts left so panel has room ─────── */
+.service-deck-wrap {
+  transition: transform 720ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+@media (min-width: 980px) {
+  body.mitti-on .service-deck-wrap {
+    transform: translateX(min(-180px, calc((100vw - 380px - 64px) * -0.20)));
+  }
+}
+
+/* Mobile: no room to shift. Deck shrinks & dims while the panel
+   takes over the bottom of the screen. */
+@media (max-width: 979px) {
+  .mitti-panel {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    height: min(70vh, 540px);
+    transform: translateY(calc(100% + 32px));
+    border-radius: 22px;
+  }
+  body.mitti-on .mitti-panel {
+    transform: translateY(0);
+  }
+  body.mitti-on .service-deck-wrap {
+    transform: scale(0.94);
+    opacity: 0.55;
+    filter: blur(0.5px);
+    transition:
+      transform 540ms cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 360ms ease,
+      filter 360ms ease;
+  }
+  /* Hide the mobile sticky CTA so it doesn't sit on top of the panel */
+  body.mitti-on .mobile-cta { display: none !important; }
+}
+
+/* Tiny phones — make the panel a bit more compact */
+@media (max-width: 420px) {
+  .mitti-panel {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    height: 78vh;
+  }
+  .talk-to-mitti {
+    padding: 10px 16px 10px 10px;
+    gap: 12px;
+  }
+  .talk-to-mitti__avatar { width: 46px; height: 46px; }
+  .talk-to-mitti__line2  { font-size: 19px; }
+}
+
+/* Reduced motion — flatten the slide-in to a fade */
+@media (prefers-reduced-motion: reduce) {
+  .mitti-panel,
+  .service-deck-wrap { transition: opacity 220ms ease !important; }
+  .mitti-panel { transform: translate(0, -50%) !important; }
+  @media (max-width: 979px) { .mitti-panel { transform: translateY(0) !important; } }
+}
+
+/* ============================================================
+   BRAND v2 (May 2026 brand-guide alignment)
+   – ::selection contrast
+   – Persistent desktop horizontal nav
+   – Sticky "Start a Conversation" CTA bar (desktop)
+   – Fixed "Contact Us" bottom CTA (mobile)
+   – 360 / 375 / 414 responsive tightening
+   ============================================================ */
+
+/* ── ::SELECTION ─────────────────────────────────────────── */
+::selection {
+  background: var(--accent-bright);
+  color: var(--bg-dark);
+  text-shadow: none;
+  -webkit-text-fill-color: var(--bg-dark);
+}
+::-moz-selection {
+  background: var(--accent-bright);
+  color: var(--bg-dark);
+  text-shadow: none;
+}
+[data-theme="light"] ::selection {
+  background: var(--accent-dark);
+  color: var(--bg-light);
+  -webkit-text-fill-color: var(--bg-light);
+}
+[data-theme="light"] ::-moz-selection {
+  background: var(--accent-dark);
+  color: var(--bg-light);
+}
+
+/* ── DESKTOP HORIZONTAL NAV LINKS ─────────────────────────── */
+.nav__links {
+  display: none;          /* shown ≥980px */
+  list-style: none;
+  margin: 0;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(12, 16, 32, 0.6);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid var(--border);
+  align-items: center;
+  gap: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+}
+[data-theme="light"] .nav__links { background: rgba(238, 244, 250, 0.7); }
+.nav__links li { list-style: none; }
+.nav__links a {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--text);
+  transition: background 240ms var(--ease), color 240ms var(--ease);
+  white-space: nowrap;
+}
+.nav__links a:hover {
+  background: rgba(176, 192, 216, 0.10);
+  color: var(--accent-bright);
+}
+[data-theme="light"] .nav__links a:hover {
+  background: rgba(42, 58, 74, 0.06);
+  color: var(--accent-dark);
+}
+.nav__links a.is-current {
+  background: var(--gradient-titanium);
+  color: var(--bg-dark);
+}
+
+@media (min-width: 980px) {
+  .nav__links { display: inline-flex; }
+  .nav__pill--menu { display: none !important; }
+  .menu-overlay { display: none !important; }
+}
+@media (max-width: 979px) {
+  .nav__links { display: none !important; }
+}
+
+/* ── DESKTOP STICKY CTA STRIP ─────────────────────────────── */
+.cta-strip {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  z-index: 75;
+  display: none;          /* shown ≥980px on non-contact pages */
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 10px var(--gutter);
+  background: linear-gradient(180deg, rgba(4, 6, 14, 0.86), rgba(4, 6, 14, 0.72));
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-bottom: 1px solid var(--border);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.003em;
+  transition: background 600ms var(--ease), border-color 400ms var(--ease);
+}
+[data-theme="light"] .cta-strip {
+  background: linear-gradient(180deg, rgba(238, 244, 250, 0.92), rgba(238, 244, 250, 0.78));
+}
+.cta-strip__text {
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.cta-strip__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  background: var(--gradient-titanium);
+  color: #04060E;
+  line-height: 1;
+  transition: transform 240ms var(--ease), box-shadow 260ms var(--ease);
+}
+.cta-strip__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -12px rgba(176, 192, 216, 0.6);
+}
+.cta-strip__cta .arrow {
+  width: 14px; height: 14px;
+  transition: transform 240ms var(--ease);
+}
+.cta-strip__cta:hover .arrow { transform: translateX(4px); }
+
+@media (min-width: 980px) {
+  body:not([data-page="contact"]) .cta-strip { display: flex; }
+  /* Make sure the hero headline never hides behind the cta-strip */
+  body:not([data-page="contact"]) .hero {
+    padding-top: clamp(168px, 14vw, 224px);
+  }
+  body:not([data-page="contact"]) .hero.hero--compact {
+    padding-top: clamp(150px, 11vw, 188px);
+  }
+}
+
+/* ── MOBILE FIXED BOTTOM CTA ──────────────────────────────── */
+.mobile-cta {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 75;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 22px;
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  background: var(--gradient-titanium);
+  color: #04060E;
+  line-height: 1;
+  box-shadow:
+    0 14px 38px -12px rgba(4, 6, 14, 0.65),
+    0 0 0 1px rgba(176, 192, 216, 0.30);
+  transition: transform 220ms var(--ease), box-shadow 240ms var(--ease);
+}
+[data-theme="light"] .mobile-cta {
+  box-shadow:
+    0 14px 38px -12px rgba(42, 58, 74, 0.25),
+    0 0 0 1px rgba(42, 58, 74, 0.18);
+}
+.mobile-cta:active { transform: translateY(1px); }
+.mobile-cta .arrow { width: 14px; height: 14px; }
+
+@media (max-width: 979px) {
+  body:not([data-page="contact"]) .mobile-cta { display: inline-flex; }
+  /* Reserve room above the footer for the floating CTA */
+  body:not([data-page="contact"]) footer {
+    padding-bottom: clamp(96px, 18vw, 128px);
+  }
+}
+
+/* While the mobile menu overlay is open, hide the floating CTA so it
+   doesn't peek through the menu backdrop. */
+.is-menu-open .mobile-cta { display: none !important; }
+
+/* ── 360 / 375 / 414 MOBILE TIGHTENING ────────────────────── */
+@media (max-width: 414px) {
+  :root { --gutter: 20px; }
+  .nav { padding: 14px var(--gutter); }
+  .nav__pill { height: 40px; padding: 0 14px; gap: 8px; }
+  .nav__pill--icon { width: 40px; }
+  .nav__brand { font-size: 14px; padding: 6px 12px 6px 6px; }
+  .nav__brand img { height: 20px; }
+  .nav__brand span { letter-spacing: -0.005em; }
+  .hero__caption { gap: 10px; font-size: 10px; }
+  .hero__caption span::before { margin-right: 10px; }
+  .hero__head { gap: 22px; margin-bottom: 44px; }
+  .hero__sub { font-size: 17px; margin: 22px 0 32px; max-width: 30ch; }
+  .hero__actions { gap: 12px; margin-bottom: 56px; }
+  .btn { padding: 13px 22px; font-size: 11px; }
+  .footer__grid { gap: 28px; }
+  .container { padding: 0 var(--gutter); }
+}
+@media (max-width: 380px) {
+  :root { --gutter: 18px; }
+  .nav__brand span { display: inline; }
+  .hero__head { gap: 18px; margin-bottom: 36px; }
+  .hero__sub { font-size: 16px; margin: 20px 0 28px; }
+  .mobile-cta { padding: 14px 18px; font-size: 11px; }
+}
+@media (max-width: 360px) {
+  :root { --gutter: 16px; }
+  .nav__pill { padding: 0 12px; }
+  .btn { padding: 12px 18px; font-size: 10.5px; letter-spacing: 0.10em; }
 }

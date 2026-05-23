@@ -565,9 +565,13 @@
     });
 
     // Click outside any card → close. CSS then collapses the deck.
+    // The Mitti chat panel lives OUTSIDE the deck but is visually paired
+    // with card 04 — clicks inside it must NOT collapse the deck.
     document.addEventListener('click', (e) => {
       if (!anyFlipped()) return;
       if (e.target.closest('.service-deck__card')) return;
+      if (e.target.closest('.mitti-panel')) return;
+      if (e.target.closest('[data-talk-to-mitti]')) return;
       deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
     });
 
@@ -603,6 +607,41 @@
         deckCards.forEach((c) => c.classList.remove('is-shuffling'));
       });
     });
+
+    // ── MOBILE: auto-fan the deck when it scrolls into view ────────
+    // Touch devices have no hover, so the hover-driven fan-out rule
+    // (Trigger A in styles.css) never fires. Instead, on mobile we
+    // watch the deck wrap with IntersectionObserver and toggle the
+    // .is-in-view class — CSS Trigger C picks that up and fans the
+    // deck out exactly like a desktop hover would. Gated to the
+    // mobile breakpoint via matchMedia so desktop users don't get
+    // the auto-fan (their hover still works fine).
+    const mobileMQ = window.matchMedia('(max-width: 768px)');
+    if (deckWrap && 'IntersectionObserver' in window) {
+      const fanObserver = new IntersectionObserver((entries) => {
+        if (!mobileMQ.matches) return;       // desktop: keep hover behaviour
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            deckWrap.classList.add('is-in-view');
+          } else {
+            deckWrap.classList.remove('is-in-view');
+          }
+        });
+      }, {
+        // Trigger when ~30% of the deck is visible — gives a clean
+        // fan reveal as the user scrolls down, not the moment a
+        // single pixel pokes into the viewport.
+        threshold: 0.3
+      });
+      fanObserver.observe(deckWrap);
+
+      // If the viewport flips between mobile and desktop (rotation,
+      // dev tools), strip the class so we don't leave a stale fan
+      // hanging on a desktop session.
+      mobileMQ.addEventListener('change', (e) => {
+        if (!e.matches) deckWrap.classList.remove('is-in-view');
+      });
+    }
 
     // If the page loaded with a hash like #voice, auto-flip that card
     if (location.hash) {
@@ -716,5 +755,207 @@
     // Handle deep-link case (services.html#voice) where the hash flips
     // the card before the observer is attached.
     sync();
+  })();
+
+  /* ───── CONVERSATION AI WIDGET — relocate LeadConnector into the Mitti panel ───
+     The Conversation widget no longer lives inside the deck card. The card
+     shows a "Talk to Mitti" CTA; clicking it slides the deck left and flies
+     the floating .mitti-panel in from the right edge. The chat widget itself
+     is hosted inside that panel. Same disambiguation as the voice side —
+     LC's loader stamps the widget-id onto the injected element so we match
+     on `widget-id="6a112f..."`. Fallback: any LC element not in the voice
+     card's host. The panel is hidden by default via CSS (off-screen +
+     opacity 0) so we don't need a separate body class to hide the widget. */
+  (function initConversationWidget () {
+    // The host now sits inside the floating .mitti-panel, not inside the
+    // card — so query it globally.
+    const host = document.querySelector('[data-conversation-host]');
+    if (!host) return;
+
+    const LC_WIDGET_ID = '6a112f4120e5a77e67391912';
+    const OTHER_HOST_SEL = '[data-voice-host]';
+    const LC_TAGS = 'chat-widget, chat-widget-floating-button, lc-chat-widget';
+    let   relocated = false;
+
+    function widgetIdOf (el) {
+      return el.getAttribute('widget-id') || el.getAttribute('data-widget-id') || '';
+    }
+
+    function findWidget () {
+      const all = document.querySelectorAll(LC_TAGS);
+      const otherHost = document.querySelector(OTHER_HOST_SEL);
+      // Pass 1: explicit widget-id match
+      for (const el of all) {
+        if (host.contains(el)) continue;
+        if (widgetIdOf(el) === LC_WIDGET_ID) return el;
+      }
+      // Pass 2: any LC element NOT already inside the Voice host
+      for (const el of all) {
+        if (host.contains(el)) continue;
+        if (otherHost && otherHost.contains(el)) continue;
+        const id = widgetIdOf(el);
+        if (id && id !== LC_WIDGET_ID) continue;
+        return el;
+      }
+      return null;
+    }
+
+    function relocateOnce () {
+      if (relocated) return;
+      const el = findWidget();
+      if (!el) return;
+      el.style.display = '';
+      host.appendChild(el);
+      relocated = true;
+    }
+
+    // Try immediately (script may have already finished).
+    relocateOnce();
+
+    if (!relocated) {
+      const docObs = new MutationObserver(() => {
+        relocateOnce();
+        if (relocated) docObs.disconnect();
+      });
+      docObs.observe(document.documentElement, { childList: true, subtree: true });
+
+      let polls = 0;
+      const pollId = setInterval(() => {
+        relocateOnce();
+        if (relocated || ++polls > 60) {
+          clearInterval(pollId);
+          if (relocated) docObs.disconnect();
+        }
+      }, 250);
+    }
+  })();
+
+  /* ───── MITTI PANEL — open/close orchestration ─────────────────────
+     CTA inside the conversation card opens the floating panel. Close
+     button, Esc, and clicks outside the panel close it again. Closing
+     the panel does NOT unflip the card — the user can keep exploring
+     the card after dismissing the chat. Unflipping the card via outside
+     click (handled in the deck section above) also closes the panel
+     so we never end up with a panel open but no visible context. */
+  (function initMittiPanel () {
+    const trigger = document.querySelector('[data-talk-to-mitti]');
+    const panel   = document.querySelector('[data-mitti-panel]');
+    if (!trigger || !panel) return;
+    const closeBtn = panel.querySelector('[data-mitti-close]');
+    const convCard = document.getElementById('conversation');
+
+    // Lazy-injects the LeadConnector loader for the Conversation widget
+    // on the first open. By NOT loading it at page-boot we keep the Voice
+    // AI loader as the only chat-widget on the page at startup — no race,
+    // no risk of voice grabbing the wrong widget.
+    const CONV_WIDGET_ID = '6a112f4120e5a77e67391912';
+    function ensureConvLoader () {
+      const exists = document.querySelector(
+        'script[data-widget-id="' + CONV_WIDGET_ID + '"]'
+      );
+      if (exists) return;
+      const s = document.createElement('script');
+      s.src = 'https://beta.leadconnectorhq.com/loader.js';
+      s.setAttribute('data-resources-url',
+        'https://beta.leadconnectorhq.com/chat-widget/loader.js');
+      s.setAttribute('data-widget-id', CONV_WIDGET_ID);
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    // ─── Align panel vertical centre with the conversation card ────
+    // The card lives in the document flow inside the deck section, so its
+    // viewport-relative Y depends on how far the user has scrolled. The
+    // panel is position:fixed and was sitting at top:50% (viewport centre)
+    // — fine if the card happens to be centred, but they drift apart
+    // otherwise. We measure the card's bounding rect at open time and pin
+    // the panel's centre to the card's centre. Desktop only — on mobile
+    // the panel is bottom-anchored and shouldn't follow the card.
+    const desktopMQ = window.matchMedia('(min-width: 980px)');
+    function alignPanelToCard () {
+      if (!convCard || !panel) return;
+      if (!desktopMQ.matches) {
+        panel.style.top = '';        // let CSS bottom-anchor take over
+        return;
+      }
+      const rect = convCard.getBoundingClientRect();
+      if (rect.height === 0) return; // not laid out yet
+      const cardCenterY = rect.top + rect.height / 2;
+      // panel keeps its translateY(-50%) so this `top` is its centre Y.
+      panel.style.top = Math.round(cardCenterY) + 'px';
+    }
+
+    function open () {
+      ensureConvLoader();
+      alignPanelToCard();              // pin to card BEFORE the slide-in
+      document.body.classList.add('mitti-on');
+      panel.setAttribute('aria-hidden', 'false');
+      // Move focus into the panel for keyboard users (close button is the
+      // first focusable child, so this lands them there).
+      if (closeBtn) {
+        setTimeout(() => closeBtn.focus({ preventScroll: true }), 540);
+      }
+    }
+
+    // Re-align if the viewport changes shape while the panel is open
+    // (rotation, browser resize, devtools toggle). Throttled to next frame.
+    let alignRaf = null;
+    window.addEventListener('resize', () => {
+      if (!document.body.classList.contains('mitti-on')) return;
+      if (alignRaf) return;
+      alignRaf = requestAnimationFrame(() => {
+        alignRaf = null;
+        alignPanelToCard();
+      });
+    });
+    function close () {
+      if (!document.body.classList.contains('mitti-on')) return;
+      document.body.classList.remove('mitti-on');
+      panel.setAttribute('aria-hidden', 'true');
+      // Return focus to the trigger so keyboard nav doesn't get stranded.
+      if (trigger) trigger.focus({ preventScroll: true });
+    }
+
+    trigger.addEventListener('click', (e) => {
+      // The trigger sits inside an already-flipped card — don't let the
+      // click bubble to the card's outside-click closer.
+      e.stopPropagation();
+      open();
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        close();
+      });
+    }
+
+    // Esc closes the panel (and bubbles up so the card can stay flipped).
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('mitti-on')) {
+        close();
+      }
+    });
+
+    // Click outside the panel (but not on the trigger or the card) → close.
+    document.addEventListener('click', (e) => {
+      if (!document.body.classList.contains('mitti-on')) return;
+      if (panel.contains(e.target)) return;
+      if (e.target.closest('[data-talk-to-mitti]')) return;
+      if (e.target.closest('.service-deck__card')) return;
+      close();
+    });
+
+    // If the conversation card is closed (un-flipped), also close the panel —
+    // there's no card to anchor the chat to anymore.
+    if (convCard) {
+      new MutationObserver(() => {
+        const stillActive =
+          convCard.classList.contains('is-elevated') ||
+          convCard.classList.contains('is-rotated')  ||
+          convCard.classList.contains('is-flipped');
+        if (!stillActive) close();
+      }).observe(convCard, { attributes: true, attributeFilter: ['class'] });
+    }
   })();
 })();

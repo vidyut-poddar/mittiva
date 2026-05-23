@@ -11,8 +11,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" /></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&family=Noto+Sans+Devanagari:wght@600;700;800&display=swap" /></noscript>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -27,7 +27,15 @@
       <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
       <span>Mittiva</span>
     </a>
-    <div class="nav__actions">
+    <ul class="nav__links" role="list" aria-label="Primary navigation">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html" class="is-current" aria-current="page">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="founders.html">Founders</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+      <div class="nav__actions">
       <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -39,6 +47,15 @@
       </button>
     </div>
   </header>
+
+  <!-- DESKTOP STICKY CTA -->
+  <div class="cta-strip" role="region" aria-label="Start a conversation">
+    <span class="cta-strip__text">Got an idea taking up your time?</span>
+    <a href="contact.html" class="cta-strip__cta">Start a conversation
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
 
   <nav class="menu-overlay" aria-label="Main menu">
     <ul class="menu-overlay__links">
@@ -305,5 +322,10 @@
   </footer>
 
   <script src="main.js" defer></script>
+  <!-- MOBILE STICKY CTA -->
+  <a href="contact.html" class="mobile-cta" aria-label="Contact us">Contact us
+    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+
 </body>
 </html>

@@ -3049,6 +3049,7 @@ body.voice-widget-on .voice-widget-host iframe {
 .talk-to-mitti {
   --mitti-accent: var(--accent-bright, #b0c0d8);
   --mitti-ink:    #fff;
+  --mitti-radius: 14px;
   margin-top: auto;          /* shoves CTA to the bottom of the card */
   position: relative;
   width: 100%;
@@ -3057,21 +3058,26 @@ body.voice-widget-on .voice-widget-host iframe {
   display: flex;
   flex-direction: column;
   background: #0a0e1c;
-  border: 1px solid rgba(176, 192, 216, 0.18);
-  border-radius: 14px;
+  /* No visible border — the previous 1px outline traced a thin
+     crescent inside the rounded corners against the image. Use a
+     box-shadow inset for a softer, gap-free edge instead. */
+  border: 0;
+  border-radius: var(--mitti-radius);
   overflow: hidden;
   padding: 0;
   color: inherit;
   cursor: pointer;
   isolation: isolate;
   text-align: left;
+  -webkit-appearance: none;
+  appearance: none;
+  font: inherit;
   box-shadow:
     0 14px 38px -14px rgba(4, 6, 14, 0.65),
-    0 0 0 1px rgba(176, 192, 216, 0.06) inset;
+    0 0 0 1px rgba(176, 192, 216, 0.14) inset;
   transition:
     transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
-    box-shadow 360ms ease,
-    border-color 320ms ease;
+    box-shadow 360ms ease;
   /* Entrance — slides up + fades in shortly after the card flips face-up */
   animation: mitti-cta-in 760ms cubic-bezier(0.32, 0.72, 0, 1) 280ms both;
 }
@@ -3081,10 +3087,9 @@ body.voice-widget-on .voice-widget-host iframe {
 }
 .talk-to-mitti:hover {
   transform: translateY(-3px);
-  border-color: rgba(176, 192, 216, 0.36);
   box-shadow:
     0 22px 52px -14px rgba(4, 6, 14, 0.80),
-    0 0 0 1px rgba(176, 192, 216, 0.20) inset;
+    0 0 0 1px rgba(176, 192, 216, 0.28) inset;
 }
 .talk-to-mitti:active { transform: translateY(-1px); }
 .talk-to-mitti:focus-visible {
@@ -3099,24 +3104,34 @@ body.voice-widget-on .voice-widget-host iframe {
   flex: 1 1 auto;
   min-height: 120px;
   overflow: hidden;
+  /* Top corners curve with the CTA; the bottom meets the action bar
+     square. Without this the cover's content sat in a square box and
+     the parent's rounded clip exposed slivers of the dark background
+     in the upper corners. */
+  border-radius: var(--mitti-radius) var(--mitti-radius) 0 0;
   background:
     radial-gradient(circle at 30% 30%, rgba(60, 50, 40, 0.5), transparent 60%),
     linear-gradient(180deg, #1a1228, #0a0a14);
 }
 .talk-to-mitti__img {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
   object-position: center 22%;   /* show Mitti's face, not the chin */
-  /* Slow Ken Burns — barely there, but the portrait never feels static */
+  /* Slow Ken Burns — always scaled past 1.0 so the image NEVER pulls
+     in from the cover edges (which would expose the dark background
+     under the rounded corners). */
   animation: mitti-kenburns 18s ease-in-out infinite alternate;
 }
 @keyframes mitti-kenburns {
-  from { transform: scale(1)     translate(0, 0); }
-  to   { transform: scale(1.06)  translate(-1.4%, -1%); }
+  from { transform: scale(1.04) translate(0, 0); }
+  to   { transform: scale(1.10) translate(-1.4%, -1%); }
 }
 
 /* Film grain — barely-there texture for the editorial-print feel */
@@ -3261,6 +3276,7 @@ body.voice-widget-on .voice-widget-host iframe {
   padding: 11px 12px 11px 14px;
   background: #0a0e1c;
   border-top: 1px solid rgba(176, 192, 216, 0.16);
+  border-radius: 0 0 var(--mitti-radius) var(--mitti-radius);
 }
 .talk-to-mitti__bar-label {
   font-family: 'Inter', sans-serif;

@@ -863,54 +863,81 @@
       document.body.appendChild(s);
     }
 
-    // ─── Align panel vertical centre with the conversation card ────
-    // The card lives in the document flow inside the deck section, so its
-    // viewport-relative Y depends on how far the user has scrolled. The
-    // panel is position:fixed and was sitting at top:50% (viewport centre)
-    // — fine if the card happens to be centred, but they drift apart
-    // otherwise. We measure the card's bounding rect at open time and pin
-    // the panel's centre to the card's centre. Desktop only — on mobile
-    // the panel is bottom-anchored and shouldn't follow the card.
-    const desktopMQ = window.matchMedia('(min-width: 980px)');
-    function alignPanelToCard () {
-      if (!convCard || !panel) return;
-      if (!desktopMQ.matches) {
-        panel.style.top = '';        // let CSS bottom-anchor take over
-        return;
-      }
-      const rect = convCard.getBoundingClientRect();
-      if (rect.height === 0) return; // not laid out yet
-      const cardCenterY = rect.top + rect.height / 2;
-      // panel keeps its translateY(-50%) so this `top` is its centre Y.
-      panel.style.top = Math.round(cardCenterY) + 'px';
+    // ─── Scroll-lock so the panel + card never drift while open ─────
+    // The panel sits at viewport centre (CSS top:50%); the card is part
+    // of document flow, so its viewport-relative position depends on the
+    // user's scroll. Previously we pinned the panel's centre to the
+    // card's centre — which clipped the panel above/below the viewport
+    // whenever the card wasn't already viewport-centred. The new flow:
+    //   1. On open: smooth-scroll the card to viewport centre.
+    //   2. After the scroll settles, lock the body to its scroll position
+    //      so the user can't scroll the page while reading the chat.
+    //   3. On close: unlock and restore scroll position.
+    // We lock by `position: fixed; top: -<scrollY>px` on the body — this
+    // freezes the page visually without changing fixed elements (.nav,
+    // panel itself) which remain viewport-positioned. padding-right of
+    // the scrollbar width prevents a horizontal jump when the scrollbar
+    // disappears.
+    let savedScrollY = 0;
+    let scrollLocked = false;
+    function lockScroll () {
+      if (scrollLocked) return;
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      const sw = window.innerWidth - document.documentElement.clientWidth;
+      const body = document.body;
+      body.style.position = 'fixed';
+      body.style.top = '-' + savedScrollY + 'px';
+      body.style.left = '0';
+      body.style.right = '0';
+      body.style.width = '100%';
+      if (sw > 0) body.style.paddingRight = sw + 'px';
+      scrollLocked = true;
+    }
+    function unlockScroll () {
+      if (!scrollLocked) return;
+      const body = document.body;
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.paddingRight = '';
+      // Restore the user's scroll position; { left, top } variant is
+      // preferred but plain (x, y) also works in every browser we care
+      // about. Run instantly — no smooth — so unlock feels snappy.
+      window.scrollTo(0, savedScrollY);
+      scrollLocked = false;
     }
 
     function open () {
+      if (document.body.classList.contains('mitti-on')) return;
       ensureConvLoader();
-      alignPanelToCard();              // pin to card BEFORE the slide-in
+
+      // 1. Centre the conversation card in the viewport so it pairs
+      //    visually with the panel (which is fixed at viewport centre).
+      if (convCard) {
+        convCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // 2. Reveal the panel right away — its slide-in transition runs
+      //    while the page is still smooth-scrolling.
       document.body.classList.add('mitti-on');
       panel.setAttribute('aria-hidden', 'false');
-      // Move focus into the panel for keyboard users (close button is the
-      // first focusable child, so this lands them there).
+
+      // 3. Lock scroll once the smooth-scroll has settled (~400ms in
+      //    most browsers). Locking earlier would interrupt the scroll.
+      setTimeout(lockScroll, 480);
+
+      // Move focus into the panel for keyboard users (close button is
+      // the first focusable child, so this lands them there).
       if (closeBtn) {
-        setTimeout(() => closeBtn.focus({ preventScroll: true }), 540);
+        setTimeout(() => closeBtn.focus({ preventScroll: true }), 560);
       }
     }
-
-    // Re-align if the viewport changes shape while the panel is open
-    // (rotation, browser resize, devtools toggle). Throttled to next frame.
-    let alignRaf = null;
-    window.addEventListener('resize', () => {
-      if (!document.body.classList.contains('mitti-on')) return;
-      if (alignRaf) return;
-      alignRaf = requestAnimationFrame(() => {
-        alignRaf = null;
-        alignPanelToCard();
-      });
-    });
     function close () {
       if (!document.body.classList.contains('mitti-on')) return;
       document.body.classList.remove('mitti-on');
+      unlockScroll();                 // restore page scroll
       panel.setAttribute('aria-hidden', 'true');
       // Return focus to the trigger so keyboard nav doesn't get stranded.
       if (trigger) trigger.focus({ preventScroll: true });

@@ -3323,6 +3323,16 @@ body.voice-widget-on .voice-widget-host iframe {
   .talk-to-mitti__status-dot { animation: none !important; }
 }
 
+/* Page scroll lock — applied to <html> by main.js when the Mitti panel
+   opens. overflow:hidden freezes user scrolling without altering body's
+   position, so the dark theme background is preserved (no white flash).
+   padding-right compensates for the disappearing scrollbar so content
+   doesn't shift horizontally as the lock engages. */
+html.mitti-locked {
+  overflow: hidden;
+  padding-right: var(--mitti-sbw, 0);
+}
+
 /* ── FLOATING MITTI CHAT PANEL ────────────────────────────────────── */
 /* Lives off-screen right by default. body.mitti-on slides it in.
    z-index sits ABOVE the nav (typical 100) so nothing intercepts clicks

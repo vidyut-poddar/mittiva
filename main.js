@@ -864,48 +864,28 @@
     }
 
     // ─── Scroll-lock so the panel + card never drift while open ─────
-    // The panel sits at viewport centre (CSS top:50%); the card is part
-    // of document flow, so its viewport-relative position depends on the
-    // user's scroll. Previously we pinned the panel's centre to the
-    // card's centre — which clipped the panel above/below the viewport
-    // whenever the card wasn't already viewport-centred. The new flow:
-    //   1. On open: smooth-scroll the card to viewport centre.
-    //   2. After the scroll settles, lock the body to its scroll position
-    //      so the user can't scroll the page while reading the chat.
-    //   3. On close: unlock and restore scroll position.
-    // We lock by `position: fixed; top: -<scrollY>px` on the body — this
-    // freezes the page visually without changing fixed elements (.nav,
-    // panel itself) which remain viewport-positioned. padding-right of
-    // the scrollbar width prevents a horizontal jump when the scrollbar
-    // disappears.
-    let savedScrollY = 0;
+    // Approach: overflow:hidden on <html>, NOT position:fixed on body.
+    // We tried the position:fixed trick first — it detaches the body
+    // from normal flow, which let the documentElement's transparent
+    // background show through as white (looked like the page was
+    // jumping to light mode when the user opened the chat). overflow:
+    // hidden keeps body in flow, dark theme intact, no visual flash.
+    // The scrollbar disappearance is compensated with a matching
+    // padding-right on the html element so content doesn't shift.
     let scrollLocked = false;
     function lockScroll () {
       if (scrollLocked) return;
-      savedScrollY = window.scrollY || window.pageYOffset || 0;
-      const sw = window.innerWidth - document.documentElement.clientWidth;
-      const body = document.body;
-      body.style.position = 'fixed';
-      body.style.top = '-' + savedScrollY + 'px';
-      body.style.left = '0';
-      body.style.right = '0';
-      body.style.width = '100%';
-      if (sw > 0) body.style.paddingRight = sw + 'px';
+      const html = document.documentElement;
+      const sw = window.innerWidth - html.clientWidth;
+      if (sw > 0) html.style.setProperty('--mitti-sbw', sw + 'px');
+      html.classList.add('mitti-locked');
       scrollLocked = true;
     }
     function unlockScroll () {
       if (!scrollLocked) return;
-      const body = document.body;
-      body.style.position = '';
-      body.style.top = '';
-      body.style.left = '';
-      body.style.right = '';
-      body.style.width = '';
-      body.style.paddingRight = '';
-      // Restore the user's scroll position; { left, top } variant is
-      // preferred but plain (x, y) also works in every browser we care
-      // about. Run instantly — no smooth — so unlock feels snappy.
-      window.scrollTo(0, savedScrollY);
+      const html = document.documentElement;
+      html.classList.remove('mitti-locked');
+      html.style.removeProperty('--mitti-sbw');
       scrollLocked = false;
     }
 

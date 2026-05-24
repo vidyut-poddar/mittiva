@@ -3324,6 +3324,140 @@ body.voice-widget-on .voice-widget-host iframe {
   .talk-to-mitti__status-dot { animation: none !important; }
 }
 
+/* ════════════════════════════════════════════════════════════════
+   SOCIAL CARD WHISPER FEED — card 03 (services deck)
+   Italic fragments of overheard "customer thought" drift across the
+   card from right to left; occasional green "AI replied in 12s"
+   flashes punctuate them. CSS-only — no JS overhead. Each whisper
+   has its own animation-delay so the stream feels organic rather
+   than synced.
+   ════════════════════════════════════════════════════════════════ */
+.service-deck__front--social {
+  padding: clamp(36px, 4vw, 48px) clamp(14px, 2vw, 20px) clamp(14px, 1.6vw, 18px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  gap: 0;
+}
+.service-deck__front--social > .service-deck__cat,
+.service-deck__front--social > .service-deck__title-h {
+  flex: 0 0 auto;
+}
+.service-deck__front--social .service-deck__cta-link {
+  margin-top: 6px;
+  align-self: center;
+}
+
+.social-whispers {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 130px;
+  margin: 14px 0 12px;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  /* SEAMLESS — no background, no border, no shadow, no border-radius.
+     The whisper feed should feel like part of the card's air, not a
+     panel pasted inside it. A single horizontal mask fades whispers
+     in/out at the card edges so nothing pops at a hard rectangle. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+}
+.social-whispers__eyebrow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  z-index: 2;
+}
+.social-whispers__live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7fdb9b;
+  animation: socialLivePulse 1.6s ease-in-out infinite;
+}
+@keyframes socialLivePulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.95); }
+  50%      { opacity: 1;    transform: scale(1.10); }
+}
+.social-whispers__stage {
+  position: absolute;
+  inset: 22px 0 0;
+  overflow: hidden;
+}
+.social-whisper {
+  position: absolute;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.52);
+  letter-spacing: -0.003em;
+  animation-name: socialWhisperDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  will-change: transform;
+}
+/* Three depth tiers — JS applies one of these to every whisper.
+   "Far" feels deep in the background (small, dim, slightly blurred);
+   "near" feels close to the viewer (larger, sharp, brighter). The
+   contrast between tiers is what reads as parallax depth. */
+.social-whisper--far {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.22);
+  filter: blur(0.6px);
+  font-weight: 400;
+}
+.social-whisper--mid {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.50);
+  font-weight: 400;
+}
+.social-whisper--near {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 500;
+}
+/* Reply variant — sharp, green, mono-flavoured. Always rendered as
+   "near" tier so it pops against the faint customer whispers. */
+.social-whisper--reply {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11px;
+  color: #7fdb9b;
+  letter-spacing: 0.04em;
+  filter: none;
+}
+/* Legacy "faint" variant — kept for any earlier markup; treat as far. */
+.social-whisper--faint {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.22);
+  filter: blur(0.6px);
+}
+@keyframes socialWhisperDrift {
+  0%   { transform: translateX(110%); opacity: 0; }
+  6%   { opacity: 1; }
+  94%  { opacity: 1; }
+  100% { transform: translateX(-105%); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .social-whisper { animation: none; transform: translateX(0); opacity: 1; }
+  .social-whispers__live-dot { animation: none; }
+}
+
 /* Service deck card CTA link — used on card 08 to deep-link into
    the full CRM page (crm.html). Sits at the bottom of the front face. */
 .service-deck__cta-link {

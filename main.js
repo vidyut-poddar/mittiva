@@ -965,4 +965,260 @@
       }).observe(convCard, { attributes: true, attributeFilter: ['class'] });
     }
   })();
+
+  /* ───── SOCIAL CARD WHISPER FEED — services.html card 03 ────────
+     Populates the in-card whisper stage with drifting customer
+     fragments + occasional green AI-reply flashes. Three depth tiers
+     (far/mid/near) give the feed a parallax-like depth. Large pool
+     of whispers + handles with recency tracking so the user never
+     sees the same line or handle twice in quick succession.
+     Gated by IntersectionObserver — only spawns while card 03 is in
+     view, so it doesn't burn cycles when the user is elsewhere. */
+  (function initSocialCardWhispers () {
+    const stage = document.querySelector('[data-card-whispers]');
+    if (!stage) return;
+
+    // ~70 customer-thought fragments spanning shipping questions,
+    // product compliments, packaging delight, casual/formal tones,
+    // family/friends mentions, location asks, collabs, etc.
+    const WHISPERS = [
+      // shipping & logistics
+      "do you ship to Mumbai?",
+      "any plans for international shipping?",
+      "Bangalore stockists?",
+      "how long does delivery take these days?",
+      "express shipping option anywhere?",
+      // product compliments
+      "the roast is sublime",
+      "best small-batch I've tried this year",
+      "you've ruined every other brand for me",
+      "ordered three more before I'd finished the first",
+      "didn't expect to love it this much",
+      "the formula has changed my evenings",
+      // packaging
+      "the packaging deserves an award",
+      "kept the box on my shelf",
+      "the unboxing was a moment",
+      "loved the handwritten note",
+      "the wrapping alone is worth it",
+      // content & captions
+      "the caption made me laugh out loud",
+      "your reels keep me up at night",
+      "saving every post for inspiration",
+      "newsletter twice every Sunday",
+      // questions
+      "when's the next drop?",
+      "is the espresso back yet?",
+      "do you do custom orders?",
+      "any referral discount?",
+      "do you ever do trunk shows?",
+      // family/friends mentions
+      "ordering for my mother — she's smitten",
+      "my husband won't stop talking about it",
+      "sister sent me your post",
+      "telling everyone at work today",
+      "bought one for my boss — winner",
+      // restock asks
+      "let me know the second it's back",
+      "would set an alarm for the next drop",
+      "I check every Monday",
+      // gifts
+      "any gift-wrap option?",
+      "perfect Diwali present, thank you",
+      "anniversary present sorted",
+      // collabs & b2b
+      "open to brand collabs?",
+      "any B2B program?",
+      "bulk pricing available?",
+      // personal stories
+      "Sunday morning ritual",
+      "the only thing on my desk that brings joy",
+      "lurked for months, finally ordering",
+      "saw your founder on a podcast — bought immediately",
+      "third order this month, no regrets",
+      // location-flavoured
+      "any London pop-up planned?",
+      "would order from Dubai if you'd ship",
+      "Chennai represents",
+      "any chance of a Goa stockist?",
+      "saw your story from Pondy and ran",
+      // surprise / delight
+      "obsessed",
+      "made my month",
+      "feeling spoilt",
+      "y'all can do no wrong",
+      "didn't think anything could be this good",
+      // service
+      "your service is unreal",
+      "replied in 12 seconds — wild",
+      "first brand to fix it without arguing",
+      // aesthetic
+      "colour exactly as advertised",
+      "the typography on the label alone",
+      "every detail feels considered",
+      "love what you've done with the rebrand",
+      // casual / formal mix
+      "lol the new ad is gold",
+      "y'all are crushing it",
+      "no notes",
+      "Excellent product. Will recommend.",
+      "Outstanding quality for the price.",
+      // misc
+      "honestly the best",
+      "saved the post for later",
+      "any behind-the-scenes content coming?",
+      "you nailed it",
+      "what's your secret?",
+      "tell whoever wrote that — thank you",
+      "I keep coming back",
+      "the consistency is what gets me",
+      "subscribed forever",
+    ];
+
+    // Categorical reply generator — no fake handles. Outputs lines like
+    // "→ Replied to ig_comment in 6 secs" or "→ Hearted ig_story_reply
+    // immediately". Each category has its own verb pool so the verb
+    // always pairs naturally with the target (you "Like" a comment but
+    // you "Answer" a DM, etc.). Weighted distribution favours comments,
+    // which is what most real ops feeds look like.
+    const REPLY_CATEGORIES = {
+      comment: {
+        targets: ['ig_comment', 'ig_reel_comment', 'fb_comment', 'li_comment', 'yt_comment', 'tt_comment', 'x_reply', 'threads_reply'],
+        verbs:   ['Replied to', 'Liked', 'Hearted', 'Reacted to', 'Answered', 'Responded to'],
+      },
+      dm: {
+        targets: ['ig_dm', 'fb_dm', 'li_dm', 'x_dm', 'tt_dm'],
+        verbs:   ['Replied to', 'Answered', 'Responded to'],
+      },
+      mention: {
+        targets: ['ig_mention', 'x_mention', 'fb_mention', 'ig_tag', 'x_tag'],
+        verbs:   ['Acknowledged', 'Followed back on', 'Replied to', 'Liked', 'Reacted to'],
+      },
+      story: {
+        targets: ['ig_story_reply', 'ig_story_reaction', 'fb_story_reply'],
+        verbs:   ['Replied to', 'Reacted to', 'Hearted'],
+      },
+    };
+    // Cumulative weights — pick a category, then pick verb + target.
+    const REPLY_WEIGHTS = [
+      ['comment', 0.55],
+      ['dm',      0.80],   // 0.55 + 0.25
+      ['mention', 0.92],   // 0.80 + 0.12
+      ['story',   1.00],   // 0.92 + 0.08
+    ];
+    const REPLY_TIMES_TXT = [
+      'in 1 sec', 'in 2 secs', 'in 3 secs', 'in 4 secs', 'in 5 secs',
+      'in 6 secs', 'in 7 secs', 'in 8 secs', 'in 11 secs', 'in 14 secs',
+      'in 17 secs', 'in 22 secs', 'in 31 secs', 'in under a second', 'immediately',
+    ];
+    function makeReply () {
+      const r = Math.random();
+      let key = 'comment';
+      for (const [k, cum] of REPLY_WEIGHTS) { if (r < cum) { key = k; break; } }
+      const cfg  = REPLY_CATEGORIES[key];
+      const verb = cfg.verbs[Math.floor(Math.random() * cfg.verbs.length)];
+      const tgt  = cfg.targets[Math.floor(Math.random() * cfg.targets.length)];
+      const tm   = REPLY_TIMES_TXT[Math.floor(Math.random() * REPLY_TIMES_TXT.length)];
+      return '→ ' + verb + ' ' + tgt + ' ' + tm;
+    }
+
+    // 5 lanes covering the feed area; round-robin with a small skip
+    // so we don't stack two whispers in the same band back-to-back.
+    const LANES = [10, 28, 46, 64, 82];
+    let laneCursor = 0;
+    function nextLane () {
+      laneCursor = (laneCursor + 1 + Math.floor(Math.random() * 2)) % LANES.length;
+      return LANES[laneCursor] + (Math.random() * 6 - 3);
+    }
+
+    // Recency rings — whispers never repeat until 15 others have cycled
+    // past; full reply strings never repeat until 8 others have.
+    const recentWhispers = [];
+    const recentReplies  = [];
+    function pickFresh (pool, recent, keepLast) {
+      let attempts = 0, item;
+      do {
+        item = pool[Math.floor(Math.random() * pool.length)];
+        attempts++;
+      } while (recent.indexOf(item) !== -1 && attempts < 12);
+      recent.push(item);
+      if (recent.length > keepLast) recent.shift();
+      return item;
+    }
+    function freshReply () {
+      let attempts = 0, r;
+      do { r = makeReply(); attempts++; }
+      while (recentReplies.indexOf(r) !== -1 && attempts < 10);
+      recentReplies.push(r);
+      if (recentReplies.length > 8) recentReplies.shift();
+      return r;
+    }
+
+    const MAX_VISIBLE = 5;
+    let running = false;
+    let spawnTimer = null;
+
+    function spawnOne () {
+      if (stage.children.length >= MAX_VISIBLE) return;
+      const el = document.createElement('div');
+      const roll = Math.random();
+      let cls = 'social-whisper';
+      let text;
+
+      // Per-tier animation durations create parallax depth: far whispers
+      // drift SLOWLY (look further away), near whispers drift FASTER
+      // (look closer). Same horizontal distance, different speeds.
+      let dur;
+      if (roll < 0.16) {
+        cls += ' social-whisper--reply';      // near tier, sharp
+        text = freshReply();
+        dur = 13 + Math.random() * 3;          // near
+      } else if (roll < 0.50) {
+        cls += ' social-whisper--far';
+        text = '"' + pickFresh(WHISPERS, recentWhispers, 15) + '"';
+        dur = 22 + Math.random() * 6;          // far — slow
+      } else if (roll < 0.82) {
+        cls += ' social-whisper--mid';
+        text = '"' + pickFresh(WHISPERS, recentWhispers, 15) + '"';
+        dur = 17 + Math.random() * 4;          // mid
+      } else {
+        cls += ' social-whisper--near';
+        text = '"' + pickFresh(WHISPERS, recentWhispers, 15) + '"';
+        dur = 13 + Math.random() * 3;          // near — fast
+      }
+      el.className = cls;
+      el.textContent = text;
+      el.style.top = nextLane() + '%';
+      el.style.animationDuration = dur + 's';
+      stage.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    function loop () {
+      if (!running) return;
+      spawnOne();
+      spawnTimer = setTimeout(loop, 1400 + Math.random() * 1300);
+    }
+    function start () {
+      if (running) return;
+      running = true;
+      for (let i = 0; i < 2; i++) spawnOne();   // pre-seed
+      spawnTimer = setTimeout(loop, 600);
+    }
+    function stop () {
+      running = false;
+      if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
+    }
+
+    // Only spawn while the card is on screen. Saves cycles when the
+    // user is on the hero or scroll-jacked horizontal section.
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => e.isIntersecting ? start() : stop());
+      }, { threshold: 0.05 });
+      io.observe(stage);
+    } else {
+      start();
+    }
+  })();
 })();

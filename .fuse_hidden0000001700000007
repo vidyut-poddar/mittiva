@@ -84,13 +84,13 @@
       filter: blur(12px);
       pointer-events: none;
     }
-    /* ── 3D CRM-Cube ─────────────────────────────────────────
+    /* ── 3D Rubik's cube ─────────────────────────────────────────
        27 cubies, 6 sticker faces each. JS keeps a 54-element state
        array (one entry per sticker) and applies real cube moves on
        scroll. The cube's orientation eases between targeted angles
        per section (no continuous spinning), so the section's target
        face is always presented forward. */
-    .crm-cube-scene {
+    .rubik-scene {
       width: 100%;
       height: 100%;
       perspective: 800px;
@@ -99,7 +99,7 @@
       align-items: center;
       justify-content: center;
     }
-    .crm-cube {
+    .rubik-cube {
       transform-style: preserve-3d;
       position: relative;
       width: 0;
@@ -130,7 +130,7 @@
     .cubie__face--D { transform: translateX(-26px) translateY(-26px) rotateX(-90deg) translateZ(28px); }
     /* Animation wrapper — JS reparents the affected cubies into one
        of these per move so it can rotate them as a unit. */
-    .crm-cube-anim-layer {
+    .rubik-anim-layer {
       position: absolute;
       transform-style: preserve-3d;
       width: 0;
@@ -461,8 +461,8 @@
     <div class="cube-stage__pin">
       <div class="cube-stage__scene">
         <span class="cube-stage__glow" aria-hidden="true"></span>
-        <div class="crm-cube-scene" aria-hidden="true">
-          <div class="crm-cube" data-cube></div>
+        <div class="rubik-scene" aria-hidden="true">
+          <div class="rubik-cube" data-cube></div>
         </div>
       </div>
 
@@ -1021,7 +1021,6 @@
           <ul>
             <li><a href="services.html#voice">Voice AI</a></li>
             <li><a href="services.html#conversation">Conversation AI</a></li>
-            <li><a href="social.html">Social Media</a></li>
             <li><a href="crm.html">CRM &amp; Funnels</a></li>
             <li><a href="services.html#web">Websites</a></li>
             <li><a href="services.html#automations">Automations</a></li>
@@ -1046,8 +1045,8 @@
   <script src="main.js" defer></script>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       CRM-CUBE — SCRAMBLED → SOLVES ONE FACE PER SECTION
-       Built from a fork of the standard CRM-Cube representation:
+       RUBIK'S CUBE — SCRAMBLED → SOLVES ONE FACE PER SECTION
+       Built from a fork of the standard Rubik's representation:
          · 27 cubies positioned by (cx, cy, cz) ∈ {-1, 0, 1}^3
          · 54-entry state array — one face-colour index per sticker
          · MOVES dict cycles state on a 90° turn of any face (U/D/R/L/F/B)
@@ -1197,7 +1196,7 @@
       const layer = cubies.filter(c => c[m.layer] === m.val);
 
       const anim = document.createElement('div');
-      anim.className = 'crm-cube-anim-layer';
+      anim.className = 'rubik-anim-layer';
       anim.style.transition = 'none';
       cubeEl.appendChild(anim);
       layer.forEach(c => anim.appendChild(c.el));

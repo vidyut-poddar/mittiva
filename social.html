@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>Social Media Automations — Mittiva</title>
+  <meta name="description" content="Mittiva listens to every comment, DM and mention across your social platforms — and replies in your voice. Always-on scheduling. AI captions. Weekly intelligence. Made in Chennai." />
+  <link rel="canonical" href="https://mittiva.io/social.html" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ───── SOCIAL PAGE-LOCAL STYLES ───── -->
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+       Listening room — full-bleed whisper feed. Dozens of italic
+       fragments drift across; AI replies flash in green at random
+       intervals. JS at the bottom spawns the whispers + replies on
+       intersection so they don't run while off-screen.
+       ════════════════════════════════════════════════════════════════ */
+    .listening-room {
+      position: relative;
+      min-height: 72vh;
+      padding: clamp(80px, 9vw, 132px) 0 clamp(80px, 9vw, 132px);
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 50%, rgba(127, 219, 155, 0.06), transparent 65%);
+    }
+    .listening-room__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .listening-room__live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7fdb9b;
+      animation: socialLivePulse 1.6s ease-in-out infinite;
+    }
+    .listening-room__lede {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.022em;
+      color: var(--text);
+      max-width: 22ch;
+      margin: 0 0 38px;
+    }
+    .listening-room__lede em {
+      font-style: normal;
+      color: #7fdb9b;
+    }
+
+    /* The drifting feed itself — full viewport width, ~50vh tall.
+       Whispers are absolutely-positioned at random y-positions and
+       drift right-to-left. Replies pop in periodically and fade. */
+    .listening-feed {
+      position: relative;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      height: 48vh;
+      min-height: 360px;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+    .listening-feed__whisper {
+      position: absolute;
+      /* Start the whisper at the RIGHT edge of the container so it has
+         the full viewport to traverse. The shared socialWhisperDrift
+         keyframe translates by % of the element's own width — fine for
+         a 380px card but only covers ~400px on a 2400px screen here.
+         We give the listening-room feed its own viewport-spanning
+         keyframe below. */
+      left: 100%;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: -0.003em;
+      animation-name: listeningWhisperDrift;
+      animation-timing-function: linear;
+      will-change: transform, opacity;
+    }
+    /* Travel = 100vw of viewport + a 500px buffer so even long
+       whispers fully exit on the left before disappearing. */
+    @keyframes listeningWhisperDrift {
+      0%   { transform: translateX(0);                                 opacity: 0; }
+      4%   { opacity: 1; }
+      96%  { opacity: 1; }
+      100% { transform: translateX(calc(-100vw - 500px));              opacity: 0; }
+    }
+    .listening-feed__whisper--faint {
+      color: rgba(255, 255, 255, 0.28);
+    }
+    .listening-feed__whisper--reply {
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      color: #7fdb9b;
+      letter-spacing: 0.04em;
+    }
+    .listening-feed__whisper--loud {
+      color: rgba(255, 255, 255, 0.85);
+      font-style: normal;
+      font-weight: 600;
+    }
+    /* Light-mode overrides — white-on-light is invisible.
+       Use dark blue-grey for customer whispers and a deeper
+       green for replies so both read well on the light bg. */
+    [data-theme="light"] .listening-feed__whisper          { color: rgba(20, 30, 45, 0.62); }
+    [data-theme="light"] .listening-feed__whisper--faint   { color: rgba(20, 30, 45, 0.32); }
+    [data-theme="light"] .listening-feed__whisper--loud    { color: rgba(20, 30, 45, 0.92); }
+    [data-theme="light"] .listening-feed__whisper--reply   { color: #1f7a3e; }
+    [data-theme="light"] .listening-room__lede em          { color: #1f7a3e; }
+    [data-theme="light"] .listening-room__live-dot         { background: #1f7a3e; }
+    [data-theme="light"] .listening-room {
+      background: radial-gradient(ellipse at 50% 50%, rgba(31, 122, 62, 0.06), transparent 65%);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .listening-feed { display: none; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       Feature blocks — alternating left/right layout with a stylised
+       SVG mockup per feature.
+       ════════════════════════════════════════════════════════════════ */
+    .social-feature {
+      padding: clamp(64px, 7vw, 96px) 0;
+      position: relative;
+    }
+    .social-feature__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+    .social-feature--rev .social-feature__inner { direction: rtl; }
+    .social-feature--rev .social-feature__inner > * { direction: ltr; }
+
+    .social-feature__copy { max-width: 460px; }
+    .social-feature__num {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .social-feature__num::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.6;
+    }
+    .social-feature__title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 3.4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.022em;
+      margin: 0 0 22px;
+      color: var(--text);
+    }
+    .social-feature__title em {
+      font-style: normal;
+      color: #7fdb9b;
+    }
+    .social-feature__lede {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin: 0 0 24px;
+    }
+    .social-feature__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .social-feature__list li {
+      position: relative;
+      padding-left: 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .social-feature__list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 12px;
+      height: 1.5px;
+      background: #7fdb9b;
+    }
+
+    .social-feature__mockup {
+      width: 100%;
+      aspect-ratio: 5 / 4;
+      background: rgba(8, 12, 24, 0.72);
+      border: 1px solid rgba(176, 192, 216, 0.18);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.55);
+    }
+    .social-feature__mockup::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      width: 36px;
+      height: 8px;
+      background-image:
+        radial-gradient(circle, rgba(176, 192, 216, 0.30) 3px, transparent 3.5px),
+        radial-gradient(circle, rgba(176, 192, 216, 0.20) 3px, transparent 3.5px),
+        radial-gradient(circle, rgba(176, 192, 216, 0.20) 3px, transparent 3.5px);
+      background-position: 0 50%, 14px 50%, 28px 50%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
+    .social-feature__mockup svg { display: block; width: 100%; height: 100%; }
+
+    @media (max-width: 900px) {
+      .social-feature__inner {
+        grid-template-columns: 1fr;
+      }
+      .social-feature--rev .social-feature__inner { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="intro-mask" data-intro-mask><span class="intro-mask__label">SOCIAL · LOADING</span></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <canvas class="constellation-bg" data-constellation aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="nav" aria-label="Primary">
+    <a href="index.html" class="nav__brand" aria-label="Mittiva home">
+      <img src="assets/mittiva-icon-dark.svg" alt="" class="logo-dark" />
+      <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
+      <span>Mittiva</span>
+    </a>
+    <ul class="nav__links" role="list" aria-label="Primary navigation">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="founders.html">Founders</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav__cta" aria-label="Start a conversation">
+      Start a conversation
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+    <div class="nav__actions">
+      <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="nav__pill nav__pill--menu" data-menu-btn aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="label-open">Menu</span>
+        <span class="label-close">Close</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="menu-overlay" aria-label="Main menu">
+    <ul class="menu-overlay__links">
+      <li><a href="index.html"><span class="num">01</span>Home</a></li>
+      <li><a href="about.html"><span class="num">02</span>About</a></li>
+      <li><a href="services.html"><span class="num">03</span>Services</a></li>
+      <li><a href="founders.html"><span class="num">04</span>Founders</a></li>
+      <li><a href="contact.html"><span class="num">05</span>Contact</a></li>
+      <li><a href="careers.html"><span class="num">06</span>Careers</a></li>
+    </ul>
+    <aside class="menu-overlay__aside">
+      <p class="menu-overlay__quote">"Your brand should keep speaking while you sleep. We make sure it does."</p>
+      <div class="menu-overlay__meta">
+        <span>Mittiva · Estd. 2026</span>
+        <span>Chennai · India</span>
+        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+      </div>
+    </aside>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__head">
+        <div class="hero__caption reveal">
+          <span>Social</span>
+          <span>Always Listening</span>
+          <span>Always On</span>
+        </div>
+        <h1 class="stacked-title">
+          <span>Your brand</span>
+          <span>doesn't <em>sleep.</em></span>
+          <span>Neither do</span>
+          <span>we.</span>
+        </h1>
+      </div>
+      <p class="lede reveal" style="max-width:58ch;">
+        Mittiva listens to every comment, DM and mention across your social
+        platforms — and replies in your voice. Schedules posts that go out on time.
+        Writes captions that sound like you. Sends weekly intelligence on what's working.
+      </p>
+    </div>
+  </section>
+
+  <!-- LISTENING ROOM — full-bleed whisper feed -->
+  <section class="listening-room" aria-label="Live listening feed">
+    <div class="container">
+      <div class="listening-room__eyebrow">
+        <span class="listening-room__live-dot"></span>
+        <span>Live · 1,247 conversations across the network</span>
+      </div>
+      <h2 class="listening-room__lede">
+        Here's what your<br/>customers are<br/><em>saying</em> right now.
+      </h2>
+    </div>
+    <div class="listening-feed" data-listening-feed aria-hidden="true"></div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="social-feature">
+    <div class="container">
+      <div class="social-feature__inner">
+        <div class="social-feature__copy">
+          <span class="social-feature__num">№ 01 · Scheduling</span>
+          <h2 class="social-feature__title">Posts that go out<br/><em>on time.</em></h2>
+          <p class="social-feature__lede">
+            Six platforms. One calendar. Drag-to-reschedule, time-zone aware,
+            auto-cross-post with platform-specific resizing. Mittiva publishes
+            at the moment your audience is most likely to engage — not when you remembered.
+          </p>
+          <ul class="social-feature__list">
+            <li>Instagram, LinkedIn, X, YouTube, Facebook, TikTok</li>
+            <li>Best-time-to-post per platform, learned from your data</li>
+            <li>Auto-resize and aspect-crop per platform</li>
+            <li>Holiday + brand-blackout calendars built in</li>
+          </ul>
+        </div>
+        <figure class="social-feature__mockup" aria-label="Mittiva scheduling calendar">
+          <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+            <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+            <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.10em">WEEK OF MAY 25</text>
+            <g transform="translate(296, 12)">
+              <rect width="80" height="18" rx="9" fill="rgba(127,219,155,0.18)" stroke="rgba(127,219,155,0.45)"/>
+              <text x="40" y="13" fill="#7fdb9b" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em" text-anchor="middle">14 SCHEDULED</text>
+            </g>
+            <g fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="9" font-weight="600" letter-spacing="0.18em">
+              <text x="48"  y="60" text-anchor="middle">MON</text>
+              <text x="100" y="60" text-anchor="middle">TUE</text>
+              <text x="152" y="60" text-anchor="middle">WED</text>
+              <text x="204" y="60" text-anchor="middle">THU</text>
+              <text x="256" y="60" text-anchor="middle">FRI</text>
+              <text x="308" y="60" text-anchor="middle">SAT</text>
+              <text x="360" y="60" text-anchor="middle">SUN</text>
+            </g>
+            <g font-family="Inter,sans-serif" font-size="9" font-weight="600">
+              <g transform="translate(24, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.20)" stroke="rgba(127,219,155,0.50)"/>
+                <text x="8" y="14" fill="#fff">9:14a</text>
+                <text x="8" y="28" fill="#cdd5e0">IG</text>
+                <circle cx="40" cy="42" r="3" fill="#7fdb9b"/>
+              </g>
+              <g transform="translate(76, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">11:30</text>
+                <text x="8" y="28" fill="rgba(176,192,216,0.5)">LI</text>
+              </g>
+              <g transform="translate(128, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.16)" stroke="rgba(127,219,155,0.42)"/>
+                <text x="8" y="14" fill="#fff">2:30p</text>
+                <text x="8" y="28" fill="#cdd5e0">X</text>
+              </g>
+              <g transform="translate(180, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">6:15</text>
+                <text x="8" y="28" fill="rgba(176,192,216,0.5)">YT</text>
+              </g>
+              <g transform="translate(232, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.20)" stroke="rgba(127,219,155,0.50)"/>
+                <text x="8" y="14" fill="#fff">9:00a</text>
+                <text x="8" y="28" fill="#cdd5e0">IG</text>
+                <circle cx="40" cy="42" r="3" fill="#7fdb9b"/>
+              </g>
+              <g transform="translate(284, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">—</text>
+              </g>
+              <g transform="translate(336, 76)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(176,192,216,0.10)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.4)">—</text>
+              </g>
+              <g transform="translate(24, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.20)" stroke="rgba(127,219,155,0.50)"/>
+                <text x="8" y="14" fill="#fff">8:42a</text>
+                <text x="8" y="28" fill="#cdd5e0">FB</text>
+              </g>
+              <g transform="translate(76, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.30)" stroke="rgba(127,219,155,0.65)"/>
+                <text x="8" y="14" fill="#fff">10:08</text>
+                <text x="8" y="28" fill="#cdd5e0">LI</text>
+                <circle cx="40" cy="42" r="3" fill="#7fdb9b"/>
+              </g>
+              <g transform="translate(128, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">3:15p</text>
+                <text x="8" y="28" fill="rgba(176,192,216,0.5)">TK</text>
+              </g>
+              <g transform="translate(180, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.20)" stroke="rgba(127,219,155,0.50)"/>
+                <text x="8" y="14" fill="#fff">7:30p</text>
+                <text x="8" y="28" fill="#cdd5e0">YT</text>
+              </g>
+              <g transform="translate(232, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">—</text>
+              </g>
+              <g transform="translate(284, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(127,219,155,0.16)" stroke="rgba(127,219,155,0.42)"/>
+                <text x="8" y="14" fill="#fff">11:00</text>
+                <text x="8" y="28" fill="#cdd5e0">IG</text>
+              </g>
+              <g transform="translate(336, 138)">
+                <rect width="48" height="48" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(176,192,216,0.16)"/>
+                <text x="8" y="14" fill="rgba(176,192,216,0.6)">5:00p</text>
+                <text x="8" y="28" fill="rgba(176,192,216,0.5)">X</text>
+              </g>
+            </g>
+            <text x="22" y="232" fill="rgba(127,219,155,0.85)" font-family="Inter,sans-serif" font-size="10" font-weight="600" letter-spacing="0.08em">PUBLISHED THIS WEEK · 8 / 14</text>
+            <rect x="22" y="244" width="356" height="4" rx="2" fill="rgba(176,192,216,0.10)"/>
+            <rect x="22" y="244" width="203" height="4" rx="2" fill="#7fdb9b"/>
+            <text x="22" y="280" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="10" font-weight="500">Best-times-to-post · learned from 312 of your posts</text>
+            <text x="22" y="298" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="10" font-weight="500">Auto-crop · auto-resize · auto-reschedule</text>
+          </svg>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-feature social-feature--rev">
+    <div class="container">
+      <div class="social-feature__inner">
+        <div class="social-feature__copy">
+          <span class="social-feature__num">№ 02 · Captions</span>
+          <h2 class="social-feature__title">Words that sound<br/><em>like you.</em></h2>
+          <p class="social-feature__lede">
+            Mittiva learns your brand voice from your last 100 posts, then writes
+            captions that sound indistinguishable from your own. Different cadence per
+            platform — punchy on X, considered on LinkedIn, warm on Instagram.
+          </p>
+          <ul class="social-feature__list">
+            <li>Trained on your actual content and comments</li>
+            <li>Tone-aware rewrites per platform</li>
+            <li>You review and approve — or set to fully autonomous</li>
+            <li>Versioning: see why a caption changed</li>
+          </ul>
+        </div>
+        <figure class="social-feature__mockup" aria-label="Mittiva caption studio">
+          <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+            <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+            <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.10em">CAPTION STUDIO</text>
+            <g transform="translate(316, 12)">
+              <rect width="68" height="18" rx="9" fill="rgba(127,219,155,0.20)" stroke="rgba(127,219,155,0.50)"/>
+              <text x="34" y="13" fill="#7fdb9b" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em" text-anchor="middle">YOUR VOICE</text>
+            </g>
+            <g transform="translate(20, 56)" font-family="Inter,sans-serif">
+              <text x="0" y="14" fill="rgba(176,192,216,0.55)" font-size="9" font-weight="700" letter-spacing="0.18em">SAME IDEA · SIX VOICES</text>
+              <g transform="translate(0, 26)">
+                <rect width="360" height="36" rx="8" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <text x="10" y="14" fill="#7fa3d5" font-size="8" font-weight="700" letter-spacing="0.18em">INSTAGRAM</text>
+                <text x="10" y="28" fill="#fff" font-size="11" font-style="italic">"new collection drop. link in bio."</text>
+              </g>
+              <g transform="translate(0, 70)">
+                <rect width="360" height="36" rx="8" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <text x="10" y="14" fill="#7fa3d5" font-size="8" font-weight="700" letter-spacing="0.18em">LINKEDIN</text>
+                <text x="10" y="28" fill="rgba(255,255,255,0.85)" font-size="10.5">Excited to share what our team has been building this quarter.</text>
+              </g>
+              <g transform="translate(0, 114)">
+                <rect width="360" height="36" rx="8" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <text x="10" y="14" fill="#7fa3d5" font-size="8" font-weight="700" letter-spacing="0.18em">X</text>
+                <text x="10" y="28" fill="#fff" font-size="10.5">new drop. small batch. limited. link below.</text>
+              </g>
+              <g transform="translate(0, 158)">
+                <rect width="360" height="36" rx="8" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <text x="10" y="14" fill="#7fa3d5" font-size="8" font-weight="700" letter-spacing="0.18em">TIKTOK</text>
+                <text x="10" y="28" fill="#fff" font-size="10.5">pov: you finally tried our spring collection ✦</text>
+              </g>
+              <g transform="translate(0, 202)">
+                <rect width="360" height="24" rx="6" fill="rgba(127,219,155,0.10)" stroke="rgba(127,219,155,0.30)"/>
+                <text x="10" y="16" fill="#7fdb9b" font-size="10" font-weight="600">✓ Approved · scheduled across 4 platforms</text>
+              </g>
+            </g>
+          </svg>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-feature">
+    <div class="container">
+      <div class="social-feature__inner">
+        <div class="social-feature__copy">
+          <span class="social-feature__num">№ 03 · Auto-reply</span>
+          <h2 class="social-feature__title">Answered before<br/>a <em>competitor</em><br/>gets there.</h2>
+          <p class="social-feature__lede">
+            Every comment, DM and mention across every platform flows into one inbox.
+            Mittiva replies in your voice — politely, on-brand, instantly — and escalates
+            anything tricky to you with full context attached.
+          </p>
+          <ul class="social-feature__list">
+            <li>Median first-reply time: 12 seconds</li>
+            <li>Sentiment-aware routing for complaints vs questions</li>
+            <li>Human-in-the-loop for high-value conversations</li>
+            <li>Conversation memory across every channel</li>
+          </ul>
+        </div>
+        <figure class="social-feature__mockup" aria-label="Mittiva unified inbox">
+          <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+            <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+            <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.10em">UNIFIED INBOX</text>
+            <g transform="translate(298, 12)">
+              <rect width="86" height="18" rx="9" fill="rgba(127,219,155,0.18)" stroke="rgba(127,219,155,0.45)"/>
+              <text x="43" y="13" fill="#7fdb9b" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.16em" text-anchor="middle">AVG 12s REPLY</text>
+            </g>
+            <g transform="translate(20, 56)" font-family="Inter,sans-serif">
+              <g>
+                <rect width="360" height="56" rx="9" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <circle cx="22" cy="28" r="13" fill="rgba(176,192,216,0.15)" stroke="rgba(127,163,213,0.55)"/>
+                <text x="22" y="32" fill="#7fa3d5" font-size="10" font-weight="700" text-anchor="middle">SK</text>
+                <text x="44" y="20" fill="#fff" font-size="11" font-weight="700">Sarah Khan</text>
+                <text x="44" y="36" fill="rgba(176,192,216,0.7)" font-size="10" font-style="italic">"do they ship to Mumbai?"</text>
+                <g transform="translate(280, 14)">
+                  <rect width="60" height="14" rx="7" fill="rgba(127,219,155,0.18)" stroke="rgba(127,219,155,0.45)"/>
+                  <text x="30" y="10" fill="#7fdb9b" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">REPLIED 8s</text>
+                </g>
+                <g transform="translate(280, 32)">
+                  <rect width="34" height="14" rx="7" fill="rgba(127,163,213,0.18)" stroke="rgba(127,163,213,0.40)"/>
+                  <text x="17" y="10" fill="#7fa3d5" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">IG</text>
+                </g>
+              </g>
+              <g transform="translate(0, 64)">
+                <rect width="360" height="56" rx="9" fill="rgba(127,163,213,0.06)" stroke="rgba(127,163,213,0.25)"/>
+                <circle cx="22" cy="28" r="13" fill="rgba(176,192,216,0.15)" stroke="rgba(127,163,213,0.55)"/>
+                <text x="22" y="32" fill="#7fa3d5" font-size="10" font-weight="700" text-anchor="middle">HT</text>
+                <text x="44" y="20" fill="#fff" font-size="11" font-weight="700">Hari T.</text>
+                <text x="44" y="36" fill="rgba(176,192,216,0.7)" font-size="10" font-style="italic">"will there be a winter line?"</text>
+                <g transform="translate(280, 14)">
+                  <rect width="60" height="14" rx="7" fill="rgba(127,219,155,0.18)" stroke="rgba(127,219,155,0.45)"/>
+                  <text x="30" y="10" fill="#7fdb9b" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">REPLIED 14s</text>
+                </g>
+                <g transform="translate(280, 32)">
+                  <rect width="34" height="14" rx="7" fill="rgba(127,163,213,0.18)" stroke="rgba(127,163,213,0.40)"/>
+                  <text x="17" y="10" fill="#7fa3d5" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">LI</text>
+                </g>
+              </g>
+              <g transform="translate(0, 128)">
+                <rect width="360" height="56" rx="9" fill="rgba(232, 145, 120, 0.06)" stroke="rgba(232, 145, 120, 0.30)"/>
+                <circle cx="22" cy="28" r="13" fill="rgba(232,145,120,0.15)" stroke="rgba(232,145,120,0.55)"/>
+                <text x="22" y="32" fill="#e89178" font-size="10" font-weight="700" text-anchor="middle">MP</text>
+                <text x="44" y="20" fill="#fff" font-size="11" font-weight="700">Meera P.</text>
+                <text x="44" y="36" fill="rgba(176,192,216,0.7)" font-size="10" font-style="italic">"my order hasn't arrived in 10 days…"</text>
+                <g transform="translate(252, 14)">
+                  <rect width="88" height="14" rx="7" fill="rgba(232,145,120,0.20)" stroke="rgba(232,145,120,0.50)"/>
+                  <text x="44" y="10" fill="#e89178" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">ESCALATED → YOU</text>
+                </g>
+                <g transform="translate(280, 32)">
+                  <rect width="34" height="14" rx="7" fill="rgba(127,163,213,0.18)" stroke="rgba(127,163,213,0.40)"/>
+                  <text x="17" y="10" fill="#7fa3d5" font-size="7" font-weight="700" letter-spacing="0.10em" text-anchor="middle">X</text>
+                </g>
+              </g>
+              <g transform="translate(0, 196)">
+                <rect width="360" height="40" rx="9" fill="rgba(127,219,155,0.06)" stroke="rgba(127,219,155,0.25)"/>
+                <text x="14" y="16" fill="#7fdb9b" font-size="9" font-weight="700" letter-spacing="0.18em">THIS HOUR</text>
+                <text x="14" y="30" fill="#fff" font-size="11" font-weight="500">47 replies sent · 3 escalated · 12s median</text>
+              </g>
+            </g>
+          </svg>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-feature social-feature--rev">
+    <div class="container">
+      <div class="social-feature__inner">
+        <div class="social-feature__copy">
+          <span class="social-feature__num">№ 04 · Intelligence</span>
+          <h2 class="social-feature__title">A weekly briefing.<br/>Not a <em>dashboard.</em></h2>
+          <p class="social-feature__lede">
+            Every Monday, a hand-written one-pager lands in your inbox: what worked,
+            what didn't, what to try next. Written by Mittiva, signed by your team.
+            Built to be forwarded, not exported to CSV.
+          </p>
+          <ul class="social-feature__list">
+            <li>One page. Plain prose. No vanity metrics.</li>
+            <li>Trend detection — "your IG carousels are outperforming reels"</li>
+            <li>Sentiment of comments + DMs over time</li>
+            <li>Three concrete recommendations for next week</li>
+          </ul>
+        </div>
+        <figure class="social-feature__mockup" aria-label="Mittiva weekly briefing">
+          <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+            <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+            <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.10em">WEEKLY BRIEFING</text>
+            <g transform="translate(310, 12)">
+              <rect width="76" height="18" rx="9" fill="rgba(127,219,155,0.18)" stroke="rgba(127,219,155,0.45)"/>
+              <text x="38" y="13" fill="#7fdb9b" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.16em" text-anchor="middle">MON 9:00am</text>
+            </g>
+            <g transform="translate(20, 56)" font-family="Inter,sans-serif">
+              <text x="0" y="14" fill="rgba(176,192,216,0.55)" font-size="9" font-weight="700" letter-spacing="0.18em">FROM: MITTIVA &lt;hello@mittiva.io&gt;</text>
+              <text x="0" y="32" fill="#fff" font-family="Inter Tight,sans-serif" font-size="16" font-weight="800" letter-spacing="-0.012em">Week of May 25 — a small reframe.</text>
+              <text x="0" y="58" fill="rgba(255,255,255,0.82)" font-size="11" font-style="italic">"Your IG carousels are outperforming reels by 3.4x.</text>
+              <text x="0" y="74" fill="rgba(255,255,255,0.82)" font-size="11" font-style="italic">Let's lean in next week — three concrete moves below."</text>
+              <text x="0" y="100" fill="#7fdb9b" font-size="9" font-weight="700" letter-spacing="0.18em">THIS WEEK</text>
+              <g transform="translate(0, 110)">
+                <rect width="360" height="60" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.12)"/>
+                <text x="14" y="20" fill="rgba(176,192,216,0.55)" font-size="9" font-weight="700" letter-spacing="0.18em">POSTS · REACH · ENGAGE</text>
+                <text x="14" y="44" fill="#fff" font-family="Inter Tight,sans-serif" font-size="16" font-weight="800">14 · 18.2k · 4.7%</text>
+                <text x="180" y="44" fill="#7fdb9b" font-size="10" font-weight="600">↑ 22% vs last week</text>
+                <polyline points="14,52 50,48 86,44 122,46 158,40 194,38 230,34 266,36 302,30 338,28" fill="none" stroke="#7fdb9b" stroke-width="1.2" stroke-linecap="round"/>
+              </g>
+              <text x="0" y="194" fill="#7fdb9b" font-size="9" font-weight="700" letter-spacing="0.18em">3 RECOMMENDATIONS</text>
+              <g transform="translate(0, 200)" font-size="10.5" fill="rgba(255,255,255,0.85)">
+                <text x="0" y="14">01 · Repurpose Tuesday's carousel as a LinkedIn doc-post</text>
+                <text x="0" y="30">02 · Add a third panel to Friday's IG drop — driving saves</text>
+                <text x="0" y="46">03 · Reply faster on X — competitor latency is 3 min, ours is 14s</text>
+              </g>
+            </g>
+          </svg>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSER -->
+  <section class="big-closer">
+    <div class="container">
+      <h2 class="stacked-title big-closer__title">
+        <span>Quiet.</span>
+        <span>Always</span>
+        <span><em>Working.</em></span>
+      </h2>
+      <p class="lede" style="max-width:60ch;margin-bottom:32px;">
+        While you sleep, eat, drive home, and dream up the next idea —
+        Mittiva keeps your brand showing up. Posting. Replying. Listening.
+      </p>
+      <a href="contact.html" class="btn btn--primary">Get a custom quote
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="assets/mittiva-logo-dark.svg" alt="Mittiva" class="logo-dark" />
+          <img src="assets/mittiva-logo-light.svg" alt="Mittiva" class="logo-light" />
+          <p>Practical AI for the businesses that built our neighbourhoods. Made in Chennai.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Build</h4>
+          <ul>
+            <li><a href="services.html#voice">Voice AI</a></li>
+            <li><a href="services.html#conversation">Conversation AI</a></li>
+            <li><a href="social.html">Social Media</a></li>
+            <li><a href="crm.html">CRM &amp; Funnels</a></li>
+            <li><a href="services.html#web">Websites</a></li>
+            <li><a href="services.html#automations">Automations</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Reach Us</h4>
+          <ul>
+            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a href="contact.html">Send a brief</a></li>
+            <li>Chennai · India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+        <span>v0.2 · EDITORIAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       LISTENING-ROOM WHISPER FEED
+       Dynamically spawn drifting whispers in the full-bleed section
+       below the hero. IntersectionObserver gates the spawner so it
+       only runs while the section is on screen.
+       ═══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+    const feed = document.querySelector('[data-listening-feed]');
+    if (!feed) return;
+
+    // ~70 fragments, varied tones and topics (mirrors the card 03 pool).
+    const WHISPERS = [
+      "do you ship to Mumbai?","any plans for international shipping?","Bangalore stockists?","how long does delivery take?","express shipping?",
+      "the roast is sublime","best small-batch I've tried this year","you've ruined every other brand for me","ordered three more today","didn't expect to love it this much","the formula has changed my evenings",
+      "the packaging deserves an award","kept the box on my shelf","the unboxing was a moment","loved the handwritten note","the wrapping alone is worth it",
+      "the caption made me laugh out loud","your reels keep me up at night","saving every post for inspiration","newsletter twice every Sunday",
+      "when's the next drop?","is the espresso back yet?","do you do custom orders?","any referral discount?","do you ever do trunk shows?",
+      "ordering for my mother — she's smitten","my husband won't stop talking about it","sister sent me your post","telling everyone at work","bought one for my boss — winner",
+      "let me know the second it's back","would set an alarm for the next drop","I check every Monday",
+      "any gift-wrap option?","perfect Diwali present","anniversary present sorted",
+      "open to brand collabs?","any B2B program?","bulk pricing available?",
+      "Sunday morning ritual","only thing on my desk that brings joy","lurked for months, finally ordering","saw your founder on a podcast — bought immediately","third order this month, no regrets",
+      "any London pop-up planned?","would order from Dubai if you'd ship","Chennai represents","any chance of a Goa stockist?","saw your story from Pondy and ran",
+      "obsessed","made my month","feeling spoilt","y'all can do no wrong","didn't think anything could be this good",
+      "your service is unreal","replied in 12 seconds — wild","first brand to fix it without arguing",
+      "colour exactly as advertised","the typography on the label alone","every detail feels considered","love what you've done with the rebrand",
+      "lol the new ad is gold","y'all are crushing it","no notes","Excellent product. Will recommend.","Outstanding quality for the price.",
+      "honestly the best","saved the post for later","any behind-the-scenes content?","you nailed it","what's your secret?","tell whoever wrote that — thank you","I keep coming back","the consistency is what gets me","subscribed forever",
+    ];
+    const LOUD = [
+      "Just got mine — it's incredible",
+      "Best purchase of the year",
+      "This is what I'll be telling everyone about",
+      "Stop reading this and just order",
+    ];
+
+    // Categorical reply generator — no fake handles. Picks a category
+    // (comment / dm / mention / story) by weight, then picks a verb that
+    // pairs naturally with that target type. Sample outputs:
+    //   "→ Replied to ig_comment in 6 secs"
+    //   "→ Hearted ig_story_reply immediately"
+    //   "→ Followed back on ig_mention in 3 secs"
+    const REPLY_CATEGORIES = {
+      comment: {
+        targets: ['ig_comment', 'ig_reel_comment', 'fb_comment', 'li_comment', 'yt_comment', 'tt_comment', 'x_reply', 'threads_reply'],
+        verbs:   ['Replied to', 'Liked', 'Hearted', 'Reacted to', 'Answered', 'Responded to'],
+      },
+      dm:      {
+        targets: ['ig_dm', 'fb_dm', 'li_dm', 'x_dm', 'tt_dm'],
+        verbs:   ['Replied to', 'Answered', 'Responded to'],
+      },
+      mention: {
+        targets: ['ig_mention', 'x_mention', 'fb_mention', 'ig_tag', 'x_tag'],
+        verbs:   ['Acknowledged', 'Followed back on', 'Replied to', 'Liked', 'Reacted to'],
+      },
+      story:   {
+        targets: ['ig_story_reply', 'ig_story_reaction', 'fb_story_reply'],
+        verbs:   ['Replied to', 'Reacted to', 'Hearted'],
+      },
+    };
+    const REPLY_WEIGHTS = [
+      ['comment', 0.55], ['dm', 0.80], ['mention', 0.92], ['story', 1.00],
+    ];
+    const REPLY_TIMES_TXT = [
+      'in 1 sec', 'in 2 secs', 'in 3 secs', 'in 4 secs', 'in 5 secs',
+      'in 6 secs', 'in 7 secs', 'in 8 secs', 'in 11 secs', 'in 14 secs',
+      'in 17 secs', 'in 22 secs', 'in 31 secs', 'in under a second', 'immediately',
+    ];
+    function makeReply () {
+      const r = Math.random();
+      let key = 'comment';
+      for (const [k, cum] of REPLY_WEIGHTS) { if (r < cum) { key = k; break; } }
+      const cfg  = REPLY_CATEGORIES[key];
+      const verb = cfg.verbs[Math.floor(Math.random() * cfg.verbs.length)];
+      const tgt  = cfg.targets[Math.floor(Math.random() * cfg.targets.length)];
+      const tm   = REPLY_TIMES_TXT[Math.floor(Math.random() * REPLY_TIMES_TXT.length)];
+      return '→ ' + verb + ' ' + tgt + ' ' + tm;
+    }
+
+    // 5 vertical lanes covering the feed area with jitter inside each.
+    // Round-robin through lanes (with a small random skip) so we never
+    // stack two whispers in the same band back-to-back.
+    const LANES = [12, 28, 46, 64, 82];
+    let laneCursor = 0;
+    function nextLane () {
+      laneCursor = (laneCursor + 1 + Math.floor(Math.random() * 2)) % LANES.length;
+      return LANES[laneCursor] + (Math.random() * 6 - 3);  // ±3% jitter
+    }
+
+    const MAX_VISIBLE = 9;       // hard cap so the screen never floods
+    const INTERVAL_MIN = 950;    // ms between spawn attempts
+    const INTERVAL_RND = 900;    // jitter on top of MIN
+    let running = false;
+    let spawnTimer = null;
+
+    function rand (arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    // Recency rings — never repeat a whisper or full reply string until
+    // it's cycled out. Pool of 70 whispers and procedurally generated
+    // handles means the user practically never sees a repeat.
+    const recentWhispers = [];
+    const recentReplies  = [];
+    function freshFrom (pool, recent, keepLast) {
+      let attempts = 0, item;
+      do {
+        item = pool[Math.floor(Math.random() * pool.length)];
+        attempts++;
+      } while (recent.indexOf(item) !== -1 && attempts < 12);
+      recent.push(item);
+      if (recent.length > keepLast) recent.shift();
+      return item;
+    }
+    function freshReply () {
+      let attempts = 0, r;
+      do { r = makeReply(); attempts++; }
+      while (recentReplies.indexOf(r) !== -1 && attempts < 10);
+      recentReplies.push(r);
+      if (recentReplies.length > 8) recentReplies.shift();
+      return r;
+    }
+
+    function spawnOne () {
+      if (feed.children.length >= MAX_VISIBLE) return;
+      const el = document.createElement('div');
+      const roll = Math.random();
+      let cls = 'listening-feed__whisper';
+      let text;
+      let size;
+      if (roll < 0.14) {
+        cls += ' listening-feed__whisper--reply';
+        text = freshReply();
+        size = 13;
+      } else if (roll < 0.17) {                // 3% loud
+        cls += ' listening-feed__whisper--loud';
+        text = rand(LOUD);
+        size = 16 + Math.floor(Math.random() * 3);
+      } else if (roll < 0.55) {
+        cls += ' listening-feed__whisper--faint';
+        text = freshFrom(WHISPERS, recentWhispers, 18);
+        size = 11 + Math.floor(Math.random() * 2);
+      } else {
+        text = freshFrom(WHISPERS, recentWhispers, 18);
+        size = 13 + Math.floor(Math.random() * 3);
+      }
+      el.className = cls;
+      el.textContent = text;
+      el.style.fontSize = size + 'px';
+      el.style.top = nextLane() + '%';
+      el.style.animationDuration = (14 + Math.random() * 6) + 's';
+      el.style.animationIterationCount = '1';
+      feed.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    function loop () {
+      if (!running) return;
+      spawnOne();
+      spawnTimer = setTimeout(loop, INTERVAL_MIN + Math.random() * INTERVAL_RND);
+    }
+
+    function start () {
+      if (running) return;
+      running = true;
+      // Pre-seed a few without scheduling — the loop owns the heartbeat.
+      for (let i = 0; i < 3; i++) spawnOne();
+      // Stagger the first scheduled spawn slightly so it doesn't pile on.
+      spawnTimer = setTimeout(loop, 500);
+    }
+    function stop () {
+      running = false;
+      if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => e.isIntersecting ? start() : stop());
+      }, { threshold: 0.05 });
+      io.observe(feed);
+    } else {
+      start();
+    }
+  })();
+  </script>
+
+  <!-- MOBILE STICKY CTA -->
+  <a href="contact.html" class="mobile-cta" aria-label="Contact us">Contact us
+    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+</body>
+</html>

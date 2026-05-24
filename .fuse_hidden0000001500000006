@@ -129,18 +129,84 @@
             </div>
           </article>
 
-          <!-- 02 — Conversation AI -->
-          <article class="service-deck__card" data-deck-card id="conversation">
+          <!-- 02 — AI Changing Room -->
+          <article class="service-deck__card" data-deck-card id="changing-room">
             <div class="service-deck__flipper">
               <div class="service-deck__face service-deck__back">
                 <span class="service-deck__back-corner service-deck__back-corner--tl">02</span>
                 <span class="service-deck__back-corner service-deck__back-corner--br">02</span>
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
+                <span class="service-deck__back-mark">AI Changing Room</span>
+              </div>
+              <div class="service-deck__face service-deck__front">
+                <span class="service-deck__front-corner service-deck__front-corner--tl">02</span>
+                <span class="service-deck__front-corner service-deck__front-corner--br">02</span>
+                <span class="service-deck__cat">Retail · Try before they buy</span>
+                <h3 class="service-deck__title-h">AI Changing Room</h3>
+                <p class="service-deck__copy">For boutiques and clothing brands. Customers upload a photo and see themselves in your pieces.</p>
+                <ul class="service-deck__features">
+                  <li>Web + WhatsApp embed</li>
+                  <li>Garment library from product photos</li>
+                  <li>Shareable try-on cards</li>
+                  <li>Optional in-store kiosk mode</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- 03 — Social Media Automations -->
+          <article class="service-deck__card" data-deck-card id="social">
+            <div class="service-deck__flipper">
+              <div class="service-deck__face service-deck__back">
+                <span class="service-deck__back-corner service-deck__back-corner--tl">03</span>
+                <span class="service-deck__back-corner service-deck__back-corner--br">03</span>
+                <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
+                <span class="service-deck__back-mark">Social</span>
+              </div>
+              <div class="service-deck__face service-deck__front service-deck__front--social">
+                <span class="service-deck__front-corner service-deck__front-corner--tl">03</span>
+                <span class="service-deck__front-corner service-deck__front-corner--br">03</span>
+                <span class="service-deck__cat">Social · Always-on brand</span>
+                <h3 class="service-deck__title-h">Social Media Automations</h3>
+                <!-- The whisper feed — drifting customer fragments + occasional
+                     green AI-reply flashes. Decorative, CSS-only animation,
+                     suggests "we're listening to your customers right now." -->
+                <div class="social-whispers" aria-hidden="true">
+                  <div class="social-whispers__eyebrow">
+                    <span class="social-whispers__live-dot"></span>
+                    <span>Live · 1,247 conversations</span>
+                  </div>
+                  <div class="social-whispers__stage">
+                    <div class="social-whisper" style="top:8%;  animation-delay: 0s;   animation-duration: 13s;">"do they ship to Mumbai…"</div>
+                    <div class="social-whisper social-whisper--faint" style="top:24%; animation-delay: -2s;  animation-duration: 14s;">"love the espresso roast…"</div>
+                    <div class="social-whisper" style="top:40%; animation-delay: -5s;  animation-duration: 12s;">"will there be a winter line?"</div>
+                    <div class="social-whisper social-whisper--reply" style="top:56%; animation-delay: -7s;  animation-duration: 10s;">→ Replied to @sarah_b in 12s</div>
+                    <div class="social-whisper social-whisper--faint" style="top:72%; animation-delay: -8s;  animation-duration: 15s;">"just placed my third order…"</div>
+                    <div class="social-whisper" style="top:14%; animation-delay: -11s; animation-duration: 14s;">"the caption made me laugh"</div>
+                    <div class="social-whisper social-whisper--reply" style="top:46%; animation-delay: -13s; animation-duration: 11s;">→ Replied to @hari_t in 8s</div>
+                    <div class="social-whisper social-whisper--faint" style="top:84%; animation-delay: -3s;  animation-duration: 16s;">"you got it right on the first try"</div>
+                  </div>
+                </div>
+                <a href="social.html" class="service-deck__cta-link" aria-label="See the listening room">
+                  See the listening room
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 04 — Conversation AI -->
+          <article class="service-deck__card" data-deck-card id="conversation">
+            <div class="service-deck__flipper">
+              <div class="service-deck__face service-deck__back">
+                <span class="service-deck__back-corner service-deck__back-corner--tl">04</span>
+                <span class="service-deck__back-corner service-deck__back-corner--br">04</span>
+                <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">Conversation AI</span>
               </div>
               <div class="service-deck__face service-deck__front service-deck__front--conversation">
-                <span class="service-deck__front-corner service-deck__front-corner--tl">02</span>
-                <span class="service-deck__front-corner service-deck__front-corner--br">02</span>
+                <span class="service-deck__front-corner service-deck__front-corner--tl">04</span>
+                <span class="service-deck__front-corner service-deck__front-corner--br">04</span>
                 <span class="service-deck__cat">Chat · WhatsApp · Web</span>
                 <h3 class="service-deck__title-h">Conversation AI</h3>
                 <!-- Editorial "cover" CTA — Mitti's portrait fills the lower half
@@ -174,65 +240,6 @@
                     </span>
                   </span>
                 </button>
-              </div>
-            </div>
-          </article>
-
-          <!-- 03 — Social Media Automations -->
-          <article class="service-deck__card" data-deck-card id="social">
-            <div class="service-deck__flipper">
-              <div class="service-deck__face service-deck__back">
-                <span class="service-deck__back-corner service-deck__back-corner--tl">03</span>
-                <span class="service-deck__back-corner service-deck__back-corner--br">03</span>
-                <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
-                <span class="service-deck__back-mark">Social</span>
-              </div>
-              <div class="service-deck__face service-deck__front service-deck__front--social">
-                <span class="service-deck__front-corner service-deck__front-corner--tl">03</span>
-                <span class="service-deck__front-corner service-deck__front-corner--br">03</span>
-                <span class="service-deck__cat">Social · Always-on brand</span>
-                <h3 class="service-deck__title-h">Social Media Automations</h3>
-                <!-- The whisper feed — drifting customer fragments + occasional
-                     green AI-reply flashes. Populated by initSocialCardWhispers()
-                     in main.js. Three depth tiers (far/mid/near) create
-                     parallax-style depth. Round-robin lane assignment
-                     prevents back-to-back stacking. -->
-                <div class="social-whispers" aria-hidden="true">
-                  <div class="social-whispers__eyebrow">
-                    <span class="social-whispers__live-dot"></span>
-                    <span>Live · 1,247 conversations</span>
-                  </div>
-                  <div class="social-whispers__stage" data-card-whispers></div>
-                </div>
-                <a href="social.html" class="service-deck__cta-link" aria-label="See the listening room">
-                  See the listening room
-                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- 04 — AI Changing Room -->
-          <article class="service-deck__card" data-deck-card id="changing-room">
-            <div class="service-deck__flipper">
-              <div class="service-deck__face service-deck__back">
-                <span class="service-deck__back-corner service-deck__back-corner--tl">04</span>
-                <span class="service-deck__back-corner service-deck__back-corner--br">04</span>
-                <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
-                <span class="service-deck__back-mark">AI Changing Room</span>
-              </div>
-              <div class="service-deck__face service-deck__front">
-                <span class="service-deck__front-corner service-deck__front-corner--tl">04</span>
-                <span class="service-deck__front-corner service-deck__front-corner--br">04</span>
-                <span class="service-deck__cat">Retail · Try before they buy</span>
-                <h3 class="service-deck__title-h">AI Changing Room</h3>
-                <p class="service-deck__copy">For boutiques and clothing brands. Customers upload a photo and see themselves in your pieces.</p>
-                <ul class="service-deck__features">
-                  <li>Web + WhatsApp embed</li>
-                  <li>Garment library from product photos</li>
-                  <li>Shareable try-on cards</li>
-                  <li>Optional in-store kiosk mode</li>
-                </ul>
               </div>
             </div>
           </article>
@@ -411,7 +418,6 @@
           <ul>
             <li><a href="services.html#voice">Voice AI</a></li>
             <li><a href="services.html#conversation">Conversation AI</a></li>
-            <li><a href="social.html">Social Media</a></li>
             <li><a href="crm.html">CRM</a></li>
             <li><a href="services.html#web">Websites</a></li>
             <li><a href="services.html#automations">Automations</a></li>

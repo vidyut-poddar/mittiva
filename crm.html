@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>CRM &amp; Funnels — Mittiva</title>
+  <meta name="description" content="One CRM to run a small business: calendar, communication, pipelines, reporting, reputation, and a mobile app. Built on GHL, set up by Mittiva." />
+  <link rel="canonical" href="https://mittiva.io/crm.html" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Inter+Tight:wght@800&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- ───── CRM PAGE-LOCAL STYLES ───── -->
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+       Per-face theme tokens. Each section sets data-crm-theme on <body>
+       via the IntersectionObserver and these variables transition.
+       ════════════════════════════════════════════════════════════════ */
+    body[data-crm-active] {
+      --crm-bg:     #07090F;
+      --crm-glow:   #3E7FB0;
+      --crm-tint:   rgba(62, 127, 176, 0.10);
+      --crm-accent: #8BBAD4;
+      transition: background-color 900ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    body[data-crm-theme="blue"]   { --crm-bg:#050a18; --crm-glow:#1050C8; --crm-tint:rgba(16,80,200,0.14); --crm-accent:#5a8be6; }
+    body[data-crm-theme="yellow"] { --crm-bg:#16110a; --crm-glow:#FFD600; --crm-tint:rgba(255,214, 0,0.10); --crm-accent:#f4cb50; }
+    body[data-crm-theme="green"]  { --crm-bg:#05140d; --crm-glow:#1A8C4E; --crm-tint:rgba( 26,140,78,0.14); --crm-accent:#4ec48d; }
+    body[data-crm-theme="red"]    { --crm-bg:#160508; --crm-glow:#C41E3A; --crm-tint:rgba(196, 30,58,0.14); --crm-accent:#ea6a82; }
+    body[data-crm-theme="orange"] { --crm-bg:#180c05; --crm-glow:#FF6000; --crm-tint:rgba(255, 96, 0,0.14); --crm-accent:#ff8e4a; }
+    body[data-crm-theme="white"]  { --crm-bg:#1a1a20; --crm-glow:#F4F4F4; --crm-tint:rgba(244,244,244,0.10); --crm-accent:#dde2ea; }
+
+    .cube-stage {
+      position: relative;
+      background: var(--crm-bg, #07090F);
+      transition: background 900ms cubic-bezier(0.32, 0.72, 0, 1);
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-areas: 'stack';
+    }
+    .cube-stage > * { grid-area: stack; }
+    .cube-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, var(--crm-tint, transparent), transparent 65%);
+      pointer-events: none;
+      transition: background 900ms cubic-bezier(0.32, 0.72, 0, 1);
+      z-index: 0;
+    }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
+    .crm-hero { position: relative; padding-top: clamp(120px, 9vw, 168px); }
+
+    /* ════════════════════════════════════════════════════════════════
+       SCROLL-PINNED TESSERACT
+       ════════════════════════════════════════════════════════════════ */
+    .cube-stage__pin {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .cube-stage__scene {
+      width: clamp(280px, 32vw, 420px);
+      height: clamp(280px, 32vw, 420px);
+      position: relative;
+      pointer-events: none;
+    }
+    .cube-stage__glow {
+      position: absolute;
+      inset: -25%;
+      background: radial-gradient(circle, var(--crm-tint, rgba(62, 127, 176, 0.18)) 0%, transparent 65%);
+      transition: background 900ms cubic-bezier(0.32, 0.72, 0, 1);
+      filter: blur(12px);
+      pointer-events: none;
+    }
+    /* ── 3D Rubik's cube ─────────────────────────────────────────
+       27 cubies, 6 sticker faces each. JS keeps a 54-element state
+       array (one entry per sticker) and applies real cube moves on
+       scroll. The cube's orientation eases between targeted angles
+       per section (no continuous spinning), so the section's target
+       face is always presented forward. */
+    .rubik-scene {
+      width: 100%;
+      height: 100%;
+      perspective: 800px;
+      perspective-origin: center 55%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rubik-cube {
+      transform-style: preserve-3d;
+      position: relative;
+      width: 0;
+      height: 0;
+      transform: rotateX(-22deg) rotateY(30deg);
+      transition: transform 1200ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cubie {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      transform-style: preserve-3d;
+    }
+    .cubie__face {
+      position: absolute;
+      width: 52px;
+      height: 52px;
+      border-radius: 5px;
+      border: 2px solid rgba(0, 0, 0, 0.62);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      transition: background 240ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cubie__face--F { transform: translateX(-26px) translateY(-26px) translateZ(28px); }
+    .cubie__face--B { transform: translateX(-26px) translateY(-26px) rotateY(180deg) translateZ(28px); }
+    .cubie__face--R { transform: translateX(-26px) translateY(-26px) rotateY(90deg)  translateZ(28px); }
+    .cubie__face--L { transform: translateX(-26px) translateY(-26px) rotateY(-90deg) translateZ(28px); }
+    .cubie__face--U { transform: translateX(-26px) translateY(-26px) rotateX(90deg)  translateZ(28px); }
+    .cubie__face--D { transform: translateX(-26px) translateY(-26px) rotateX(-90deg) translateZ(28px); }
+    /* Animation wrapper — JS reparents the affected cubies into one
+       of these per move so it can rotate them as a unit. */
+    .rubik-anim-layer {
+      position: absolute;
+      transform-style: preserve-3d;
+      width: 0;
+      height: 0;
+    }
+
+    /* Face-jump dots */
+    .cube-stage__index {
+      position: absolute;
+      top: 50%;
+      right: clamp(16px, 3vw, 36px);
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 3;
+      pointer-events: auto;
+    }
+    .cube-stage__index-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(176, 192, 216, 0.18);
+      border: 1px solid rgba(176, 192, 216, 0.30);
+      cursor: pointer;
+      transition: transform 280ms var(--ease), background 280ms var(--ease), box-shadow 280ms var(--ease);
+      padding: 0;
+    }
+    .cube-stage__index-dot[aria-current="true"] {
+      background: var(--crm-glow, var(--accent-bright));
+      box-shadow: 0 0 0 4px var(--crm-tint, rgba(176, 192, 216, 0.20));
+      transform: scale(1.25);
+    }
+
+    /* ── PANELS ───────────────────────────────────────────────────── */
+    .cube-stage__panels {
+      position: relative;
+      z-index: 2;
+    }
+    .cube-panel {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: clamp(48px, 6vw, 96px) var(--gutter);
+      position: relative;
+    }
+    .cube-panel__content {
+      max-width: 460px;
+      width: 100%;
+      color: var(--text);
+    }
+    .cube-panel--left  .cube-panel__content { margin-right: auto; margin-left: 0; }
+    .cube-panel--right .cube-panel__content { margin-left: auto;  margin-right: 0; }
+
+    .cube-panel__num {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--crm-accent, var(--text-muted));
+      margin-bottom: 18px;
+      transition: color 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel__num::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.6;
+    }
+    .cube-panel__title {
+      font-family: 'Inter Tight', 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(34px, 4.2vw, 54px);
+      line-height: 1.0;
+      letter-spacing: -0.022em;
+      margin: 0 0 22px;
+      color: var(--text);
+    }
+    .cube-panel__title em {
+      font-style: normal;
+      color: var(--crm-accent);
+      transition: color 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel__lede {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin: 0 0 24px;
+    }
+
+    /* GHL-style dashboard mockup card */
+    .cube-panel__mockup {
+      margin: 0 0 28px;
+      padding: 0;
+      width: 100%;
+      max-width: 460px;
+      aspect-ratio: 16 / 10;
+      background: rgba(8, 12, 24, 0.72);
+      border: 1px solid rgba(176, 192, 216, 0.18);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.55);
+      transition: border-color 700ms cubic-bezier(0.32, 0.72, 0, 1),
+                  box-shadow 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel__mockup::after {
+      /* Tiny chrome — three traffic-light dots, top-left */
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      width: 36px;
+      height: 8px;
+      background-image:
+        radial-gradient(circle, rgba(176, 192, 216, 0.30) 3px, transparent 3.5px),
+        radial-gradient(circle, rgba(176, 192, 216, 0.20) 3px, transparent 3.5px),
+        radial-gradient(circle, rgba(176, 192, 216, 0.20) 3px, transparent 3.5px);
+      background-position: 0 50%, 14px 50%, 28px 50%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
+    .cube-panel.is-active .cube-panel__mockup {
+      border-color: var(--crm-tint, rgba(176, 192, 216, 0.30));
+      box-shadow: 0 24px 56px -14px rgba(0, 0, 0, 0.7),
+                  0 0 0 1px var(--crm-tint, transparent) inset;
+    }
+    .cube-panel__mockup svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .cube-panel__features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cube-panel__features li {
+      position: relative;
+      padding-left: 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .cube-panel__features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 12px;
+      height: 1.5px;
+      background: var(--crm-accent);
+      transition: background 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      background: var(--crm-glow);
+      color: #04060E;
+      transition: transform 240ms var(--ease), box-shadow 260ms var(--ease), background 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel__cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px -14px var(--crm-glow);
+    }
+    .cube-panel__cta .arrow { width: 12px; height: 12px; }
+
+    /* Reveal-style entrance for panel content */
+    .cube-panel__content > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1), transform 700ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .cube-panel.is-active .cube-panel__content > * { opacity: 1; transform: translateY(0); }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(1) { transition-delay: 60ms;  }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(2) { transition-delay: 140ms; }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(3) { transition-delay: 220ms; }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(4) { transition-delay: 300ms; }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(5) { transition-delay: 380ms; }
+    .cube-panel.is-active .cube-panel__content > *:nth-child(6) { transition-delay: 460ms; }
+
+    /* Tablet & narrow screens — stack tesseract above content */
+    @media (max-width: 900px) {
+      .cube-stage__pin {
+        position: sticky;
+        top: 0;
+        height: 46vh;
+      }
+      .cube-stage__scene {
+        width: 220px;
+        height: 220px;
+      }
+      .cube-panel {
+        min-height: 80vh;
+        padding-top: 52vh;
+      }
+      .cube-panel__content {
+        max-width: none;
+        margin: 0 auto !important;
+        text-align: center;
+      }
+      .cube-panel__num { justify-content: center; }
+      .cube-panel__features { display: inline-flex; text-align: left; }
+      .cube-panel__mockup { margin-left: auto; margin-right: auto; }
+      .cube-stage__index { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .cube-stage__scene { width: 180px; height: 180px; }
+      .cube-panel__title { font-size: clamp(28px, 8vw, 36px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cube-stage,
+      .cube-stage::before { transition: none !important; }
+      .cube-panel__content > * { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body data-crm-active data-crm-theme="blue">
+  <div class="intro-mask" data-intro-mask><span class="intro-mask__label">CRM · LOADING</span></div>
+  <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+  <canvas class="constellation-bg" data-constellation aria-hidden="true"></canvas>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="nav" aria-label="Primary">
+    <a href="index.html" class="nav__brand" aria-label="Mittiva home">
+      <img src="assets/mittiva-icon-dark.svg" alt="" class="logo-dark" />
+      <img src="assets/mittiva-icon-light.svg" alt="" class="logo-light" />
+      <span>Mittiva</span>
+    </a>
+    <ul class="nav__links" role="list" aria-label="Primary navigation">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="founders.html">Founders</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+      <a href="contact.html" class="nav__cta" aria-label="Start a conversation">
+        Start a conversation
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+
+      <div class="nav__actions">
+      <button class="nav__pill nav__pill--icon" data-theme-toggle aria-label="Toggle theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <button class="nav__pill nav__pill--menu" data-menu-btn aria-label="Toggle menu">
+        <span class="menu-icon"></span>
+        <span class="label-open">Menu</span>
+        <span class="label-close">Close</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="menu-overlay" aria-label="Main menu">
+    <ul class="menu-overlay__links">
+      <li><a href="index.html"><span class="num">01</span>Home</a></li>
+      <li><a href="about.html"><span class="num">02</span>About</a></li>
+      <li><a href="services.html"><span class="num">03</span>Services</a></li>
+      <li><a href="founders.html"><span class="num">04</span>Founders</a></li>
+      <li><a href="contact.html"><span class="num">05</span>Contact</a></li>
+      <li><a href="careers.html"><span class="num">06</span>Careers</a></li>
+    </ul>
+    <aside class="menu-overlay__aside">
+      <p class="menu-overlay__quote">"Six tools, one workspace. Run your business the way a factory floor runs — stage by stage, with one source of truth."</p>
+      <div class="menu-overlay__meta">
+        <span>Mittiva · Estd. 2026</span>
+        <span>Chennai · India</span>
+        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+      </div>
+    </aside>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero crm-hero">
+    <div class="container">
+      <div class="hero__head">
+        <div class="hero__caption reveal">
+          <span>CRM</span>
+          <span>Six Sides</span>
+          <span>One Workspace</span>
+        </div>
+        <h1 class="stacked-title">
+          <span>One CRM</span>
+          <span>That <em>Runs</em></span>
+          <span>The Whole</span>
+          <span>Business.</span>
+        </h1>
+      </div>
+      <p class="lede reveal" style="max-width:58ch;">
+        Six tools you'd otherwise buy separately — calendar, conversations, pipelines,
+        reporting, reputation and a mobile app — stacked into a single workspace.
+        Built on the GHL platform, set up, branded and run by Mittiva.
+      </p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SCROLL-PINNED TESSERACT STAGE
+       ════════════════════════════════════════════════════════════════ -->
+  <section class="cube-stage" aria-label="The six sides of Mittiva CRM">
+
+    <!-- PINNED TESSERACT -->
+    <div class="cube-stage__pin">
+      <div class="cube-stage__scene">
+        <span class="cube-stage__glow" aria-hidden="true"></span>
+        <div class="rubik-scene" aria-hidden="true">
+          <div class="rubik-cube" data-cube></div>
+        </div>
+      </div>
+
+      <!-- Face-jump dots -->
+      <nav class="cube-stage__index" aria-label="Jump to face">
+        <button type="button" class="cube-stage__index-dot" data-face-jump="0" aria-label="Calendar &amp; Booking"></button>
+        <button type="button" class="cube-stage__index-dot" data-face-jump="1" aria-label="Communication"></button>
+        <button type="button" class="cube-stage__index-dot" data-face-jump="2" aria-label="Pipelines &amp; Funnels"></button>
+        <button type="button" class="cube-stage__index-dot" data-face-jump="3" aria-label="Reporting"></button>
+        <button type="button" class="cube-stage__index-dot" data-face-jump="4" aria-label="Reputation"></button>
+        <button type="button" class="cube-stage__index-dot" data-face-jump="5" aria-label="Mobile App"></button>
+      </nav>
+    </div>
+
+    <!-- PANELS — each scrolls past the pinned tesseract. Sides alternate. -->
+    <div class="cube-stage__panels">
+
+      <!-- 01 · Calendar & Booking · Blue · LEFT -->
+      <article class="cube-panel cube-panel--left" data-cube-panel data-cube-face="B" data-cube-theme="blue" id="calendar">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 01 · Calendar &amp; Booking</span>
+          <h2 class="cube-panel__title">Stop playing<br/><em>phone-tag.</em></h2>
+          <p class="cube-panel__lede">
+            Public booking link, two-way Google &amp; Outlook sync, time-zone aware
+            reminders by SMS, WhatsApp and email. Customers book themselves — you show up.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — booking calendar">
+            <!-- Calendar grid mockup -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header bar -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">MAY 2026</text>
+              <g transform="translate(282, 12)">
+                <rect width="100" height="18" rx="9" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/>
+                <circle cx="14" cy="9" r="3" fill="var(--crm-glow)"/>
+                <text x="24" y="13" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em">14 BOOKED</text>
+              </g>
+              <!-- Day labels -->
+              <g fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="9" font-weight="600" letter-spacing="0.18em">
+                <text x="34"  y="60">M</text>
+                <text x="84"  y="60">T</text>
+                <text x="134" y="60">W</text>
+                <text x="184" y="60">T</text>
+                <text x="234" y="60">F</text>
+                <text x="284" y="60">S</text>
+                <text x="334" y="60">S</text>
+              </g>
+              <!-- Date grid: 4 rows × 7 cols. Some cells "booked". -->
+              <g font-family="Inter Tight,sans-serif" font-size="11" font-weight="700">
+                <!-- Row 1 (week of 4 May) -->
+                <g transform="translate(16, 72)">
+                  <rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">04</text>
+                  <g transform="translate(50, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">05</text></g>
+                  <g transform="translate(100, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/><text x="6" y="20" fill="#fff">06</text><circle cx="35" cy="6" r="2.5" fill="var(--crm-glow)"/></g>
+                  <g transform="translate(150, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">07</text></g>
+                  <g transform="translate(200, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.22" stroke="var(--crm-glow)" stroke-opacity="0.55"/><text x="6" y="20" fill="#fff">08</text><circle cx="35" cy="6" r="2.5" fill="var(--crm-glow)"/></g>
+                  <g transform="translate(250, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">09</text></g>
+                  <g transform="translate(300, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.015)"/><text x="6" y="20" fill="rgba(176,192,216,0.35)">10</text></g>
+                </g>
+                <!-- Row 2 -->
+                <g transform="translate(16, 112)">
+                  <rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">11</text>
+                  <g transform="translate(50, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.30" stroke="var(--crm-glow)" stroke-opacity="0.7"/><text x="6" y="20" fill="#fff">12</text><circle cx="35" cy="6" r="2.5" fill="var(--crm-glow)"/></g>
+                  <g transform="translate(100, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">13</text></g>
+                  <g transform="translate(150, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/><text x="6" y="20" fill="#fff">14</text></g>
+                  <g transform="translate(200, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">15</text></g>
+                  <g transform="translate(250, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.015)"/><text x="6" y="20" fill="rgba(176,192,216,0.35)">16</text></g>
+                  <g transform="translate(300, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.22" stroke="var(--crm-glow)" stroke-opacity="0.5"/><text x="6" y="20" fill="#fff">17</text><circle cx="35" cy="6" r="2.5" fill="var(--crm-glow)"/></g>
+                </g>
+                <!-- Row 3 (highlight "today") -->
+                <g transform="translate(16, 152)">
+                  <rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">18</text>
+                  <g transform="translate(50, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.025)"/><text x="6" y="20" fill="rgba(176,192,216,0.5)">19</text></g>
+                  <g transform="translate(100, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/><text x="6" y="20" fill="#fff">20</text></g>
+                  <g transform="translate(150, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.95" stroke="var(--crm-glow)"/><text x="6" y="20" fill="#04060E">21</text><circle cx="33" cy="26" r="3" fill="#04060E" fill-opacity="0.7"/></g>
+                  <g transform="translate(200, 0)"><rect width="42" height="34" rx="5" fill="var(--crm-glow)" fill-opacity="0.22" stroke="var(--crm-glow)" stroke-opacity="0.5"/><text x="6" y="20" fill="#fff">22</text></g>
+                  <g transform="translate(250, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.015)"/><text x="6" y="20" fill="rgba(176,192,216,0.35)">23</text></g>
+                  <g transform="translate(300, 0)"><rect width="42" height="34" rx="5" fill="rgba(255,255,255,0.015)"/><text x="6" y="20" fill="rgba(176,192,216,0.35)">24</text></g>
+                </g>
+              </g>
+              <!-- Lower footer line -->
+              <text x="22" y="232" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="10" font-weight="500">Public booking link  ·  Google + Outlook sync</text>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Branded booking pages with your colours &amp; logo</li>
+            <li>Two-way calendar sync — Google, Outlook, iCal</li>
+            <li>Automated SMS + WhatsApp + email reminders</li>
+            <li>No-show recovery sequences run themselves</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            See it in 20 minutes
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 02 · Communication · Yellow · RIGHT -->
+      <article class="cube-panel cube-panel--right" data-cube-panel data-cube-face="D" data-cube-theme="yellow" id="communication">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 02 · Communication</span>
+          <h2 class="cube-panel__title">Every conversation,<br/><em>one inbox.</em></h2>
+          <p class="cube-panel__lede">
+            WhatsApp, SMS, email, Instagram DM, Facebook Messenger and webchat
+            stitched into a single thread per contact. Reply once, track once,
+            nothing lost in five tabs.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — unified inbox">
+            <!-- Unified inbox mockup -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">INBOX</text>
+              <g transform="translate(310, 12)">
+                <rect width="76" height="18" rx="9" fill="var(--crm-glow)" fill-opacity="0.20" stroke="var(--crm-glow)" stroke-opacity="0.5"/>
+                <text x="38" y="13" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em" text-anchor="middle">3 UNREAD</text>
+              </g>
+              <!-- Channel filter strip -->
+              <g transform="translate(16, 50)" font-family="Inter,sans-serif" font-size="9" font-weight="600" letter-spacing="0.10em">
+                <rect width="56" height="22" rx="11" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/>
+                <text x="28" y="15" fill="var(--crm-glow)" text-anchor="middle">ALL · 12</text>
+                <g transform="translate(64, 0)"><rect width="68" height="22" rx="11" fill="rgba(255,255,255,0.04)"/><text x="34" y="15" fill="rgba(176,192,216,0.6)" text-anchor="middle">WhatsApp</text></g>
+                <g transform="translate(140, 0)"><rect width="46" height="22" rx="11" fill="rgba(255,255,255,0.04)"/><text x="23" y="15" fill="rgba(176,192,216,0.6)" text-anchor="middle">SMS</text></g>
+                <g transform="translate(194, 0)"><rect width="50" height="22" rx="11" fill="rgba(255,255,255,0.04)"/><text x="25" y="15" fill="rgba(176,192,216,0.6)" text-anchor="middle">Email</text></g>
+                <g transform="translate(252, 0)"><rect width="44" height="22" rx="11" fill="rgba(255,255,255,0.04)"/><text x="22" y="15" fill="rgba(176,192,216,0.6)" text-anchor="middle">IG</text></g>
+              </g>
+              <!-- Conversation list -->
+              <g transform="translate(16, 84)" font-family="Inter,sans-serif">
+                <!-- Convo 1 (unread, active) -->
+                <g>
+                  <rect width="368" height="46" rx="9" fill="var(--crm-glow)" fill-opacity="0.10" stroke="var(--crm-glow)" stroke-opacity="0.35"/>
+                  <circle cx="22" cy="23" r="13" fill="rgba(176,192,216,0.15)" stroke="var(--crm-glow)" stroke-opacity="0.55"/>
+                  <text x="22" y="27" fill="var(--crm-glow)" font-size="10" font-weight="700" text-anchor="middle">LK</text>
+                  <text x="44" y="20" fill="#fff" font-size="11" font-weight="700">Lakshmi Krishnan</text>
+                  <text x="44" y="34" fill="rgba(176,192,216,0.7)" font-size="10">Hi! Are you open Saturday for a fitting?</text>
+                  <g transform="translate(322, 14)"><rect width="34" height="14" rx="7" fill="var(--crm-glow)" fill-opacity="0.25" stroke="var(--crm-glow)" stroke-opacity="0.6"/><text x="17" y="10" fill="var(--crm-glow)" font-size="7" font-weight="700" letter-spacing="0.1em" text-anchor="middle">WHATSAPP</text></g>
+                  <circle cx="362" cy="36" r="3" fill="var(--crm-glow)"/>
+                </g>
+                <!-- Convo 2 -->
+                <g transform="translate(0, 54)">
+                  <rect width="368" height="46" rx="9" fill="rgba(255,255,255,0.03)" stroke="rgba(176,192,216,0.10)"/>
+                  <circle cx="22" cy="23" r="13" fill="rgba(176,192,216,0.10)"/>
+                  <text x="22" y="27" fill="rgba(176,192,216,0.7)" font-size="10" font-weight="700" text-anchor="middle">AR</text>
+                  <text x="44" y="20" fill="rgba(255,255,255,0.85)" font-size="11" font-weight="600">Arjun Rao</text>
+                  <text x="44" y="34" fill="rgba(176,192,216,0.55)" font-size="10">Sent your quote — let me know what works.</text>
+                  <g transform="translate(322, 14)"><rect width="34" height="14" rx="7" fill="rgba(176,192,216,0.10)"/><text x="17" y="10" fill="rgba(176,192,216,0.7)" font-size="7" font-weight="700" letter-spacing="0.1em" text-anchor="middle">EMAIL</text></g>
+                </g>
+                <!-- Convo 3 -->
+                <g transform="translate(0, 108)">
+                  <rect width="368" height="46" rx="9" fill="rgba(255,255,255,0.03)" stroke="rgba(176,192,216,0.10)"/>
+                  <circle cx="22" cy="23" r="13" fill="rgba(176,192,216,0.10)"/>
+                  <text x="22" y="27" fill="rgba(176,192,216,0.7)" font-size="10" font-weight="700" text-anchor="middle">PV</text>
+                  <text x="44" y="20" fill="rgba(255,255,255,0.85)" font-size="11" font-weight="600">Priya Venkat</text>
+                  <text x="44" y="34" fill="rgba(176,192,216,0.55)" font-size="10">Loved the trial! Sending payment now.</text>
+                  <g transform="translate(322, 14)"><rect width="34" height="14" rx="7" fill="rgba(176,192,216,0.10)"/><text x="17" y="10" fill="rgba(176,192,216,0.7)" font-size="7" font-weight="700" letter-spacing="0.1em" text-anchor="middle">SMS</text></g>
+                </g>
+              </g>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Unified inbox across every channel</li>
+            <li>AI-assisted replies that match your voice</li>
+            <li>Internal notes + @mentions for your team</li>
+            <li>Smart routing by topic, source or business hours</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            Turn it on
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 03 · Pipelines & Funnels · Green · LEFT -->
+      <article class="cube-panel cube-panel--left" data-cube-panel data-cube-face="F" data-cube-theme="green" id="pipelines">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 03 · Pipelines &amp; Funnels</span>
+          <h2 class="cube-panel__title">Move deals like<br/>a <em>factory line.</em></h2>
+          <p class="cube-panel__lede">
+            Drag-and-drop stages, automation triggers per stage, and a live
+            revenue forecast. See what's stuck, what's hot, where the month
+            is going to land — without opening a spreadsheet.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — sales pipeline">
+            <!-- Pipeline kanban mockup -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">SALES PIPELINE</text>
+              <g transform="translate(282, 12)">
+                <rect width="100" height="18" rx="9" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.45"/>
+                <text x="50" y="13" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em" text-anchor="middle">₹4.2L FORECAST</text>
+              </g>
+              <!-- Stage headers -->
+              <g transform="translate(16, 56)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.14em">
+                <text fill="rgba(176,192,216,0.55)">NEW · 5</text>
+                <text x="128" fill="rgba(176,192,216,0.55)">PROPOSAL · 3</text>
+                <text x="256" fill="var(--crm-glow)">CLOSED · 4</text>
+              </g>
+              <!-- Stage columns -->
+              <g transform="translate(16, 70)">
+                <!-- Col 1 -->
+                <rect width="116" height="170" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.10)"/>
+                <g transform="translate(8, 10)">
+                  <rect width="100" height="38" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(176,192,216,0.18)"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Lakshmi K.</text>
+                  <text x="8" y="28" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9">₹22k · 2d</text>
+                </g>
+                <g transform="translate(8, 56)">
+                  <rect width="100" height="38" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(176,192,216,0.18)"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Arjun R.</text>
+                  <text x="8" y="28" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9">₹38k · 1d</text>
+                </g>
+                <g transform="translate(8, 102)">
+                  <rect width="100" height="38" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(176,192,216,0.18)"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Priya V.</text>
+                  <text x="8" y="28" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9">₹15k · 4h</text>
+                </g>
+              </g>
+              <!-- Col 2 -->
+              <g transform="translate(144, 70)">
+                <rect width="116" height="170" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.10)"/>
+                <g transform="translate(8, 10)">
+                  <rect width="100" height="38" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(176,192,216,0.18)"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Rajesh S.</text>
+                  <text x="8" y="28" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9">₹78k · 5d</text>
+                </g>
+                <g transform="translate(8, 56)">
+                  <rect width="100" height="38" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(176,192,216,0.18)"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Anika M.</text>
+                  <text x="8" y="28" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9">₹52k · 3d</text>
+                </g>
+              </g>
+              <!-- Col 3 -->
+              <g transform="translate(272, 70)">
+                <rect width="116" height="170" rx="8" fill="var(--crm-glow)" fill-opacity="0.06" stroke="var(--crm-glow)" stroke-opacity="0.30"/>
+                <g transform="translate(8, 10)">
+                  <rect width="100" height="38" rx="6" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.55"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Hari T.</text>
+                  <text x="8" y="28" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700">₹1.2L · WON</text>
+                </g>
+                <g transform="translate(8, 56)">
+                  <rect width="100" height="38" rx="6" fill="var(--crm-glow)" fill-opacity="0.18" stroke="var(--crm-glow)" stroke-opacity="0.55"/>
+                  <text x="8" y="14" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="700">Meera P.</text>
+                  <text x="8" y="28" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700">₹48k · WON</text>
+                </g>
+              </g>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Custom pipeline stages — sales, service, onboarding</li>
+            <li>Stage-triggered automations: emails, tasks, WhatsApp</li>
+            <li>Real-time revenue forecast and aging alerts</li>
+            <li>Funnel templates for common SMB plays</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            Build my pipeline
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 04 · Reporting · Red · RIGHT -->
+      <article class="cube-panel cube-panel--right" data-cube-panel data-cube-face="R" data-cube-theme="red" id="reporting">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 04 · Reporting</span>
+          <h2 class="cube-panel__title">Numbers your<br/><em>team trusts.</em></h2>
+          <p class="cube-panel__lede">
+            Real-time dashboards for revenue, calls, conversion rate, conversation
+            volume. Custom widgets per role, scheduled email digests, source
+            attribution that actually attributes.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — reporting dashboard">
+            <!-- Dashboard mockup -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">DASHBOARD · MAY</text>
+              <g transform="translate(310, 12)">
+                <rect width="76" height="18" rx="9" fill="var(--crm-glow)" fill-opacity="0.20" stroke="var(--crm-glow)" stroke-opacity="0.5"/>
+                <text x="38" y="13" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em" text-anchor="middle">LIVE</text>
+                <circle cx="14" cy="9" r="3" fill="var(--crm-glow)"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite"/></circle>
+              </g>
+              <!-- KPI tiles -->
+              <g transform="translate(16, 52)" font-family="Inter,sans-serif">
+                <!-- Tile 1 -->
+                <g>
+                  <rect width="116" height="62" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.12)"/>
+                  <text x="10" y="18" fill="rgba(176,192,216,0.55)" font-size="8" font-weight="700" letter-spacing="0.18em">REVENUE</text>
+                  <text x="10" y="40" fill="#fff" font-family="Inter Tight,sans-serif" font-size="18" font-weight="800">₹4.2L</text>
+                  <text x="10" y="54" fill="var(--crm-glow)" font-size="9" font-weight="700">+18% vs Apr</text>
+                </g>
+                <!-- Tile 2 -->
+                <g transform="translate(128, 0)">
+                  <rect width="116" height="62" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.12)"/>
+                  <text x="10" y="18" fill="rgba(176,192,216,0.55)" font-size="8" font-weight="700" letter-spacing="0.18em">CONVERSION</text>
+                  <text x="10" y="40" fill="#fff" font-family="Inter Tight,sans-serif" font-size="18" font-weight="800">23.6%</text>
+                  <text x="10" y="54" fill="var(--crm-glow)" font-size="9" font-weight="700">+4 pts</text>
+                </g>
+                <!-- Tile 3 -->
+                <g transform="translate(256, 0)">
+                  <rect width="116" height="62" rx="8" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.12)"/>
+                  <text x="10" y="18" fill="rgba(176,192,216,0.55)" font-size="8" font-weight="700" letter-spacing="0.18em">PIPELINE</text>
+                  <text x="10" y="40" fill="#fff" font-family="Inter Tight,sans-serif" font-size="18" font-weight="800">₹12.8L</text>
+                  <text x="10" y="54" fill="rgba(176,192,216,0.6)" font-size="9" font-weight="700">22 open</text>
+                </g>
+              </g>
+              <!-- Chart -->
+              <g transform="translate(16, 130)">
+                <rect width="368" height="108" rx="8" fill="rgba(176,192,216,0.03)" stroke="rgba(176,192,216,0.10)"/>
+                <text x="14" y="22" fill="rgba(176,192,216,0.6)" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.18em">REVENUE · LAST 7 DAYS</text>
+                <!-- Grid lines -->
+                <g stroke="rgba(176,192,216,0.07)" stroke-dasharray="2 4">
+                  <line x1="14" y1="60" x2="354" y2="60"/>
+                  <line x1="14" y1="76" x2="354" y2="76"/>
+                  <line x1="14" y1="92" x2="354" y2="92"/>
+                </g>
+                <!-- Line chart -->
+                <polyline
+                  points="14,86 60,72 106,80 152,52 198,48 244,58 290,38 336,30 354,32"
+                  fill="none" stroke="var(--crm-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline
+                  points="14,86 60,72 106,80 152,52 198,48 244,58 290,38 336,30 354,32 354,98 14,98"
+                  fill="var(--crm-glow)" fill-opacity="0.10" stroke="none"/>
+                <!-- Last point indicator -->
+                <circle cx="336" cy="30" r="4" fill="var(--crm-glow)"/>
+                <circle cx="336" cy="30" r="9" fill="var(--crm-glow)" fill-opacity="0.18"/>
+              </g>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Custom dashboards per role or department</li>
+            <li>Scheduled morning digests by email or WhatsApp</li>
+            <li>Source attribution — ad, channel, campaign, person</li>
+            <li>Conversion funnels with drop-off diagnostics</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            See the dashboards
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 05 · Reputation · Orange · LEFT -->
+      <article class="cube-panel cube-panel--left" data-cube-panel data-cube-face="L" data-cube-theme="orange" id="reputation">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 05 · Reputation Management</span>
+          <h2 class="cube-panel__title">Happy customers,<br/><em>louder.</em></h2>
+          <p class="cube-panel__lede">
+            Auto-request Google reviews after every purchase. Monitor and reply
+            across Google, Facebook, Yelp, Justdial from one screen. A wall of
+            five-stars on your own site, refreshed automatically.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — reputation dashboard">
+            <!-- Reputation mockup -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">REPUTATION</text>
+              <!-- Aggregate rating -->
+              <g transform="translate(16, 52)">
+                <rect width="180" height="80" rx="10" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.14)"/>
+                <text x="14" y="22" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="8" font-weight="700" letter-spacing="0.18em">AVERAGE</text>
+                <text x="14" y="56" fill="#fff" font-family="Inter Tight,sans-serif" font-size="34" font-weight="800">4.8</text>
+                <!-- Stars -->
+                <g transform="translate(72, 38)" fill="var(--crm-glow)">
+                  <polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.9)"/>
+                  <g transform="translate(18, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.9)"/></g>
+                  <g transform="translate(36, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.9)"/></g>
+                  <g transform="translate(54, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.9)"/></g>
+                  <g transform="translate(72, 0)" fill-opacity="0.55"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.9)"/></g>
+                </g>
+                <text x="72" y="72" fill="rgba(176,192,216,0.7)" font-family="Inter,sans-serif" font-size="10" font-weight="600">124 reviews</text>
+              </g>
+              <!-- Source breakdown -->
+              <g transform="translate(208, 52)" font-family="Inter,sans-serif">
+                <rect width="176" height="80" rx="10" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.14)"/>
+                <text x="14" y="22" fill="rgba(176,192,216,0.55)" font-size="8" font-weight="700" letter-spacing="0.18em">SOURCES</text>
+                <!-- Google -->
+                <g transform="translate(14, 30)">
+                  <text fill="#fff" font-size="11" font-weight="700">Google</text>
+                  <text x="148" text-anchor="end" fill="var(--crm-glow)" font-size="11" font-weight="700">4.9</text>
+                  <rect y="6" width="148" height="3" rx="1.5" fill="rgba(176,192,216,0.08)"/>
+                  <rect y="6" width="138" height="3" rx="1.5" fill="var(--crm-glow)"/>
+                </g>
+                <!-- Facebook -->
+                <g transform="translate(14, 48)">
+                  <text fill="#fff" font-size="11" font-weight="700">Facebook</text>
+                  <text x="148" text-anchor="end" fill="var(--crm-glow)" font-size="11" font-weight="700">4.7</text>
+                  <rect y="6" width="148" height="3" rx="1.5" fill="rgba(176,192,216,0.08)"/>
+                  <rect y="6" width="130" height="3" rx="1.5" fill="var(--crm-glow)" fill-opacity="0.7"/>
+                </g>
+              </g>
+              <!-- Recent review card -->
+              <g transform="translate(16, 144)" font-family="Inter,sans-serif">
+                <rect width="368" height="92" rx="10" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.14)"/>
+                <text x="14" y="22" fill="rgba(176,192,216,0.55)" font-size="8" font-weight="700" letter-spacing="0.18em">LATEST · 2 HOURS AGO</text>
+                <!-- 5 stars -->
+                <g transform="translate(14, 30)" fill="var(--crm-glow)">
+                  <polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.85)"/>
+                  <g transform="translate(16, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.85)"/></g>
+                  <g transform="translate(32, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.85)"/></g>
+                  <g transform="translate(48, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.85)"/></g>
+                  <g transform="translate(64, 0)"><polygon points="0,8 3,12 8,12 4,15 6,20 0,17 -6,20 -4,15 -8,12 -3,12" transform="scale(0.85)"/></g>
+                </g>
+                <text x="100" y="50" fill="rgba(255,255,255,0.85)" font-size="11" font-style="italic">"Phenomenal service. The team was thorough, on time,</text>
+                <text x="14" y="68" fill="rgba(255,255,255,0.85)" font-size="11" font-style="italic">and the booking flow was the smoothest I've used in Chennai."</text>
+                <text x="14" y="86" fill="rgba(176,192,216,0.55)" font-size="10" font-weight="600">— Hari T. · via Google</text>
+              </g>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Automated review requests by SMS &amp; WhatsApp</li>
+            <li>Multi-platform monitoring — Google, FB, Yelp, Justdial</li>
+            <li>Sentiment-aware routing for tricky responses</li>
+            <li>Embeddable review wall for your website</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            Grow my reviews
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 06 · Mobile App · White · RIGHT -->
+      <article class="cube-panel cube-panel--right" data-cube-panel data-cube-face="U" data-cube-theme="white" id="mobile">
+        <div class="cube-panel__content">
+          <span class="cube-panel__num">№ 06 · Mobile App</span>
+          <h2 class="cube-panel__title">Your CRM in<br/><em>your pocket.</em></h2>
+          <p class="cube-panel__lede">
+            iOS and Android. Call, text, see deals, edit pipelines, fire automations
+            from a chai shop. Push notifications when a lead lands; claim it with one tap.
+          </p>
+
+          <figure class="cube-panel__mockup" aria-label="Mittiva CRM — mobile app">
+            <!-- Mobile mockup: phone outline + app UI -->
+            <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+              <!-- Header -->
+              <rect x="0" y="0" width="400" height="38" fill="rgba(176,192,216,0.04)"/>
+              <text x="60" y="24" fill="#cdd5e0" font-family="Inter,sans-serif" font-size="12" font-weight="700" letter-spacing="0.1em">ON-THE-GO</text>
+              <!-- Phone outline (left) -->
+              <g transform="translate(34, 56)">
+                <rect width="156" height="186" rx="22" fill="rgba(8,12,24,0.85)" stroke="var(--crm-glow)" stroke-opacity="0.35" stroke-width="1.5"/>
+                <rect x="6" y="6" width="144" height="174" rx="16" fill="rgba(176,192,216,0.04)"/>
+                <!-- Notch -->
+                <rect x="58" y="10" width="40" height="6" rx="3" fill="rgba(0,0,0,0.5)"/>
+                <!-- Status bar -->
+                <text x="16" y="32" fill="rgba(176,192,216,0.65)" font-family="Inter,sans-serif" font-size="8" font-weight="700">9:41</text>
+                <text x="142" y="32" fill="rgba(176,192,216,0.65)" font-family="Inter,sans-serif" font-size="8" font-weight="700" text-anchor="end">●●●●</text>
+                <!-- App content -->
+                <text x="16" y="56" fill="#fff" font-family="Inter Tight,sans-serif" font-size="13" font-weight="800">New Lead</text>
+                <circle cx="140" cy="52" r="5" fill="var(--crm-glow)"/>
+                <!-- Lead card -->
+                <g transform="translate(12, 64)">
+                  <rect width="132" height="46" rx="8" fill="var(--crm-glow)" fill-opacity="0.14" stroke="var(--crm-glow)" stroke-opacity="0.45"/>
+                  <text x="10" y="16" fill="#fff" font-family="Inter Tight,sans-serif" font-size="10" font-weight="800">Lakshmi K.</text>
+                  <text x="10" y="28" fill="rgba(176,192,216,0.75)" font-family="Inter,sans-serif" font-size="8">Boutique fitting · Sat 11am</text>
+                  <text x="10" y="40" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="8" font-weight="700">WhatsApp · just now</text>
+                </g>
+                <!-- Action pills -->
+                <g transform="translate(12, 118)" font-family="Inter,sans-serif" font-size="8" font-weight="700" letter-spacing="0.1em">
+                  <g><rect width="62" height="22" rx="11" fill="var(--crm-glow)"/><text x="31" y="14" fill="#04060E" text-anchor="middle">CLAIM</text></g>
+                  <g transform="translate(70, 0)"><rect width="62" height="22" rx="11" fill="rgba(255,255,255,0.08)" stroke="rgba(176,192,216,0.25)"/><text x="31" y="14" fill="#fff" text-anchor="middle">CALL</text></g>
+                </g>
+                <!-- Tab bar -->
+                <g transform="translate(12, 150)" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="7" font-weight="700" letter-spacing="0.1em">
+                  <text x="14" fill="var(--crm-glow)">INBOX</text>
+                  <text x="54">DEALS</text>
+                  <text x="90">CAL</text>
+                  <text x="122">YOU</text>
+                </g>
+              </g>
+              <!-- Notification card (right) -->
+              <g transform="translate(216, 70)">
+                <rect width="168" height="58" rx="10" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.18)"/>
+                <text x="14" y="20" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="8" font-weight="700" letter-spacing="0.18em">PUSH · 9:41</text>
+                <text x="14" y="36" fill="#fff" font-family="Inter Tight,sans-serif" font-size="11" font-weight="800">New WhatsApp lead</text>
+                <text x="14" y="50" fill="rgba(176,192,216,0.75)" font-family="Inter,sans-serif" font-size="9">Lakshmi · tap to claim</text>
+              </g>
+              <g transform="translate(216, 138)">
+                <rect width="168" height="50" rx="10" fill="rgba(176,192,216,0.04)" stroke="rgba(176,192,216,0.18)"/>
+                <text x="14" y="20" fill="rgba(176,192,216,0.55)" font-family="Inter,sans-serif" font-size="8" font-weight="700" letter-spacing="0.18em">REVENUE · TODAY</text>
+                <text x="14" y="40" fill="var(--crm-glow)" font-family="Inter Tight,sans-serif" font-size="14" font-weight="800">+ ₹38,400</text>
+              </g>
+              <g transform="translate(216, 198)">
+                <rect width="168" height="38" rx="10" fill="var(--crm-glow)" fill-opacity="0.14" stroke="var(--crm-glow)" stroke-opacity="0.45"/>
+                <text x="84" y="24" fill="var(--crm-glow)" font-family="Inter,sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="0.14em">DOWNLOAD ON IOS · ANDROID</text>
+              </g>
+            </svg>
+          </figure>
+
+          <ul class="cube-panel__features">
+            <li>Native iOS + Android apps, branded as yours</li>
+            <li>Two-way calls + texts straight from the app</li>
+            <li>Push notifications with one-tap lead claim</li>
+            <li>Offline-first contact access for sites and travel</li>
+          </ul>
+          <a href="contact.html" class="cube-panel__cta">
+            Get the app
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CLOSER -->
+  <section class="big-closer">
+    <div class="container">
+      <h2 class="stacked-title big-closer__title">
+        <span>Six Sides.</span>
+        <span>One</span>
+        <span><em>Workspace.</em></span>
+      </h2>
+      <p class="lede" style="max-width:60ch;margin-bottom:32px;">
+        Most SMBs stitch this together from five subscriptions. We'd rather you
+        had one — built on GHL, set up by us, priced like a phone bill, run from your pocket.
+      </p>
+      <a href="contact.html" class="btn btn--primary">Get a custom quote
+        <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="assets/mittiva-logo-dark.svg" alt="Mittiva" class="logo-dark" />
+          <img src="assets/mittiva-logo-light.svg" alt="Mittiva" class="logo-light" />
+          <p>Practical AI for the businesses that built our neighbourhoods. Made in Chennai.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="founders.html">Founders</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Build</h4>
+          <ul>
+            <li><a href="services.html#voice">Voice AI</a></li>
+            <li><a href="services.html#conversation">Conversation AI</a></li>
+            <li><a href="crm.html">CRM &amp; Funnels</a></li>
+            <li><a href="services.html#web">Websites</a></li>
+            <li><a href="services.html#automations">Automations</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Reach Us</h4>
+          <ul>
+            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a href="contact.html">Send a brief</a></li>
+            <li>Chennai · India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+        <span>v0.2 · EDITORIAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       RUBIK'S CUBE — SCRAMBLED → SOLVES ONE FACE PER SECTION
+       Built from a fork of the standard Rubik's representation:
+         · 27 cubies positioned by (cx, cy, cz) ∈ {-1, 0, 1}^3
+         · 54-entry state array — one face-colour index per sticker
+         · MOVES dict cycles state on a 90° turn of any face (U/D/R/L/F/B)
+         · executeMove() reparents the affected 9 cubies into a temp
+           layer, rotates that layer, then writes positions back
+
+       Per-section flow (driven by IntersectionObserver below):
+         1. Smoothly rotate the cube container so the section's
+            target face is the visible one (no continuous spin —
+            just an easing between fixed orientations).
+         2. Queue 3 visual moves to dramatise "solving in progress".
+         3. After the moves settle, force-solve the target face's
+            9 stickers, plus every face already completed in earlier
+            sections, so visual progress is monotonic.
+       ═══════════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    const cubeEl = document.querySelector('[data-cube]');
+    if (!cubeEl) return;
+
+    // ── Constants ────────────────────────────────────────────────
+    const GAP = 62;          // px between cubie centres
+    const ANIM_MS = 280;     // per-move animation duration
+
+    // Face indices: U=0 (white), R=1 (red), F=2 (green),
+    //               D=3 (yellow), L=4 (orange), B=5 (blue).
+    const COLORS = [
+      '#F4F4F4', // U — White (Mobile App)
+      '#C41E3A', // R — Red   (Reporting)
+      '#1A8C4E', // F — Green (Pipelines)
+      '#FFD600', // D — Yellow (Communication)
+      '#FF6000', // L — Orange (Reputation)
+      '#1050C8', // B — Blue  (Calendar)
+    ];
+    const FACE_INDEX = { U: 0, R: 1, F: 2, D: 3, L: 4, B: 5 };
+
+    // Sticker index helpers (per face, 9 stickers laid out left-right
+    // top-bottom from each face's natural perspective).
+    function sU (cx, cz) { return       (cz + 1) * 3 + (cx + 1); }
+    function sR (cy, cz) { return  9 + (1 - cy) * 3 + (1 - cz); }
+    function sF (cx, cy) { return 18 + (1 - cy) * 3 + (cx + 1); }
+    function sD (cx, cz) { return 27 + (1 - cz) * 3 + (cx + 1); }
+    function sL (cy, cz) { return 36 + (1 - cy) * 3 + (cz + 1); }
+    function sB (cx, cy) { return 45 + (1 - cy) * 3 + (1 - cx); }
+
+    // Move definitions. Each move is a list of CW cycles in the state
+    // array (face cycle + 3 side cycles) + the layer axis it rotates.
+    const MOVES = {
+      U: { face: [[0,6,8,2],[1,3,7,5]],     sides: [[18,9,45,36],[19,10,46,37],[20,11,47,38]],   layer: 'cy', val:  1, axis: 'Y', cwDeg:  90 },
+      D: { face: [[27,33,35,29],[28,30,34,32]], sides: [[24,42,51,15],[25,43,52,16],[26,44,53,17]], layer: 'cy', val: -1, axis: 'Y', cwDeg: -90 },
+      R: { face: [[9,11,17,15],[10,14,16,12]], sides: [[20,2,51,29],[23,5,48,32],[26,8,45,35]],     layer: 'cx', val:  1, axis: 'X', cwDeg:  90 },
+      L: { face: [[36,38,44,42],[37,41,43,39]], sides: [[18,27,53,0],[21,30,50,3],[24,33,47,6]],    layer: 'cx', val: -1, axis: 'X', cwDeg: -90 },
+      F: { face: [[18,20,26,24],[19,23,25,21]], sides: [[6,9,29,44],[7,12,28,41],[8,15,27,38]],     layer: 'cz', val:  1, axis: 'Z', cwDeg:  90 },
+      B: { face: [[45,47,53,51],[46,50,52,48]], sides: [[0,42,35,11],[1,39,34,14],[2,36,33,17]],    layer: 'cz', val: -1, axis: 'Z', cwDeg: -90 },
+    };
+    // For each CW face turn, the new (cx, cy, cz) position of an
+    // affected cubie. Used after the animation to write cubies
+    // back into the cube at their correct lattice positions.
+    const POS_CW = {
+      U: (cx, cy, cz) => [ cz,  cy, -cx],
+      D: (cx, cy, cz) => [-cz,  cy,  cx],
+      R: (cx, cy, cz) => [ cx,  cz, -cy],
+      L: (cx, cy, cz) => [ cx, -cz,  cy],
+      F: (cx, cy, cz) => [ cy, -cx,  cz],
+      B: (cx, cy, cz) => [-cy,  cx,  cz],
+    };
+
+    // ── State ────────────────────────────────────────────────────
+    // Start solved: stickers 0..8 are U, 9..17 are R, etc.
+    let state = Array.from({ length: 54 }, (_, i) => Math.floor(i / 9));
+    let cubies = [];           // [{ cx, cy, cz, el }]
+    let animating = false;
+    let moveQueue = [];        // [{ name, dir, cb }]
+
+    // ── Build the cube DOM ───────────────────────────────────────
+    function setCubieXYZ (el, cx, cy, cz) {
+      el.style.transform = `translate3d(${cx * GAP}px, ${-cy * GAP}px, ${cz * GAP}px)`;
+    }
+
+    function buildCube () {
+      for (let cx = -1; cx <= 1; cx++)
+      for (let cy = -1; cy <= 1; cy++)
+      for (let cz = -1; cz <= 1; cz++) {
+        if (!cx && !cy && !cz) continue; // skip invisible centre
+        const el = document.createElement('div');
+        el.className = 'cubie';
+        setCubieXYZ(el, cx, cy, cz);
+        // 6 face divs in fixed order F,B,R,L,U,D
+        ['F', 'B', 'R', 'L', 'U', 'D'].forEach((f) => {
+          const face = document.createElement('div');
+          face.className = `cubie__face cubie__face--${f}`;
+          el.appendChild(face);
+        });
+        cubeEl.appendChild(el);
+        cubies.push({ cx, cy, cz, el });
+      }
+      renderColors();
+    }
+
+    function renderColors () {
+      for (const c of cubies) {
+        const fs = c.el.children;
+        // Order matches the DOM build order: F, B, R, L, U, D
+        const map = [
+          [c.cz ===  1, c.cz ===  1 ? sF(c.cx, c.cy) : null],
+          [c.cz === -1, c.cz === -1 ? sB(c.cx, c.cy) : null],
+          [c.cx ===  1, c.cx ===  1 ? sR(c.cy, c.cz) : null],
+          [c.cx === -1, c.cx === -1 ? sL(c.cy, c.cz) : null],
+          [c.cy ===  1, c.cy ===  1 ? sU(c.cx, c.cz) : null],
+          [c.cy === -1, c.cy === -1 ? sD(c.cx, c.cz) : null],
+        ];
+        map.forEach(([vis, idx], i) => {
+          fs[i].style.background = vis ? COLORS[state[idx]] : '#050810';
+          fs[i].style.boxShadow  = vis ? 'inset 0 0 0 1px rgba(255,255,255,0.06)' : 'none';
+        });
+      }
+    }
+
+    // ── State mutation per move ──────────────────────────────────
+    function applyCycle (cyc) {
+      const tmp = state[cyc[cyc.length - 1]];
+      for (let i = cyc.length - 1; i > 0; i--) state[cyc[i]] = state[cyc[i - 1]];
+      state[cyc[0]] = tmp;
+    }
+    function applyToState (name, dir) {
+      const m = MOVES[name];
+      const cycles = [...m.face, ...m.sides];
+      if (dir === 'CW') cycles.forEach(c => applyCycle(c));
+      else              cycles.forEach(c => applyCycle([...c].reverse()));
+    }
+    function posTransform (name, dir, cx, cy, cz) {
+      if (dir === 'CW') return POS_CW[name](cx, cy, cz);
+      // CCW = CW × 3
+      let p = POS_CW[name](cx, cy, cz);
+      p = POS_CW[name](...p);
+      p = POS_CW[name](...p);
+      return p;
+    }
+
+    // ── Animated move ────────────────────────────────────────────
+    function executeMove (name, dir, cb) {
+      animating = true;
+      const m = MOVES[name];
+      const angle = dir === 'CW' ? m.cwDeg : -m.cwDeg;
+      const layer = cubies.filter(c => c[m.layer] === m.val);
+
+      const anim = document.createElement('div');
+      anim.className = 'rubik-anim-layer';
+      anim.style.transition = 'none';
+      cubeEl.appendChild(anim);
+      layer.forEach(c => anim.appendChild(c.el));
+      anim.getBoundingClientRect(); // reflow before transition
+
+      anim.style.transition = `transform ${ANIM_MS}ms cubic-bezier(0.32, 0.72, 0, 1)`;
+      anim.style.transform  = `rotate${m.axis}(${angle}deg)`;
+
+      anim.addEventListener('transitionend', () => {
+        anim.style.transition = 'none';
+        applyToState(name, dir);
+        layer.forEach(c => {
+          const [ncx, ncy, ncz] = posTransform(name, dir, c.cx, c.cy, c.cz);
+          c.cx = ncx; c.cy = ncy; c.cz = ncz;
+          setCubieXYZ(c.el, ncx, ncy, ncz);
+          cubeEl.appendChild(c.el);
+        });
+        anim.remove();
+        renderColors();
+        animating = false;
+        if (cb) cb();
+        processQueue();
+      }, { once: true });
+    }
+    function processQueue () {
+      if (animating || !moveQueue.length) return;
+      const { name, dir, cb } = moveQueue.shift();
+      executeMove(name, dir, cb);
+    }
+    function queueMove (name, dir, cb) {
+      moveQueue.push({ name, dir, cb: cb || null });
+      processQueue();
+    }
+
+    // ── History-tracked scramble + chunked solve ────────────────
+    // The artifact's logic: a scramble is recorded as a list of moves,
+    // and the solve is the reverse of those moves played as inverses.
+    // We extend that by splitting the inverse into N equal chunks, one
+    // per section — so each scroll consumes the next chunk and you
+    // watch the cube get progressively more solved by REAL cube moves.
+    const SCRAMBLE_MOVES     = 24;   // total scramble depth
+    const MOVES_PER_SECTION  = 4;    // 24 ÷ 6 sections = 4 moves each
+    const history = [];              // {name, dir} pairs
+    let chunksUsed = 0;              // monotonic — section n consumes
+                                     // chunks 1..(n+1) on first activation
+
+    // Apply a move to STATE and to CUBIE POSITIONS without any animation
+    // — used at page load to scramble the cube before the user sees it.
+    function applyMoveInstant (name, dir) {
+      applyToState(name, dir);
+      const m = MOVES[name];
+      const layer = cubies.filter(c => c[m.layer] === m.val);
+      layer.forEach(c => {
+        const [ncx, ncy, ncz] = posTransform(name, dir, c.cx, c.cy, c.cz);
+        c.cx = ncx; c.cy = ncy; c.cz = ncz;
+        setCubieXYZ(c.el, ncx, ncy, ncz);
+      });
+    }
+
+    // Build a deterministic scramble: same depth every load, but the
+    // particular moves are randomised. (Switch Math.random for a seed
+    // if you want the cube to look identical across reloads.)
+    function initScramble () {
+      const NAMES = ['U','D','R','L','F','B'];
+      const DIRS  = ['CW','CCW'];
+      let prev = '';
+      for (let i = 0; i < SCRAMBLE_MOVES; i++) {
+        let n;
+        do { n = NAMES[Math.floor(Math.random() * 6)]; } while (n === prev);
+        const d = DIRS[Math.floor(Math.random() * 2)];
+        history.push({ name: n, dir: d });
+        applyMoveInstant(n, d);
+        prev = n;
+      }
+      renderColors();
+    }
+
+    // ── Orientation per section ─────────────────────────────────
+    // Each target face → a fixed (rotateX, rotateY) that brings it
+    // visibly forward. NO continuous rotation — just easing between
+    // these resting positions when the section changes.
+    const ORIENTATIONS = {
+      B: { x: -22, y:  150 },  // back — Calendar
+      D: { x:  58, y:   30 },  // bottom — Communication
+      F: { x: -22, y:   30 },  // front — Pipelines
+      R: { x: -22, y:  -60 },  // right — Reporting
+      L: { x: -22, y:  120 },  // left — Reputation
+      U: { x: -62, y:   30 },  // top — Mobile App
+    };
+    function orientForFace (faceLetter) {
+      const o = ORIENTATIONS[faceLetter] || ORIENTATIONS.F;
+      cubeEl.style.transform = `rotateX(${o.x}deg) rotateY(${o.y}deg)`;
+    }
+
+    // ── Init: build the DOM, scramble the cube ──────────────────
+    buildCube();
+    initScramble();
+
+    // ── Scroll-driven section handler ────────────────────────────
+    const panels = Array.from(document.querySelectorAll('[data-cube-panel]'));
+    const dots   = Array.from(document.querySelectorAll('[data-face-jump]'));
+    const body   = document.body;
+    let activeIdx = -1;
+
+    // Pop the next chunk of moves off the history and queue their
+    // inverses for animation. Each call solves another step toward
+    // a fully-solved cube. We stop when history is empty.
+    function playNextChunk () {
+      const n = Math.min(MOVES_PER_SECTION, history.length);
+      for (let i = 0; i < n; i++) {
+        const m = history.pop();
+        const invDir = m.dir === 'CW' ? 'CCW' : 'CW';
+        moveQueue.push({ name: m.name, dir: invDir, cb: null });
+      }
+      chunksUsed++;
+      processQueue();
+    }
+
+    function setActive (idx) {
+      if (idx === activeIdx) return;
+      activeIdx = idx;
+      const panel = panels[idx];
+      if (!panel) return;
+
+      const face  = panel.dataset.cubeFace;
+      const theme = panel.dataset.cubeTheme;
+      if (theme) body.setAttribute('data-crm-theme', theme);
+      panels.forEach((p, i) => p.classList.toggle('is-active', i === idx));
+      dots.forEach((d, i) => d.setAttribute('aria-current', i === idx ? 'true' : 'false'));
+
+      // Orient the cube so the section's target face is forward — pure
+      // CSS transition on transform, no continuous spinning.
+      if (face) orientForFace(face);
+
+      // Play any chunks the user hasn't reached yet. Scrolling forward
+      // by one section plays one chunk; jumping past sections plays
+      // all skipped chunks in order so the cube catches up. Scrolling
+      // back never replays — chunksUsed is monotonic.
+      const target = idx + 1;
+      while (chunksUsed < target && history.length > 0) {
+        playNextChunk();
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        let best = null, bestRatio = 0;
+        entries.forEach((e) => {
+          if (e.isIntersecting && e.intersectionRatio > bestRatio) {
+            best = e.target;
+            bestRatio = e.intersectionRatio;
+          }
+        });
+        if (best) {
+          const idx = panels.indexOf(best);
+          if (idx >= 0) setActive(idx);
+        }
+      }, {
+        rootMargin: '-40% 0px -40% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      });
+      panels.forEach(p => obs.observe(p));
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const idx = Number(dot.getAttribute('data-face-jump'));
+        const target = panels[idx];
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+
+    if (panels.length) setActive(0);
+  })();
+  </script>
+
+  <!-- MOBILE STICKY CTA -->
+  <a href="contact.html" class="mobile-cta" aria-label="Contact us">Contact us
+    <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+
+</body>
+</html>

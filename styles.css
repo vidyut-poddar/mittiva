@@ -239,10 +239,11 @@ section { padding: var(--section-y) 0; position: relative; }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 80;
-  padding: 24px var(--gutter);
+  padding: 12px var(--gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   pointer-events: none;
 }
 .nav > * { pointer-events: auto; }
@@ -250,12 +251,12 @@ section { padding: var(--section-y) 0; position: relative; }
 .nav__brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-family: 'Inter Tight', 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: -0.01em;
-  padding: 8px 14px 8px 8px;
+  padding: 6px 12px 6px 6px;
   border-radius: 999px;
   background: rgba(12, 16, 32, 0.6);
   backdrop-filter: blur(14px) saturate(140%);
@@ -281,8 +282,8 @@ section { padding: var(--section-y) 0; position: relative; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  height: 44px;
-  padding: 0 20px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: 999px;
   background: rgba(12, 16, 32, 0.6);
   backdrop-filter: blur(14px) saturate(140%);
@@ -3323,6 +3324,35 @@ body.voice-widget-on .voice-widget-host iframe {
   .talk-to-mitti__status-dot { animation: none !important; }
 }
 
+/* Service deck card CTA link — used on card 08 to deep-link into
+   the full CRM page (crm.html). Sits at the bottom of the front face. */
+.service-deck__cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 14px 8px 16px;
+  border-radius: 999px;
+  background: var(--gradient-titanium);
+  color: #04060E;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  align-self: flex-start;
+  transition: transform 240ms var(--ease), box-shadow 260ms var(--ease);
+}
+.service-deck__cta-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -10px rgba(176, 192, 216, 0.55);
+}
+.service-deck__cta-link .arrow {
+  width: 12px; height: 12px;
+  transition: transform 240ms var(--ease);
+}
+.service-deck__cta-link:hover .arrow { transform: translateX(3px); }
+
 /* Page scroll lock — applied to <html> by main.js when the Mitti panel
    opens. overflow:hidden freezes user scrolling without altering body's
    position, so the dark theme background is preserved (no white flash).
@@ -3619,7 +3649,7 @@ body.mitti-on .mitti-panel {
   display: none;          /* shown ≥980px */
   list-style: none;
   margin: 0;
-  padding: 4px 6px;
+  padding: 3px 4px;
   border-radius: 999px;
   background: rgba(12, 16, 32, 0.6);
   backdrop-filter: blur(14px) saturate(140%);
@@ -3631,12 +3661,19 @@ body.mitti-on .mitti-panel {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.003em;
+  /* Centre the nav links inside the bar — pulled out of the flex
+     flow so brand stays left, CTA + actions stay right, links sit
+     dead-centre regardless of how wide the side groups are. */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 [data-theme="light"] .nav__links { background: rgba(238, 244, 250, 0.7); }
 .nav__links li { list-style: none; }
 .nav__links a {
   display: inline-block;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 999px;
   color: var(--text);
   transition: background 240ms var(--ease), color 240ms var(--ease);
@@ -3664,70 +3701,55 @@ body.mitti-on .mitti-panel {
   .nav__links { display: none !important; }
 }
 
-/* ── DESKTOP STICKY CTA STRIP ─────────────────────────────── */
-.cta-strip {
-  position: fixed;
-  top: 80px;
-  left: 0;
-  right: 0;
-  z-index: 75;
-  display: none;          /* shown ≥980px on non-contact pages */
+/* ── IN-NAV CTA — "Start a conversation" (right side of the nav) ── */
+/* Was previously a separate sticky strip under the nav. Now lives
+   inside the nav bar itself on desktop, pushed right by margin-left:
+   auto so it sits adjacent to the theme/menu pill group. */
+.nav__cta {
+  display: none;          /* shown ≥720px; hidden on mobile (bottom CTA there) */
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  padding: 10px var(--gutter);
-  background: linear-gradient(180deg, rgba(4, 6, 14, 0.86), rgba(4, 6, 14, 0.72));
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  border-bottom: 1px solid var(--border);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  letter-spacing: -0.003em;
-  transition: background 600ms var(--ease), border-color 400ms var(--ease);
-}
-[data-theme="light"] .cta-strip {
-  background: linear-gradient(180deg, rgba(238, 244, 250, 0.92), rgba(238, 244, 250, 0.78));
-}
-.cta-strip__text {
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-.cta-strip__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 22px;
+  gap: 8px;
+  height: 38px;
+  padding: 0 18px;
   border-radius: 999px;
   font-family: 'Inter', sans-serif;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.10em;
   text-transform: uppercase;
   background: var(--gradient-titanium);
   color: #04060E;
   line-height: 1;
-  transition: transform 240ms var(--ease), box-shadow 260ms var(--ease);
+  white-space: nowrap;
+  margin-left: auto;      /* push CTA + actions to the right edge */
+  transition: transform 240ms var(--ease), box-shadow 260ms var(--ease), filter 260ms var(--ease);
 }
-.cta-strip__cta:hover {
+.nav__cta:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 28px -12px rgba(176, 192, 216, 0.6);
+  box-shadow: 0 10px 28px -12px rgba(176, 192, 216, 0.55);
+  filter: brightness(1.04);
 }
-.cta-strip__cta .arrow {
-  width: 14px; height: 14px;
+.nav__cta .arrow {
+  width: 13px; height: 13px;
   transition: transform 240ms var(--ease);
 }
-.cta-strip__cta:hover .arrow { transform: translateX(4px); }
+.nav__cta:hover .arrow { transform: translateX(3px); }
 
+/* Hide on the contact page itself (no point CTA-ing to it from itself). */
+body[data-page="contact"] .nav__cta { display: none !important; }
+
+@media (min-width: 720px) {
+  .nav__cta { display: inline-flex; }
+}
+
+/* Now that the cta-strip is gone, the hero only needs to clear the
+   (thinner) nav itself. */
 @media (min-width: 980px) {
-  body:not([data-page="contact"]) .cta-strip { display: flex; }
-  /* Make sure the hero headline never hides behind the cta-strip */
   body:not([data-page="contact"]) .hero {
-    padding-top: clamp(168px, 14vw, 224px);
+    padding-top: clamp(96px, 7vw, 132px);
   }
   body:not([data-page="contact"]) .hero.hero--compact {
-    padding-top: clamp(150px, 11vw, 188px);
+    padding-top: clamp(84px, 6vw, 116px);
   }
 }
 

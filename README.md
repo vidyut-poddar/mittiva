@@ -31,7 +31,7 @@ mittiva/
    founders page).
 
 4. **Email addresses** — replace `hello@mittiva.io`,
-   `vidyut@mittiva.io`, `sanskar@mittiva.io` if different.
+   `vid@mittiva.io`, `sanskar@mittiva.io` if different.
 
 5. **Domain** — site is configured for `mittiva.io`. If you change
    domains, update `sitemap.xml`, `robots.txt`, and all `<link rel="canonical">` tags.

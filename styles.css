@@ -1861,6 +1861,41 @@ footer {
   color: var(--text-muted);
   line-height: 1;
 }
+
+/* Per-card deep-link CTA — sits below the tags, leads to the matching
+   service-deck card on services.html. main.js reads location.hash on
+   that page and auto-flips the right card open. */
+.h-card__cta-row {
+  margin: 24px 0 0;
+}
+.h-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: var(--gradient-titanium);
+  color: #04060E;
+  font-family: 'Inter', sans-serif;
+  font-size: var(--fs-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: transform 240ms var(--ease), box-shadow 260ms var(--ease);
+}
+.h-card__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -12px rgba(176, 192, 216, 0.55);
+}
+.h-card__cta .arrow {
+  width: 12px;
+  height: 12px;
+  transition: transform 240ms var(--ease);
+}
+.h-card__cta:hover .arrow {
+  transform: translateX(3px);
+}
 /* Bottom row — quote / status line */
 .h-card__foot {
   display: flex;

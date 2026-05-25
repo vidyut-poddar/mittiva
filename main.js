@@ -697,6 +697,38 @@
       });
     });
 
+    /* ── DEEP-LINK FROM HOMEPAGE / NAV DROPDOWN ─────────────────
+       The homepage h-scroll cards link to services.html#<id> (e.g.
+       #voice, #conversation, #social, #changing-room, #web,
+       #email, #automations, #crm). The nav dropdown does the same.
+       On arrival we look up the matching card via its id, scroll
+       it into view, and trigger flipIn() so the visitor lands on
+       the exact card they clicked — no manual hunt through the
+       deck. We sanitise the hash to a strict id pattern before
+       passing it to querySelector. */
+    function openDeckCardFromHash () {
+      const raw = (location.hash || '').replace(/^#/, '');
+      if (!/^[a-z][a-z0-9-]{0,40}$/i.test(raw)) return;
+      const target = document.getElementById(raw);
+      if (!target || !target.classList.contains('service-deck__card')) return;
+      // Close any other open card first (defensive — usually nothing's open
+      // on a fresh navigation).
+      deckCards.forEach((c) => { if (c !== target && isCardActive(c)) flipOut(c); });
+      // Brief delay so the page settles + the deck's mobile auto-fan
+      // observer can mark itself in-view before we kick off the flip.
+      setTimeout(() => {
+        if (!isCardActive(target)) {
+          flipIn(target);
+          scrollCardToCenter();
+        }
+      }, 220);
+    }
+    // Run once on initial load
+    openDeckCardFromHash();
+    // And again if the hash changes while the page is open (e.g. user
+    // clicks a same-page anchor or browser back/forward changes it).
+    window.addEventListener('hashchange', openDeckCardFromHash);
+
     // ── MOBILE: auto-fan the deck when it scrolls into view ────────
     // Touch devices have no hover, so the hover-driven fan-out rule
     // (Trigger A in styles.css) never fires. Instead, on mobile we

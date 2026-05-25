@@ -163,56 +163,82 @@
 
       <div class="h-scroll__track">
 
+        <!-- Card order matches services.html deck (Voice → Conversation →
+             Social → Changing Room → Web → Email → Automations → CRM).
+             Each card's CTA deep-links to services.html#<id>, where the
+             init handler in main.js reads location.hash and auto-flips
+             the matching service-deck card open. -->
+
         <article class="h-card">
-          <div class="h-card__stamp"><span class="cat">01 · Social</span><span>Always-on</span></div>
+          <div class="h-card__stamp"><span class="cat">01 · Voice</span><span>24/7 inbound + outbound</span></div>
           <div class="h-card__main">
             <p class="h-card__num">01</p>
-            <div class="h-card__text">
-              <h3 class="h-card__title">Social Media Automations.</h3>
-              <p class="h-card__copy">Captions, scheduling and replies on autopilot — keeping your brand alive across platforms without a team.</p>
-              <div class="h-card__tags"><span class="h-card__tag">Instagram</span><span class="h-card__tag">LinkedIn</span><span class="h-card__tag">YouTube</span></div>
-            </div>
-          </div>
-          <div class="h-card__foot"><span>Always-on brand</span><span><strong>01</strong> / 09</span></div>
-        </article>
-
-        <article class="h-card">
-          <div class="h-card__stamp"><span class="cat">02 · Retail</span><span>Try-on</span></div>
-          <div class="h-card__main">
-            <p class="h-card__num">02</p>
-            <div class="h-card__text">
-              <h3 class="h-card__title">AI Changing Room.</h3>
-              <p class="h-card__copy">Customers try on your clothes from their phone. Cut returns. Raise conversion. Sell beyond your store.</p>
-              <div class="h-card__tags"><span class="h-card__tag">Boutiques</span><span class="h-card__tag">Designers</span><span class="h-card__tag">WhatsApp</span></div>
-            </div>
-          </div>
-          <div class="h-card__foot"><span>For boutiques &amp; brands</span><span><strong>02</strong> / 09</span></div>
-        </article>
-
-        <article class="h-card">
-          <div class="h-card__stamp"><span class="cat">03 · Voice</span><span>24/7 inbound + outbound</span></div>
-          <div class="h-card__main">
-            <p class="h-card__num">03</p>
             <div class="h-card__text">
               <h3 class="h-card__title">Voice AI.</h3>
               <p class="h-card__copy">Calling agents that book appointments, qualify leads, take orders, follow up. Tamil, English, Hindi.</p>
               <div class="h-card__tags"><span class="h-card__tag">Inbound</span><span class="h-card__tag">Outbound</span><span class="h-card__tag">Multi-lingual</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#voice" class="h-card__cta">Open Voice AI
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
-          <div class="h-card__foot"><span>Never miss a call</span><span><strong>03</strong> / 09</span></div>
+          <div class="h-card__foot"><span>Never miss a call</span><span><strong>01</strong> / 09</span></div>
         </article>
 
         <article class="h-card">
-          <div class="h-card__stamp"><span class="cat">04 · Chat</span><span>WhatsApp · Web · DM</span></div>
+          <div class="h-card__stamp"><span class="cat">02 · Chat</span><span>WhatsApp · Web · DM</span></div>
           <div class="h-card__main">
-            <p class="h-card__num">04</p>
+            <p class="h-card__num">02</p>
             <div class="h-card__text">
               <h3 class="h-card__title">Conversation AI.</h3>
               <p class="h-card__copy">Your business in a chat window — answering questions about products, hours and policies the moment they're asked.</p>
               <div class="h-card__tags"><span class="h-card__tag">WhatsApp Business</span><span class="h-card__tag">Web chat</span><span class="h-card__tag">Instagram DM</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#conversation" class="h-card__cta">Open Conversation AI
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
-          <div class="h-card__foot"><span>Customers don't wait</span><span><strong>04</strong> / 09</span></div>
+          <div class="h-card__foot"><span>Customers don't wait</span><span><strong>02</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">03 · Social</span><span>Always-on</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">03</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">Social Media Automations.</h3>
+              <p class="h-card__copy">Captions, scheduling and replies on autopilot — keeping your brand alive across platforms without a team.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Instagram</span><span class="h-card__tag">LinkedIn</span><span class="h-card__tag">YouTube</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#social" class="h-card__cta">Open Social Media
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>Always-on brand</span><span><strong>03</strong> / 09</span></div>
+        </article>
+
+        <article class="h-card">
+          <div class="h-card__stamp"><span class="cat">04 · Retail</span><span>Try-on</span></div>
+          <div class="h-card__main">
+            <p class="h-card__num">04</p>
+            <div class="h-card__text">
+              <h3 class="h-card__title">AI Changing Room.</h3>
+              <p class="h-card__copy">Customers try on your clothes from their phone. Cut returns. Raise conversion. Sell beyond your store.</p>
+              <div class="h-card__tags"><span class="h-card__tag">Boutiques</span><span class="h-card__tag">Designers</span><span class="h-card__tag">WhatsApp</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#changing-room" class="h-card__cta">Open AI Changing Room
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="h-card__foot"><span>For boutiques &amp; brands</span><span><strong>04</strong> / 09</span></div>
         </article>
 
         <article class="h-card">
@@ -223,6 +249,11 @@
               <h3 class="h-card__title">Website Development.</h3>
               <p class="h-card__copy">Fast, conversion-first sites — sub-second load, baked-in SEO, ready to rank from launch day one.</p>
               <div class="h-card__tags"><span class="h-card__tag">HTML / CSS / JS</span><span class="h-card__tag">SEO baked in</span><span class="h-card__tag">PageSpeed 90+</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#web" class="h-card__cta">Open Websites
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
           <div class="h-card__foot"><span>Built lean, ranks fast</span><span><strong>05</strong> / 09</span></div>
@@ -236,6 +267,11 @@
               <h3 class="h-card__title">Email Design Kit.</h3>
               <p class="h-card__copy">Newsletters, drips, broadcasts and transactional — designed once, used forever. Looks like a brand, not a blast.</p>
               <div class="h-card__tags"><span class="h-card__tag">Mailchimp</span><span class="h-card__tag">Brevo</span><span class="h-card__tag">Klaviyo</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#email" class="h-card__cta">Open Email Design Kit
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
           <div class="h-card__foot"><span>10+ templates</span><span><strong>06</strong> / 09</span></div>
@@ -249,6 +285,11 @@
               <h3 class="h-card__title">Automations.</h3>
               <p class="h-card__copy">The 30-minute task you do every morning — gone. We connect your tools so the boring work runs on its own.</p>
               <div class="h-card__tags"><span class="h-card__tag">CRM ↔ WhatsApp</span><span class="h-card__tag">Invoicing</span><span class="h-card__tag">Inventory</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#automations" class="h-card__cta">Open Automations
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
           <div class="h-card__foot"><span>Done before you sit down</span><span><strong>07</strong> / 09</span></div>
@@ -262,6 +303,11 @@
               <h3 class="h-card__title">CRM, Forms &amp; Funnels.</h3>
               <p class="h-card__copy">Forms, surveys, sales pipeline, reporting — one place for leads, conversations, and revenue numbers.</p>
               <div class="h-card__tags"><span class="h-card__tag">Pipeline</span><span class="h-card__tag">Surveys</span><span class="h-card__tag">Reporting</span></div>
+              <p class="h-card__cta-row">
+                <a href="services.html#crm" class="h-card__cta">Open CRM &amp; Funnels
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+              </p>
             </div>
           </div>
           <div class="h-card__foot"><span>Used daily, not on demand</span><span><strong>08</strong> / 09</span></div>

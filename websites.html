@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#04060E" />
+  <title>Websites — We see them. We get them. — Mittiva</title>
+  <meta name="description" content="Custom-built websites for Indian SMBs. Six site types, four-week timelines, PageSpeed 90+ on mobile, SEO and hosting included. Hand-written HTML, CSS, and JS — no frameworks, no bloat." />
+  <link rel="canonical" href="https://mittiva.io/websites.html" />
+  <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Inter+Tight:wght@800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Inter+Tight:wght@800&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="venom-page">
+
+  <!-- Standard minimal nav (no eye-mask, no custom cursor — this is a
+       regular service page now; the venom moment is just the transition). -->
+  <header class="venom-nav" aria-label="Primary">
+    <a href="index.html" class="venom-nav__brand">
+      <img src="assets/mittiva-icon-dark.svg" alt="" width="20" height="20" />
+      <span>Mittiva</span>
+    </a>
+    <nav>
+      <a href="services.html" style="margin-right: 18px;">All services</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO — keeps the "We see them. We get them." line as the callback
+       to the transition the visitor just experienced. The <canvas#fluid>
+       below is the WebGL fluid-pointer effect (see fluid.js); it's
+       absolutely positioned to fill the hero and sits BEHIND the hero
+       content via z-index, with pointer-events:none so buttons stay
+       clickable. Events are listened to on the hero element itself so
+       the simulation only responds inside this section. -->
+  <section class="venom-hero">
+    <canvas id="fluid" aria-hidden="true"></canvas>
+    <div class="venom-hero__eyebrow">Service № 05 · Web</div>
+    <h1 class="venom-hero__title">
+      We see them.<br/>
+      <span class="accent">We get them.</span>
+    </h1>
+    <p class="venom-hero__sub">
+      Custom-built websites for Indian SMBs. The kind that load instantly, rank where they should, and send the visitor toward one clear next step — without making them think.
+    </p>
+    <div class="venom-hero__cta-row">
+      <a href="contact.html" class="venom-cta-primary">
+        Start a project
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a href="services.html" class="venom-cta-ghost">
+        See all eight services
+      </a>
+    </div>
+  </section>
+
+  <!-- WHAT WE BUILD -->
+  <section class="venom-section">
+    <div class="venom-section__inner">
+      <p class="venom-section__eyebrow">What we build</p>
+      <h2 class="venom-section__title">Six site types. One studio.</h2>
+      <p class="venom-section__lede">
+        Most agencies build whatever you ask for. We've spent enough time with Indian SMBs to know there are really only six shapes — and the one you need depends on how your customer wants to be reached.
+      </p>
+      <div class="venom-grid">
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">01 · MARKETING</div>
+          <h3 class="venom-card-item__h">The marketing site</h3>
+          <p class="venom-card-item__p">Five to nine pages, one clear conversion goal, every section pulling the visitor toward it. Lighthouse 95+ on mobile.</p>
+        </article>
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">02 · COMMERCE</div>
+          <h3 class="venom-card-item__h">The e-commerce site</h3>
+          <p class="venom-card-item__p">Headless storefront with RazorPay and Stripe baked in, product pages that load instantly, and a checkout that doesn't lose the cart.</p>
+        </article>
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">03 · EDITORIAL</div>
+          <h3 class="venom-card-item__h">The editorial site</h3>
+          <p class="venom-card-item__p">For brands with something to say. Long-form layouts, beautiful type, scroll-driven storytelling, SEO that compounds quarterly.</p>
+        </article>
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">04 · PORTFOLIO</div>
+          <h3 class="venom-card-item__h">The portfolio site</h3>
+          <p class="venom-card-item__p">For studios, photographers, architects. Image-heavy without bloat, every project a cinematic case study, contact a single tap away.</p>
+        </article>
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">05 · BOOKING</div>
+          <h3 class="venom-card-item__h">The booking site</h3>
+          <p class="venom-card-item__p">For clinics, salons, restaurants. Calendar embed, WhatsApp confirmation, deposit collection — the customer is booked before they close the tab.</p>
+        </article>
+
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">06 · LANDING</div>
+          <h3 class="venom-card-item__h">The campaign landing page</h3>
+          <p class="venom-card-item__p">One page, one ask, one URL. Built in a week, optimised for a specific ad spend, retired the moment the campaign ends.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW WE WORK -->
+  <section class="venom-section venom-section--tight">
+    <div class="venom-section__inner">
+      <p class="venom-section__eyebrow">How we work</p>
+      <h2 class="venom-section__title">Four weeks. One site. Yours.</h2>
+      <p class="venom-section__lede">
+        Most agencies will spend three months talking and one week building. We do the opposite — fast intake, longer craft, ship in four weeks.
+      </p>
+      <div class="venom-process">
+        <div>
+          <div class="venom-step__num">01</div>
+          <h4 class="venom-step__h">Brief</h4>
+          <p class="venom-step__p">Week one. We map your customer, your competitors, and your one true conversion goal.</p>
+        </div>
+        <div>
+          <div class="venom-step__num">02</div>
+          <h4 class="venom-step__h">Design</h4>
+          <p class="venom-step__p">Week two. Wireframes, type system, colour palette, content architecture. You approve before we touch code.</p>
+        </div>
+        <div>
+          <div class="venom-step__num">03</div>
+          <h4 class="venom-step__h">Build</h4>
+          <p class="venom-step__p">Week three. Hand-written HTML, CSS, and JS. No frameworks, no bloat. Deployed to staging the moment it's ready.</p>
+        </div>
+        <div>
+          <div class="venom-step__num">04</div>
+          <h4 class="venom-step__h">Launch</h4>
+          <p class="venom-step__p">Week four. Domain, SEO, analytics, content load, final QA. Then we hand you the keys. You keep them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="venom-section">
+    <div class="venom-section__inner">
+      <p class="venom-section__eyebrow">Every site includes</p>
+      <h2 class="venom-section__title">Everything is in.</h2>
+      <p class="venom-section__lede">
+        One flat number. No surprise add-ons. No retainer required after launch. If we miss the standard, we fix it for free.
+      </p>
+      <div class="venom-grid">
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">CRAFT</div>
+          <h3 class="venom-card-item__h">Bespoke design system</h3>
+          <p class="venom-card-item__p">Custom type pairing, colour, motion. Not a template, not a kit. Yours.</p>
+        </article>
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">SPEED</div>
+          <h3 class="venom-card-item__h">PageSpeed 90+ on mobile</h3>
+          <p class="venom-card-item__p">Sub-second LCP. Lazy-loading. CDN-edge delivery. We benchmark on every commit.</p>
+        </article>
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">RANK</div>
+          <h3 class="venom-card-item__h">SEO foundations</h3>
+          <p class="venom-card-item__p">Sitemap, schema, semantic HTML, OG cards. Search Console wired on day one.</p>
+        </article>
+        <article class="venom-card-item">
+          <div class="venom-card-item__num">HOST</div>
+          <h3 class="venom-card-item__h">Hosting + CDN</h3>
+          <p class="venom-card-item__p">First year on us. Then ten dollars a month. No vendor lock-in, ever.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="venom-cta-section">
+    <h2 class="venom-cta-section__title">Ready to start?</h2>
+    <p class="venom-cta-section__sub">
+      The first call is thirty minutes. We listen, we ask seven questions, and we tell you if we're a fit. If we are — your site goes live in four weeks. If not — we point you to someone who is.
+    </p>
+    <a href="contact.html" class="venom-cta-primary">
+      Start a project
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <!-- FOOTER (minimal) -->
+  <footer class="venom-footer">
+    <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
+    <span><a href="services.html">All services</a> · <a href="contact.html">hello@mittiva.io</a></span>
+  </footer>
+
+  <script src="main.js" defer></script>
+  <script src="fluid.js" defer></script>
+
+</body>
+</html>

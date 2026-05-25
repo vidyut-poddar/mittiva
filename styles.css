@@ -3458,6 +3458,213 @@ body.voice-widget-on .voice-widget-host iframe {
   .social-whispers__live-dot { animation: none; }
 }
 
+/* ============================================================
+   CARD 05 — Website Development · Type-specimen carousel
+   Rotating SMB hero specimens (chai stall, photographer, oil
+   brand, block-print, manufacturer) — each in its own
+   typographic register and palette. Bottom strip + CTA below.
+   Cycled by initWebsiteCardSpecimens() in main.js, gated by
+   IntersectionObserver so the rotation pauses off-screen.
+   ============================================================ */
+.service-deck__front--specimen {
+  text-align: center;
+  gap: 0;
+}
+.service-deck__front--specimen > .service-deck__cat,
+.service-deck__front--specimen > .service-deck__title-h {
+  flex: 0 0 auto;
+}
+.service-deck__front--specimen .service-deck__cta-link {
+  margin-top: 10px;
+  align-self: center;
+}
+.specimen-stage {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 220px;
+  margin: 14px 0 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #efe6d3; /* default cream — overridden per-specimen */
+}
+.specimen {
+  position: absolute;
+  inset: 0;
+  padding: 18px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  opacity: 0;
+  transition: opacity 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.specimen.is-on { opacity: 1; }
+.specimen__crown {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 8px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+}
+.specimen__body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+.specimen__title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+.specimen__title--italic {
+  font-style: italic;
+  font-weight: 400;
+}
+.specimen__title--lower {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  text-transform: lowercase;
+  line-height: 1.1;
+}
+.specimen__title--mono {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+.specimen__sub {
+  font-family: 'Georgia', serif;
+  font-size: 11px;
+  line-height: 1.4;
+  font-style: italic;
+  opacity: 0.78;
+}
+.specimen__ornament {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  opacity: 0.55;
+}
+.specimen__accent {
+  /* per-specimen accent colour applied below */
+}
+.specimen__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: ui-monospace, monospace;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ── 01 · Chai stall · cream + Georgia bold ───────────── */
+.specimen--chai {
+  background: #efe6d3;
+  color: #1a1408;
+}
+.specimen--chai .specimen__crown { color: #8a7a5a; }
+.specimen--chai .specimen__sub { color: #4a3818; }
+.specimen--chai .specimen__foot { color: #6a5530; }
+
+/* ── 02 · Photographer · dark navy + Georgia italic ──── */
+.specimen--photo {
+  background: #1a1f2a;
+  color: #efe6d3;
+}
+.specimen--photo .specimen__crown { color: #5a6a7a; }
+.specimen--photo .specimen__sub { color: #a4b4c4; }
+.specimen--photo .specimen__foot { color: #5a6a7a; }
+
+/* ── 03 · Oil brand · sage + lowercase sans ──────────── */
+.specimen--oil {
+  background: #2a3a2c;
+  color: #e8efd8;
+}
+.specimen--oil .specimen__crown { color: #8aa68c; }
+.specimen--oil .specimen__sub {
+  color: #c0d0a8;
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+}
+.specimen--oil .specimen__foot { color: #6a8a6c; }
+
+/* ── 04 · Block-print textile · cream + ornaments ────── */
+.specimen--block {
+  background: #efe6d3;
+  color: #1a1408;
+}
+.specimen--block .specimen__crown { color: #8a7a5a; }
+.specimen--block .specimen__sub { color: #4a3818; }
+.specimen--block .specimen__ornament { color: #6a5530; }
+.specimen--block .specimen__foot { color: #6a5530; }
+.specimen--block .specimen__body { gap: 10px; }
+
+/* ── 05 · Manufacturer · near-black + bold sans ──────── */
+.specimen--tubes {
+  background: #0a0e18;
+  color: #f0ede4;
+}
+.specimen--tubes .specimen__crown { color: #5a6070; }
+.specimen--tubes .specimen__title { color: #f0ede4; }
+.specimen--tubes .specimen__accent { color: #ef9f27; }
+.specimen--tubes .specimen__sub {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  color: #9a9389;
+  font-size: 10px;
+}
+.specimen--tubes .specimen__foot { color: #5a6070; }
+
+/* Pagination dots — colour adapted per active specimen by JS */
+.specimen-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 3;
+  pointer-events: none;
+}
+.specimen-dot {
+  width: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(128, 128, 140, 0.4);
+  transition: width 300ms var(--ease), background 300ms var(--ease);
+}
+.specimen-dot.is-on {
+  width: 16px;
+}
+
+/* Bottom meta strip below the carousel */
+.specimen-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 2px 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+.specimen-meta > span:last-child {
+  font-family: ui-monospace, monospace;
+  letter-spacing: 0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .specimen { transition: none; }
+}
+
 /* Service deck card CTA link — used on card 08 to deep-link into
    the full CRM page (crm.html). Sits at the bottom of the front face. */
 .service-deck__cta-link {
@@ -4677,3 +4884,534 @@ body[data-page="contact"] .nav__cta { display: none !important; }
   .auto-anatomy__core-card { padding: 24px; }
   .auto-anatomy__core-meta { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   WEBSITES — Venom symbiote button (card 05) + transition
+   overlay + POV destination page. The card hosts a button that
+   triggers a living-goo takeover sequence: tendrils erupt and
+   slowly creep across the viewport, the cursor is replaced with
+   a symbiote shape, two Venom eyes open, and the browser
+   navigates to websites.html — already styled as POV.
+   ============================================================ */
+
+/* ── Card 05 venom face ──────────────────────────────────── */
+.service-deck__front--venom {
+  text-align: center;
+  gap: 0;
+}
+.service-deck__front--venom > .service-deck__cat,
+.service-deck__front--venom > .service-deck__title-h {
+  flex: 0 0 auto;
+}
+.service-deck__front--venom .venom-copy {
+  font-style: italic;
+  color: rgba(216, 232, 244, 0.62);
+  max-width: 28ch;
+  margin: 6px auto 18px;
+}
+.venom-btn {
+  position: relative;
+  margin: 4px auto 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-block;
+  align-self: center;
+}
+.venom-btn__drip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  width: 110px;
+  height: 28px;
+  opacity: 0.85;
+  pointer-events: none;
+  transition: opacity 260ms var(--ease), transform 320ms var(--ease);
+}
+.venom-btn__drip svg { width: 100%; height: 100%; display: block; }
+.venom-btn:hover .venom-btn__drip { opacity: 1; transform: translateX(-50%) translateY(6px); }
+.venom-btn__inner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+  border: 1px solid #1f1f24;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  transition: border-color 220ms var(--ease), box-shadow 220ms var(--ease), transform 120ms ease-out;
+}
+.venom-btn:hover .venom-btn__inner {
+  border-color: #7f77dd;
+  box-shadow: 0 4px 26px rgba(127, 119, 221, 0.45), inset 0 0 22px rgba(127, 119, 221, 0.08);
+  transform: scale(1.02);
+}
+.venom-btn:active .venom-btn__inner { transform: scale(0.97); }
+.venom-btn__dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b8b0e8;
+  box-shadow: 0 0 10px #7f77dd;
+  animation: venomDotPulse 1.8s ease-in-out infinite;
+}
+@keyframes venomDotPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 8px #7f77dd; }
+  50%      { transform: scale(1.35); box-shadow: 0 0 20px #7f77dd, 0 0 36px rgba(184, 176, 232, 0.5); }
+}
+.venom-btn__label {
+  color: #e8e6df;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+}
+.venom-btn__arrow {
+  width: 12px;
+  height: 12px;
+  color: #e8e6df;
+  transition: transform 220ms var(--ease);
+}
+.venom-btn:hover .venom-btn__arrow { transform: translateX(4px); }
+.venom-warn {
+  display: block;
+  margin-top: 10px;
+  color: #3a4250;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 8px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+/* ── Transition overlay — full-viewport takeover ────────── */
+.venom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 360ms var(--ease-cinematic);
+  /* When active we need pointer-events to catch the cursor area */
+}
+.venom-overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.venom-overlay__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.venom-overlay__goo {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #0a0a14 0%, #000 70%);
+  opacity: 0;
+  transition: opacity 700ms var(--ease-cinematic);
+}
+.venom-overlay__goo.is-on { opacity: 1; }
+
+/* Custom symbiote cursor — used both during overlay and on /websites.html */
+.venom-cursor {
+  position: fixed;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 100000;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 320ms var(--ease);
+}
+.venom-cursor.is-on { opacity: 1; }
+body.venom-bound, body.venom-bound * { cursor: none !important; }
+
+/* Tendrils are now drawn on a <canvas> directly by initVenomBind.
+   See main.js — each tendril is a Tendril() instance whose tip
+   advances frame-by-frame with smoothed random-walk steering,
+   hesitation, sniffing, and unscheduled branching. No CSS rules
+   are needed for the strokes; the canvas accumulates them as it
+   draws. The only CSS the overlay needs is .venom-overlay__canvas
+   above, which positions the canvas full-bleed. */
+
+/* ── POV PAGE — body.venom-pov on websites.html ──────────── */
+body.venom-pov {
+  background: #04060e;
+  color: #e8e6df;
+  overflow-x: hidden;
+}
+.venom-page {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 20%, rgba(127, 119, 221, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 80%, rgba(127, 119, 221, 0.06) 0%, transparent 70%),
+    #04060e;
+  color: #e8e6df;
+  min-height: 100vh;
+}
+.venom-page * { box-sizing: border-box; }
+
+/* Eye-mask scaffolding — uses CSS mask to clip the page content
+   into two almond windows. The mask SVG follows the viewport.
+   When user clicks "Release", body.venom-pov.is-released removes the mask. */
+.venom-pov-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+.venom-pov-mask svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.venom-pov-edge {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  pointer-events: none;
+  overflow: visible;
+}
+.venom-pov-edge svg { width: 100%; height: 100%; display: block; }
+.venom-pov-edge path {
+  fill: none;
+  stroke: #000;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 14px rgba(127, 119, 221, 0.32));
+  animation: venomBreatheEdge 6s ease-in-out infinite;
+}
+@keyframes venomBreatheEdge {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; transform: translate(0, 1px); }
+}
+
+/* Release / re-bind toggle */
+.venom-release {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 60;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: #b8b0e8;
+  background: rgba(127, 119, 221, 0.10);
+  border: 1px solid rgba(184, 176, 232, 0.32);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 200ms var(--ease);
+}
+.venom-release:hover {
+  background: rgba(184, 176, 232, 0.22);
+  border-color: #b8b0e8;
+  color: #f0ede4;
+}
+body.venom-pov.is-released .venom-pov-mask,
+body.venom-pov.is-released .venom-pov-edge { opacity: 0; transition: opacity 600ms var(--ease); }
+body.venom-pov.is-released.venom-bound,
+body.venom-pov.is-released.venom-bound * { cursor: auto !important; }
+body.venom-pov.is-released .venom-cursor { opacity: 0 !important; }
+
+/* Venom-page layout — sections sit comfortably even when the
+   eye-mask is hiding their edges. Content is centered narrow. */
+.venom-nav {
+  position: relative;
+  z-index: 70;
+  padding: 22px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+.venom-nav a, .venom-nav span { color: #9a9389; text-decoration: none; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+.venom-nav a:hover { color: #b8b0e8; }
+.venom-nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #e8e6df;
+  letter-spacing: 0.2em;
+}
+.venom-hero {
+  padding: 14vh 8vw 8vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+  overflow: hidden; /* clip the fluid canvas to hero bounds */
+}
+/* WebGL fluid pointer canvas — fills the hero, sits BEHIND the
+   hero content via z-index, and is pointer-events:none so it
+   doesn't intercept clicks meant for buttons/links. The
+   simulation listens for pointer events on the hero element
+   itself (see fluid.js), so movement inside the hero registers
+   even though the canvas is non-interactive. */
+.venom-hero > #fluid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+/* Hero content sits ABOVE the fluid canvas */
+.venom-hero > .venom-hero__eyebrow,
+.venom-hero > .venom-hero__title,
+.venom-hero > .venom-hero__sub,
+.venom-hero > .venom-hero__cta-row {
+  position: relative;
+  z-index: 1;
+}
+.venom-hero__eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: #7f77dd;
+  margin-bottom: 22px;
+}
+.venom-hero__title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0;
+  max-width: 14ch;
+  color: #ffffff;
+}
+.venom-hero__title .accent {
+  background: linear-gradient(135deg, #b8b0e8 0%, #ffffff 50%, #7f77dd 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.venom-hero__sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.6;
+  color: #9a9389;
+  max-width: 48ch;
+  margin: 24px auto 0;
+}
+.venom-hero__sub em { color: #b8b0e8; font-style: normal; }
+.venom-hero__cta-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+.venom-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 4px;
+  background: #b8b0e8;
+  color: #04060e;
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease);
+}
+.venom-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(127, 119, 221, 0.55); }
+.venom-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 4px;
+  background: transparent;
+  color: #e8e6df;
+  border: 1px solid rgba(184, 176, 232, 0.32);
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 220ms var(--ease);
+}
+.venom-cta-ghost:hover { background: rgba(127, 119, 221, 0.08); border-color: #b8b0e8; color: #ffffff; }
+.venom-cta-primary svg, .venom-cta-ghost svg { width: 12px; height: 12px; transition: transform 220ms var(--ease); }
+.venom-cta-primary:hover svg, .venom-cta-ghost:hover svg { transform: translateX(4px); }
+
+.venom-section {
+  padding: clamp(80px, 10vw, 140px) 8vw;
+  position: relative;
+  z-index: 5;
+}
+.venom-section--tight { padding: clamp(56px, 7vw, 100px) 8vw; }
+.venom-section__inner { max-width: 980px; margin: 0 auto; }
+.venom-section__eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #7f77dd;
+  margin: 0 0 16px;
+}
+.venom-section__title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+  color: #f0ede4;
+  max-width: 18ch;
+}
+.venom-section__lede {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.7;
+  color: #9a9389;
+  max-width: 58ch;
+  margin: 0 0 40px;
+}
+.venom-section__lede em { color: #b8b0e8; font-style: normal; }
+
+.venom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(18px, 2.4vw, 30px);
+}
+.venom-card-item {
+  position: relative;
+  padding: 24px 24px 22px;
+  border: 1px solid rgba(127, 119, 221, 0.20);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(127, 119, 221, 0.04), transparent 60%), #07091a;
+  transition: border-color 320ms var(--ease), transform 320ms var(--ease);
+}
+.venom-card-item:hover { border-color: rgba(184, 176, 232, 0.50); transform: translateY(-3px); }
+.venom-card-item__num {
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: #7f77dd;
+  margin-bottom: 12px;
+}
+.venom-card-item__h {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 1.6vw, 20px);
+  margin: 0 0 8px;
+  color: #f0ede4;
+}
+.venom-card-item__p {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #9a9389;
+  margin: 0;
+}
+
+.venom-process {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  border-top: 1px solid rgba(127, 119, 221, 0.18);
+  padding-top: 22px;
+}
+.venom-step__num {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1;
+  color: #b8b0e8;
+  margin-bottom: 10px;
+}
+.venom-step__h {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #f0ede4;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.venom-step__p { font-family: 'Inter', sans-serif; font-size: 12px; color: #9a9389; line-height: 1.55; margin: 0; }
+
+.venom-cta-section {
+  padding: clamp(90px, 12vw, 160px) 8vw;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  border-top: 1px solid rgba(127, 119, 221, 0.18);
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(127, 119, 221, 0.10), transparent 70%);
+}
+.venom-cta-section__title {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: clamp(30px, 4.5vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, #b8b0e8 0%, #ffffff 50%, #7f77dd 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.venom-cta-section__sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.7;
+  color: #9a9389;
+  max-width: 50ch;
+  margin: 0 auto 32px;
+}
+
+.venom-footer {
+  position: relative;
+  z-index: 5;
+  padding: 36px 8vw;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #5a6070;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-top: 1px solid rgba(127, 119, 221, 0.10);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.venom-footer a { color: #9a9389; text-decoration: none; }
+.venom-footer a:hover { color: #b8b0e8; }
+
+@media (max-width: 720px) {
+  .venom-grid { grid-template-columns: 1fr; }
+  .venom-process { grid-template-columns: repeat(2, 1fr); }
+  .venom-nav { padding: 18px 22px; }
+  .venom-section { padding: 70px 22px; }
+  .venom-cta-section { padding: 80px 22px; }
+  .venom-footer { padding: 24px 22px; flex-direction: column; align-items: flex-start; }
+  .venom-release { top: 14px; right: 14px; padding: 6px 10px; font-size: 8px; }
+}
+

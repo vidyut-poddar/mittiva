@@ -1221,4 +1221,935 @@
       start();
     }
   })();
+
+  /* ── CARD 05 — Rotating type-specimen carousel ──────────────
+     Five SMB hero specimens, each in its own typographic
+     register and palette, cycling every ~4.2s. Dots adapt
+     colour to whichever specimen background is currently
+     active (light cream specimens get dark dots, dark
+     specimens get light dots). Gated by IntersectionObserver
+     so it doesn't burn cycles when card 05 isn't visible. */
+  (function initWebsiteCardSpecimens () {
+    const stage = document.querySelector('[data-card-specimens]');
+    if (!stage) return;
+    const specimens = stage.querySelectorAll('.specimen');
+    const dots = stage.querySelectorAll('.specimen-dot');
+    if (!specimens.length) return;
+
+    let i = 0;
+    let timer = null;
+
+    function adjustDots () {
+      const active = specimens[i];
+      if (!active) return;
+      const bg = window.getComputedStyle(active).backgroundColor || '';
+      // Heuristic: any of our cream/light specimens contain rgb
+      // values in the 200+ range. If so use dark dots, otherwise
+      // light dots.
+      const m = bg.match(/\d+/g);
+      let isLight = false;
+      if (m && m.length >= 3) {
+        const lum = (parseInt(m[0]) * 0.299 + parseInt(m[1]) * 0.587 + parseInt(m[2]) * 0.114);
+        isLight = lum > 160;
+      }
+      dots.forEach(function (d, idx) {
+        const on = idx === i;
+        if (isLight) {
+          d.style.background = on ? 'rgba(20, 14, 8, 0.62)' : 'rgba(20, 14, 8, 0.18)';
+        } else {
+          d.style.background = on ? 'rgba(255, 255, 255, 0.82)' : 'rgba(255, 255, 255, 0.22)';
+        }
+      });
+    }
+
+    function tick () {
+      specimens.forEach(function (s, idx) { s.classList.toggle('is-on', idx === i); });
+      dots.forEach(function (d, idx) { d.classList.toggle('is-on', idx === i); });
+      adjustDots();
+      i = (i + 1) % specimens.length;
+    }
+
+    function start () {
+      if (timer) return;
+      tick();
+      timer = setInterval(tick, 4200);
+    }
+    function stop () {
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.05 });
+      io.observe(stage);
+    } else {
+      start();
+    }
+  })();
+
+  /* ── AUTOMATIONS BRIDGE ────────────────────────────────────
+     Fully meshed graph of 13 nodes (3 cores: Mittiva CRM, AI,
+     Meta + 10 deck nodes) drawn in the silhouette of a
+     suspension bridge. Mounts into ANY element with
+     [data-card-bridge] (card 07 inline) or
+     [data-hero-bridge] (full-bleed on automations.html).
+     Same SVG builder, different scale. IntersectionObserver
+     gates pulse spawning so we don't burn cycles off-screen.
+     Signal pulses route through varied combinations of the
+     three cores — single, dual, triple, or none. */
+  function buildBridge (mount, opts) {
+    if (!mount) return null;
+    const ns = 'http://www.w3.org/2000/svg';
+    const cfg = Object.assign({
+      maxPulses: 14,
+      spawnMin: 120,
+      spawnMax: 300,
+      labelsOnDeck: true,
+      labelSize: 10
+    }, opts || {});
+
+    const nodes = {
+      crm:      { x: 170, y: 80,  role: 'core',     label: 'Mittiva CRM' },
+      meta:     { x: 510, y: 80,  role: 'core',     label: 'Meta' },
+      ai:       { x: 340, y: 245, role: 'core',     label: 'AI' },
+      slack:    { x: 110, y: 397, role: 'sideDeck', label: 'Slack',    color: '#639922' },
+      stripe:   { x: 200, y: 397, role: 'trigger',  label: 'Stripe',   color: '#ef9f27' },
+      razorpay: { x: 240, y: 397, role: 'trigger',  label: 'RazorPay', color: '#ef9f27' },
+      form:     { x: 280, y: 397, role: 'trigger',  label: 'Form',     color: '#ef9f27' },
+      survey:   { x: 320, y: 397, role: 'trigger',  label: 'Survey',   color: '#ef9f27' },
+      calendar: { x: 360, y: 397, role: 'action',   label: 'Calendar', color: '#1d9e75' },
+      whatsapp: { x: 400, y: 397, role: 'action',   label: 'WhatsApp', color: '#1d9e75' },
+      dm:       { x: 440, y: 397, role: 'action',   label: 'DM',       color: '#1d9e75' },
+      email:    { x: 480, y: 397, role: 'action',   label: 'Email',    color: '#1d9e75' },
+      call:     { x: 570, y: 397, role: 'sideDeck', label: 'Call',     color: '#ef9f27' }
+    };
+    const keys = Object.keys(nodes);
+
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 680 460');
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    svg.setAttribute('class', 'bridge-svg');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Mittiva automations — fully meshed network of 13 nodes shaped like a suspension bridge');
+    svg.style.overflow = 'visible';
+
+    const defs = document.createElementNS(ns, 'defs');
+    defs.innerHTML = ''
+      + '<linearGradient id="bFadeL" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-mesh-spoke)" stop-opacity="0"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-mesh-spoke)" stop-opacity="0.6"/>'
+      + '</linearGradient>'
+      + '<linearGradient id="bFadeR" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-mesh-spoke)" stop-opacity="0.6"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-mesh-spoke)" stop-opacity="0"/>'
+      + '</linearGradient>'
+      + '<linearGradient id="bCableFadeL" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-cable)" stop-opacity="0"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-cable)" stop-opacity="1"/>'
+      + '</linearGradient>'
+      + '<linearGradient id="bCableFadeR" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-cable)" stop-opacity="1"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-cable)" stop-opacity="0"/>'
+      + '</linearGradient>'
+      + '<linearGradient id="bDeckFadeL" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-deck)" stop-opacity="0"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-deck)" stop-opacity="1"/>'
+      + '</linearGradient>'
+      + '<linearGradient id="bDeckFadeR" x1="0" y1="0" x2="1" y2="0">'
+      +   '<stop offset="0" stop-color="var(--bridge-deck)" stop-opacity="1"/>'
+      +   '<stop offset="1" stop-color="var(--bridge-deck)" stop-opacity="0"/>'
+      + '</linearGradient>';
+    svg.appendChild(defs);
+
+    function el (tag, attrs) {
+      const e = document.createElementNS(ns, tag);
+      for (const k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+    const meshLayer = el('g', { 'fill': 'none', 'stroke-linecap': 'round' });
+    const extLayer  = el('g', { 'fill': 'none', 'stroke-linecap': 'round' });
+    const sigLayer  = el('g', { 'fill': 'none', 'stroke': 'transparent' });
+    const pulsesLayer = el('g', {});
+    svg.appendChild(meshLayer);
+    svg.appendChild(extLayer);
+
+    // Cable extensions (off-frame side spans, fading)
+    const extGroup = el('g', { 'fill': 'none', 'stroke-linecap': 'round' });
+    extGroup.appendChild(el('path', { d: 'M -60,180 Q -10,290 30,395', stroke: 'url(#bCableFadeL)', 'stroke-width': '2.2' }));
+    extGroup.appendChild(el('path', { d: 'M 650,395 Q 690,290 740,180', stroke: 'url(#bCableFadeR)', 'stroke-width': '2.2' }));
+    svg.appendChild(extGroup);
+
+    // Main cables: side span L, main span (catenary through AI), side span R
+    const cables = el('g', { stroke: 'var(--bridge-cable)', 'stroke-width': '2.2', fill: 'none', 'stroke-linecap': 'round' });
+    cables.appendChild(el('path', { d: 'M 30,395 Q 110,285 170,80' }));
+    cables.appendChild(el('path', { d: 'M 510,80 Q 570,285 650,395' }));
+    cables.appendChild(el('path', { d: 'M 170,80 Q 340,420 510,80' }));
+    svg.appendChild(cables);
+
+    // Side-span suspenders (left + right)
+    const sideSusp = el('g', { stroke: 'var(--bridge-suspender)', 'stroke-width': '0.7', fill: 'none', opacity: '0.75' });
+    [[55,357],[80,313],[110,250],[145,158],[535,158],[570,250],[600,313],[625,357]].forEach(([x,y]) => {
+      sideSusp.appendChild(el('line', { x1: x, y1: y, x2: x, y2: 397 }));
+    });
+    svg.appendChild(sideSusp);
+
+    // Main-span suspenders
+    const mainSusp = el('g', { stroke: 'var(--bridge-suspender-main)', 'stroke-width': '0.6', fill: 'none', opacity: '0.75' });
+    [[200,124],[240,174],[280,212],[320,234],[360,234],[400,212],[440,174],[480,124]].forEach(([x,y]) => {
+      mainSusp.appendChild(el('line', { x1: x, y1: y, x2: x, y2: 397 }));
+    });
+    svg.appendChild(mainSusp);
+
+    // Anchorages
+    const anch = el('g', {});
+    [20, 626].forEach(x => {
+      anch.appendChild(el('rect', { x: x, y: 395, width: 34, height: 40, fill: 'var(--bridge-anchor)', stroke: 'var(--bridge-anchor-stroke)', 'stroke-width': '0.8', rx: '2' }));
+      anch.appendChild(el('rect', { x: x + 2, y: 395, width: 30, height: 4, fill: 'var(--bridge-tower-detail)' }));
+      anch.appendChild(el('line', { x1: x - 5, y1: 430, x2: x + 39, y2: 430, stroke: 'var(--bridge-tower-detail)', 'stroke-width': '2' }));
+    });
+    svg.appendChild(anch);
+
+    // Towers (CRM left, Meta right)
+    const towers = el('g', {});
+    [170, 510].forEach(x => {
+      towers.appendChild(el('line', { x1: x, y1: 80, x2: x, y2: 397, stroke: 'var(--bridge-pylon)', 'stroke-width': '2.6', 'stroke-linecap': 'round' }));
+      [180, 270, 345].forEach(y => {
+        towers.appendChild(el('line', { x1: x - 4, y1: y, x2: x + 4, y2: y, stroke: 'var(--bridge-tower-detail)', 'stroke-width': '2.5' }));
+      });
+    });
+    svg.appendChild(towers);
+
+    // Deck (extending past the frame)
+    svg.appendChild(el('line', { x1: -80, y1: 397, x2: 20, y2: 397, stroke: 'url(#bDeckFadeL)', 'stroke-width': '2.4', 'stroke-linecap': 'round' }));
+    svg.appendChild(el('line', { x1: 660, y1: 397, x2: 760, y2: 397, stroke: 'url(#bDeckFadeR)', 'stroke-width': '2.4', 'stroke-linecap': 'round' }));
+    svg.appendChild(el('line', { x1: 20, y1: 397, x2: 660, y2: 397, stroke: 'var(--bridge-deck)', 'stroke-width': '2.4', 'stroke-linecap': 'round' }));
+    svg.appendChild(el('line', { x1: -80, y1: 403, x2: 760, y2: 403, stroke: 'var(--bridge-deck-soft)', 'stroke-width': '0.8', 'stroke-linecap': 'round', opacity: '0.7' }));
+    svg.appendChild(el('line', { x1: -80, y1: 408, x2: 760, y2: 408, stroke: 'var(--bridge-mesh-web)', 'stroke-width': '0.5', 'stroke-dasharray': '4 8', opacity: '0.6' }));
+
+    svg.appendChild(pulsesLayer);
+
+    // Cores
+    const cores = el('g', {});
+    const aiHalo = el('circle', { cx: 340, cy: 245, r: 26, fill: 'var(--bridge-node-bg)', stroke: '#7f77dd', 'stroke-width': '1.2', opacity: '0.35' });
+    cores.appendChild(el('circle', { cx: 170, cy: 80, r: 16, fill: 'var(--bridge-node-bg)', stroke: '#ef9f27', 'stroke-width': '1.8' }));
+    cores.appendChild(el('circle', { cx: 170, cy: 80, r: 6, fill: '#ef9f27' }));
+    cores.appendChild(el('text', { x: 170, y: 52, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': '500', fill: '#f4c875', 'letter-spacing': '0.02em', 'font-family': 'Inter, ui-sans-serif, system-ui' })).textContent = 'Mittiva CRM';
+    cores.appendChild(el('circle', { cx: 510, cy: 80, r: 16, fill: 'var(--bridge-node-bg)', stroke: '#378add', 'stroke-width': '1.8' }));
+    cores.appendChild(el('circle', { cx: 510, cy: 80, r: 6, fill: '#378add' }));
+    cores.appendChild(el('text', { x: 510, y: 52, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': '500', fill: '#a4cbf2', 'letter-spacing': '0.02em', 'font-family': 'Inter, ui-sans-serif, system-ui' })).textContent = 'Meta';
+    cores.appendChild(aiHalo);
+    cores.appendChild(el('circle', { cx: 340, cy: 245, r: 16, fill: 'var(--bridge-node-bg)', stroke: '#a59cff', 'stroke-width': '1.6' }));
+    cores.appendChild(el('circle', { cx: 340, cy: 245, r: 5, fill: '#a59cff' }));
+    cores.appendChild(el('text', { x: 340, y: 218, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': '500', fill: '#cfc7ff', 'letter-spacing': '0.02em', 'font-family': 'Inter, ui-sans-serif, system-ui' })).textContent = 'AI';
+    svg.appendChild(cores);
+
+    // Deck nodes (labels go below the node)
+    const deck = el('g', {});
+    ['slack','stripe','razorpay','form','survey','calendar','whatsapp','dm','email','call'].forEach(k => {
+      const n = nodes[k];
+      const g = el('g', { transform: 'translate(' + n.x + ',' + n.y + ')' });
+      g.appendChild(el('circle', { r: 7, fill: 'var(--bridge-node-bg)', stroke: n.color, 'stroke-width': '1.4' }));
+      if (cfg.labelsOnDeck) {
+        const t = el('text', { y: 22, 'text-anchor': 'middle', 'font-size': cfg.labelSize, fill: 'var(--bridge-text)', 'font-family': 'Inter, ui-sans-serif, system-ui' });
+        t.textContent = n.label;
+        g.appendChild(t);
+      }
+      deck.appendChild(g);
+    });
+    svg.appendChild(deck);
+    svg.appendChild(sigLayer);
+
+    // ── Build the 78-edge mesh
+    function classify (a, b) {
+      const A = nodes[a], B = nodes[b];
+      const cs = { crm: 1, meta: 1, ai: 1 };
+      if (cs[a] && cs[b]) return 'frame';
+      if (cs[a] || cs[b]) return 'spoke';
+      const deckLike = r => r === 'trigger' || r === 'action' || r === 'sideDeck';
+      if (deckLike(A.role) && deckLike(B.role)) {
+        return Math.abs(A.x - B.x) < 70 ? 'deck' : 'crossweb';
+      }
+      return 'crossweb';
+    }
+    const styles = {
+      frame:    { stroke: 'var(--bridge-mesh-frame)', width: 1.4, opacity: 0.55 },
+      spoke:    { stroke: 'var(--bridge-mesh-spoke)', width: 0.7, opacity: 0.42 },
+      deck:     { stroke: 'var(--bridge-mesh-deck)',  width: 0.6, opacity: 0.50 },
+      crossweb: { stroke: 'var(--bridge-mesh-web)',   width: 0.35, opacity: 0.32 }
+    };
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = i + 1; j < keys.length; j++) {
+        const a = keys[i], b = keys[j], s = styles[classify(a, b)];
+        meshLayer.appendChild(el('line', {
+          x1: nodes[a].x, y1: nodes[a].y,
+          x2: nodes[b].x, y2: nodes[b].y,
+          stroke: s.stroke, 'stroke-width': s.width, opacity: s.opacity
+        }));
+      }
+    }
+
+    // ── Continuation rays leaving the frame
+    const extensions = [
+      ['crm',-80,30],['crm',-80,120],['ai',-80,245],['ai',-80,360],
+      ['slack',-80,397],['slack',-80,320],['stripe',-80,430],
+      ['meta',760,30],['meta',760,120],['ai',760,245],['ai',760,360],
+      ['call',760,397],['call',760,320],['email',760,430]
+    ];
+    extensions.forEach(([from, x, y]) => {
+      const n = nodes[from];
+      extLayer.appendChild(el('line', {
+        x1: n.x, y1: n.y, x2: x, y2: y,
+        stroke: x < 0 ? 'url(#bFadeL)' : 'url(#bFadeR)',
+        'stroke-width': '0.6'
+      }));
+    });
+
+    // ── Routes (varied routing through cores)
+    const COL = {
+      crm: '#ef9f27', ai: '#a59cff', meta: '#378add',
+      crm_ai: '#f0997b', crm_meta: '#c0dd97', ai_meta: '#9fe1cb',
+      all: '#e8e6df', direct: '#5a6b85'
+    };
+    const variants = [
+      { cores: ['crm'],             color: COL.crm,      w: 3 },
+      { cores: ['ai'],              color: COL.ai,       w: 3 },
+      { cores: ['meta'],            color: COL.meta,     w: 3 },
+      { cores: ['crm','ai'],        color: COL.crm_ai,   w: 2 },
+      { cores: ['ai','meta'],       color: COL.ai_meta,  w: 2 },
+      { cores: ['crm','meta'],      color: COL.crm_meta, w: 2 },
+      { cores: ['meta','ai'],       color: COL.ai_meta,  w: 1 },
+      { cores: ['meta','crm'],      color: COL.crm_meta, w: 1 },
+      { cores: ['ai','crm'],        color: COL.crm_ai,   w: 1 },
+      { cores: ['crm','ai','meta'], color: COL.all,      w: 1 },
+      { cores: ['meta','ai','crm'], color: COL.all,      w: 1 },
+      { cores: ['crm','meta','ai'], color: COL.all,      w: 1 },
+      { cores: [],                  color: COL.direct,   w: 1 }
+    ];
+    const triggers = ['stripe','razorpay','form','survey'];
+    const actions  = ['calendar','whatsapp','dm','email'];
+    const sources  = ['slack'].concat(triggers);
+    const sinks    = actions.concat(['call']);
+    const routes = [];
+    sources.forEach(src => {
+      sinks.forEach(snk => {
+        if (src === snk) return;
+        variants.forEach(v => {
+          const seq = [src].concat(v.cores, [snk]);
+          const d = 'M ' + seq.map(k => nodes[k].x + ',' + nodes[k].y).join(' L ');
+          routes.push({ d: d, color: v.color, dur: 1500 + Math.random() * 1600, w: v.w });
+        });
+      });
+    });
+    // Core-to-core shorts
+    [['crm','ai',COL.ai,700],['ai','meta',COL.ai,700],
+     ['crm','meta',COL.crm_meta,1100],['ai','crm',COL.crm,700],
+     ['meta','ai',COL.meta,700]].forEach(([a,b,c,d]) => {
+      routes.push({ d: 'M ' + nodes[a].x + ',' + nodes[a].y + ' L ' + nodes[b].x + ',' + nodes[b].y, color: c, dur: d, w: 2 });
+    });
+    routes.forEach((r, i) => {
+      const p = el('path', { d: r.d });
+      sigLayer.appendChild(p);
+      r.path = p;
+    });
+    const pool = [];
+    routes.forEach(r => { for (let i = 0; i < r.w; i++) pool.push(r); });
+
+    function pulse (route) {
+      const path = route.path;
+      const L = path.getTotalLength();
+      const head = el('circle', { r: 2.8, fill: route.color });
+      const glow = el('circle', { r: 6, fill: route.color, opacity: 0.22 });
+      const tail = el('circle', { r: 1.8, fill: route.color, opacity: 0.4 });
+      pulsesLayer.appendChild(head);
+      pulsesLayer.appendChild(glow);
+      pulsesLayer.appendChild(tail);
+      const start = performance.now();
+      function step (now) {
+        const t = Math.min(1, (now - start) / route.dur);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const hp = path.getPointAtLength(L * e);
+        const tp = path.getPointAtLength(L * Math.max(0, e - 0.05));
+        head.setAttribute('cx', hp.x); head.setAttribute('cy', hp.y);
+        glow.setAttribute('cx', hp.x); glow.setAttribute('cy', hp.y);
+        tail.setAttribute('cx', tp.x); tail.setAttribute('cy', tp.y);
+        const fade = t > 0.9 ? (1 - (t - 0.9) / 0.1) : 1;
+        head.setAttribute('opacity', fade);
+        glow.setAttribute('opacity', String(0.22 * fade));
+        tail.setAttribute('opacity', String(0.4 * fade));
+        if (t < 1 && running) requestAnimationFrame(step);
+        else { head.remove(); glow.remove(); tail.remove(); }
+      }
+      requestAnimationFrame(step);
+    }
+
+    let active = 0;
+    let running = false;
+    let spawnTimer = null;
+    let haloPhase = 0;
+    let haloTimer = null;
+    function tick () {
+      if (!running) return;
+      while (active < cfg.maxPulses) {
+        const r = pool[Math.floor(Math.random() * pool.length)];
+        active++;
+        pulse(r);
+        setTimeout(() => active--, r.dur);
+      }
+      spawnTimer = setTimeout(tick, cfg.spawnMin + Math.random() * (cfg.spawnMax - cfg.spawnMin));
+    }
+    function start () {
+      if (running) return;
+      running = true;
+      tick();
+      haloTimer = setInterval(() => {
+        haloPhase += 0.045;
+        aiHalo.setAttribute('opacity', String(0.28 + Math.sin(haloPhase) * 0.16));
+      }, 60);
+    }
+    function stop () {
+      running = false;
+      if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
+      if (haloTimer)  { clearInterval(haloTimer); haloTimer = null; }
+    }
+
+    mount.appendChild(svg);
+    return { svg: svg, start: start, stop: stop };
+  }
+
+  // Wire up card 07 inline bridge (gated by IntersectionObserver)
+  (function initAutomationsCardBridge () {
+    const mount = document.querySelector('[data-card-bridge]');
+    if (!mount) return;
+    const bridge = buildBridge(mount, { maxPulses: 10, spawnMin: 180, spawnMax: 360, labelSize: 9 });
+    if (!bridge) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => e.isIntersecting ? bridge.start() : bridge.stop());
+      }, { threshold: 0.05 });
+      io.observe(mount);
+    } else {
+      bridge.start();
+    }
+  })();
+
+  // Wire up automations.html full-bleed hero bridge
+  (function initAutomationsHeroBridge () {
+    const mount = document.querySelector('[data-hero-bridge]');
+    if (!mount) return;
+    const bridge = buildBridge(mount, { maxPulses: 16, spawnMin: 100, spawnMax: 240, labelSize: 11 });
+    if (!bridge) return;
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => e.isIntersecting ? bridge.start() : bridge.stop());
+      }, { threshold: 0.02 });
+      io.observe(mount);
+    } else {
+      bridge.start();
+    }
+  })();
+
+
+  /* ── (retired) VENOM BIND placeholder — initial venom-button
+     transition has been retired; card 05 now uses a clean anchor link to websites.html.
+     The remaining .venom-page CSS class is still in use on
+     websites.html for layout/typography, but the .venom-btn,
+     .venom-overlay, .venom-cursor styles are dead code that can
+     be cleaned up in a future pass. */
+  (function initVenomBind_retired () {
+    const btn = document.querySelector('[data-venom-bind]');
+    if (!btn) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let busy = false;
+
+    function makeSymbioteCursor () {
+      const cur = document.createElement('div');
+      cur.className = 'venom-cursor';
+      cur.innerHTML = ''
+        + '<svg viewBox="0 0 22 22" style="width:100%; height:100%; overflow:visible;">'
+        +   '<path d="M 11,2 L 16,11 L 11,20 L 6,11 Z" fill="#000" stroke="#b8b0e8" stroke-width="0.8"/>'
+        +   '<path d="M 11,4 L 13,11 L 11,18 L 9,11 Z" fill="#1a0e26"/>'
+        +   '<circle cx="11" cy="11" r="1.4" fill="#b8b0e8"/>'
+        +   '<path d="M 11,11 Q 11,18 7,24 Q 5,28 8,32" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.7"/>'
+        +   '<path d="M 11,11 Q 13,18 17,22" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.45"/>'
+        + '</svg>';
+      document.body.appendChild(cur);
+
+      function move (e) {
+        cur.style.left = e.clientX + 'px';
+        cur.style.top = e.clientY + 'px';
+      }
+      document.addEventListener('mousemove', move, { passive: true });
+      // remember so we can clean up if user releases
+      cur._move = move;
+      return cur;
+    }
+
+    function makeSymbioteCursor () {
+      const cur = document.createElement('div');
+      cur.className = 'venom-cursor';
+      cur.innerHTML = ''
+        + '<svg viewBox="0 0 22 22" style="width:100%; height:100%; overflow:visible;">'
+        +   '<path d="M 11,2 L 16,11 L 11,20 L 6,11 Z" fill="#000" stroke="#b8b0e8" stroke-width="0.8"/>'
+        +   '<path d="M 11,4 L 13,11 L 11,18 L 9,11 Z" fill="#1a0e26"/>'
+        +   '<circle cx="11" cy="11" r="1.4" fill="#b8b0e8"/>'
+        +   '<path d="M 11,11 Q 11,18 7,24 Q 5,28 8,32" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.7"/>'
+        +   '<path d="M 11,11 Q 13,18 17,22" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.45"/>'
+        + '</svg>';
+      document.body.appendChild(cur);
+      function move (e) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
+      document.addEventListener('mousemove', move, { passive: true });
+      return cur;
+    }
+
+    function bind () {
+      if (busy) return;
+      busy = true;
+
+      // Reduced-motion users get a quiet fade-through.
+      if (reduce) {
+        document.body.style.transition = 'opacity 360ms';
+        document.body.style.opacity = '0';
+        setTimeout(() => { window.location.href = 'websites.html'; }, 380);
+        return;
+      }
+
+      const r = btn.getBoundingClientRect();
+      const ox = r.left + r.width / 2;
+      const oy = r.top + r.height / 2;
+
+      // Canvas-backed overlay (canvas accumulates strokes naturally,
+      // which is what gives the mold its filled-in body).
+      const overlay = document.createElement('div');
+      overlay.className = 'venom-overlay';
+      overlay.innerHTML = ''
+        + '<canvas class="venom-overlay__canvas"></canvas>'
+        + '<div class="venom-overlay__goo"></div>';
+      document.body.appendChild(overlay);
+
+      const canvas = overlay.querySelector('.venom-overlay__canvas');
+      const ctx = canvas.getContext('2d');
+      const goo = overlay.querySelector('.venom-overlay__goo');
+
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const W = window.innerWidth, H = window.innerHeight;
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      canvas.style.width  = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.scale(dpr, dpr);
+      ctx.fillStyle = '#000';
+      ctx.strokeStyle = '#000';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      requestAnimationFrame(() => overlay.classList.add('is-active'));
+
+      // Cursor takeover during the bind, gone again on arrival.
+      document.body.classList.add('venom-bound');
+      const cursor = makeSymbioteCursor();
+      setTimeout(() => cursor.classList.add('is-on'), 1200);
+
+      // ── SLIME-MOLD NETWORK GROWTH (Physarum-style) ──────────
+      // Reference: Physarum polycephalum time-lapse — the mold
+      // doesn't pick a direction and walk; it senses food points
+      // and routes between them, forming a hierarchical network
+      // of thick arteries (near the centre) tapering into fine
+      // capillaries (at the leading front).
+      //
+      // Algorithm:
+      //   1. Scatter ~280 invisible food points across the viewport
+      //      (with edge bias so the mold reaches the corners).
+      //   2. Seed the central blob at the click origin (consumed,
+      //      depth 0).
+      //   3. Each "consumed" point becomes a growth source for its
+      //      lifetime — periodically emits a vein toward its nearest
+      //      unconsumed neighbour within reach.
+      //   4. When a vein reaches its target, that target gets
+      //      consumed → becomes a new source → cascade continues.
+      //   5. Vein width tapers with depth (artery → vein → capillary).
+      //   6. Slight perpendicular curve on each vein for organic feel.
+
+      const foods = [];
+      const TARGET_COUNT = 280;
+
+      // Stratified random with edge bias so the mold has reason to
+      // spread outward all the way to the viewport corners.
+      for (let i = 0; i < TARGET_COUNT; i++) {
+        let x, y;
+        if (Math.random() < 0.40) {
+          const side = Math.floor(Math.random() * 4);
+          if (side === 0)       { x = Math.random() * W;             y = Math.random() * H * 0.32; }
+          else if (side === 1)  { x = W - Math.random() * W * 0.32;  y = Math.random() * H; }
+          else if (side === 2)  { x = Math.random() * W;             y = H - Math.random() * H * 0.32; }
+          else                  { x = Math.random() * W * 0.32;      y = Math.random() * H; }
+        } else {
+          x = Math.random() * W;
+          y = Math.random() * H;
+        }
+        foods.push({ x: x, y: y, consumed: false, targeted: false, depth: -1, frameConsumed: -1, isRoot: false });
+      }
+
+      // Origin point — already consumed at frame 0, depth 0.
+      const root = { x: ox, y: oy, consumed: true, targeted: true, depth: 0, frameConsumed: 0, isRoot: true };
+      foods.push(root);
+
+      const veins = [];
+
+      function bezier (x0, y0, x1, y1, x2, y2, t) {
+        const u = 1 - t;
+        return {
+          x: u * u * x0 + 2 * u * t * x1 + t * t * x2,
+          y: u * u * y0 + 2 * u * t * y1 + t * t * y2
+        };
+      }
+
+      let frame = 0;
+      const TOTAL_FRAMES = 600; // ~10 seconds at 60fps
+
+      function tick () {
+        frame++;
+
+        // STEP A — emit new veins from active growth sources.
+        for (let i = 0; i < foods.length; i++) {
+          const src = foods[i];
+          if (!src.consumed) continue;
+          const age = frame - src.frameConsumed;
+          // Source stays active for a window after being consumed.
+          if (age > 280) continue;
+
+          // Emission rate decays with age. Root is more prolific.
+          const rate = src.isRoot
+            ? (age < 80  ? 0.060 : 0.020)
+            : (age < 60  ? 0.045 : 0.012);
+          if (Math.random() > rate) continue;
+
+          // Find candidate targets — nearest unconsumed/untargeted
+          // food points within a depth-dependent reach radius.
+          const maxReach = src.isRoot ? 180 : Math.max(40, 120 - src.depth * 12);
+          const cand = [];
+          for (let j = 0; j < foods.length; j++) {
+            const f = foods[j];
+            if (f.consumed || f.targeted) continue;
+            const dx = f.x - src.x;
+            const dy = f.y - src.y;
+            const d = Math.hypot(dx, dy);
+            if (d > 20 && d < maxReach) cand.push({ f: f, d: d });
+          }
+          if (cand.length === 0) continue;
+
+          // Sort by distance, pick from closest few with bias (so
+          // the network doesn't always pick literal nearest — some
+          // variation lets the network look organic).
+          cand.sort(function (a, b) { return a.d - b.d; });
+          const top = Math.min(5, cand.length);
+          const pick = cand[Math.floor(Math.random() * top)];
+          pick.f.targeted = true;
+
+          // Width tapers with depth — artery → vein → capillary.
+          const baseW = Math.max(0.55, 5.2 * Math.pow(0.78, src.depth));
+
+          // Slight perpendicular curve for organic feel.
+          const dx = pick.f.x - src.x;
+          const dy = pick.f.y - src.y;
+          const dist = pick.d;
+          const px = -dy / dist;
+          const py =  dx / dist;
+          const perp = (Math.random() - 0.5) * Math.min(dist * 0.28, 36);
+          const ctrlX = (src.x + pick.f.x) / 2 + px * perp;
+          const ctrlY = (src.y + pick.f.y) / 2 + py * perp;
+
+          veins.push({
+            from: src, to: pick.f,
+            ctrlX: ctrlX, ctrlY: ctrlY,
+            progress: 0, prevProgress: 0,
+            width: baseW,
+            depth: src.depth + 1
+          });
+        }
+
+        // STEP B — advance + draw all growing veins.
+        for (let v = 0; v < veins.length; v++) {
+          const vein = veins[v];
+          if (vein.progress >= 1) continue;
+
+          vein.prevProgress = vein.progress;
+          vein.progress = Math.min(1, vein.progress + 0.020); // ~50 frames per vein at full distance
+
+          // Sample 3 sub-steps along the bezier for a smooth curve.
+          const steps = 3;
+          ctx.lineWidth = vein.width;
+          for (let s = 1; s <= steps; s++) {
+            const t1 = vein.prevProgress + (vein.progress - vein.prevProgress) * ((s - 1) / steps);
+            const t2 = vein.prevProgress + (vein.progress - vein.prevProgress) * (s / steps);
+            const p1 = bezier(vein.from.x, vein.from.y, vein.ctrlX, vein.ctrlY, vein.to.x, vein.to.y, t1);
+            const p2 = bezier(vein.from.x, vein.from.y, vein.ctrlX, vein.ctrlY, vein.to.x, vein.to.y, t2);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+
+          // Active growth bloom — a small lavender flicker at the
+          // current leading tip, fading. Gives the active front a
+          // living glow without persisting on the canvas.
+          if (vein.progress < 0.97) {
+            const tip = bezier(vein.from.x, vein.from.y, vein.ctrlX, vein.ctrlY, vein.to.x, vein.to.y, vein.progress);
+            const grad = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 6);
+            grad.addColorStop(0, 'rgba(184, 176, 232, 0.45)');
+            grad.addColorStop(1, 'rgba(184, 176, 232, 0)');
+            ctx.save();
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(tip.x, tip.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          // On arrival — consume the target → it becomes a new source.
+          if (vein.progress >= 1 && !vein.to.consumed) {
+            vein.to.consumed = true;
+            vein.to.depth = vein.depth;
+            vein.to.frameConsumed = frame;
+          }
+        }
+
+        if (frame < TOTAL_FRAMES) requestAnimationFrame(tick);
+      }
+
+      // Root blob grows first (the "wound" through which the network
+      // emerges). Drawn as a softly-eased fill that completes before
+      // the network starts emitting.
+      const rootStart = performance.now();
+      function drawRoot (now) {
+        const e = now - rootStart;
+        if (e > 1800) return;
+        const k = Math.min(1, e / 1100);
+        const r = 28 * (1 - Math.pow(1 - k, 3));
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(ox, oy, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        requestAnimationFrame(drawRoot);
+      }
+      requestAnimationFrame(drawRoot);
+
+      // Start network growth after the root has visibly formed —
+      // it should look like the body emerges first, then the network.
+      setTimeout(function () { requestAnimationFrame(tick); }, 600);
+
+      // Goo overlay fades in near the end to fill any negative space
+      // the network didn't fully colonise — the screen needs to be
+      // solid before navigation.
+      setTimeout(function () { goo.classList.add('is-on'); }, 8800);
+
+      // Navigate at the end. websites.html is a clean dark service
+      // page — no eye-mask, no custom cursor.
+      setTimeout(function () { window.location.href = 'websites.html'; }, 10000);
+    }
+
+    btn.addEventListener('click', bind);
+  })();
+
+  /* ── WEBSITES POV PAGE — eye-mask, breathing edges, cursor
+     The websites.html page loads with body.venom-pov. We set up:
+       - the SVG eye-mask that follows the viewport
+       - the symbiote cursor (always on, even after release option)
+       - the "release / re-bind" toggle that removes the framing
+       - subtle parallax — eye-mask drifts a few px with mouse */
+  (function initVenomPovPage () {
+    if (!document.body.classList.contains('venom-pov')) return;
+
+    const ns = 'http://www.w3.org/2000/svg';
+
+    function sharpEyePath (cx, cy, hw, hh, side) {
+      const sharpX = side === 'L' ? cx - hw : cx + hw;
+      const innerX = side === 'L' ? cx + hw * 0.85 : cx - hw * 0.85;
+      const innerOffset = side === 'L' ? -10 : 10;
+      return [
+        'M', sharpX, cy,
+        'L', cx - hw * 0.5, cy - hh,
+        'Q', cx, cy - hh * 1.05, innerX, cy - hh * 0.55,
+        'L', innerX + innerOffset, cy,
+        'L', innerX, cy + hh * 0.55,
+        'Q', cx, cy + hh * 1.05, cx - hw * 0.5, cy + hh,
+        'Z'
+      ].join(' ');
+    }
+
+    // Build the mask scaffold (black overlay with two eye-shaped holes).
+    const maskWrap = document.createElement('div');
+    maskWrap.className = 'venom-pov-mask';
+    document.body.appendChild(maskWrap);
+
+    const W = window.innerWidth, H = window.innerHeight;
+    const maskSvg = document.createElementNS(ns, 'svg');
+    maskSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    maskSvg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    maskSvg.innerHTML = ''
+      + '<defs>'
+      +   '<mask id="vnPovMask">'
+      +     '<rect width="100%" height="100%" fill="white"/>'
+      +     '<path id="vn-pov-eye-l" fill="black"/>'
+      +     '<path id="vn-pov-eye-r" fill="black"/>'
+      +   '</mask>'
+      + '</defs>'
+      + '<rect width="100%" height="100%" fill="#04060e" mask="url(#vnPovMask)"/>'
+      + '<path id="vn-pov-rim-l" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linejoin="miter" opacity="0.92"/>'
+      + '<path id="vn-pov-rim-r" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linejoin="miter" opacity="0.92"/>';
+    maskWrap.appendChild(maskSvg);
+
+    // Edge tendrils — separate SVG, drawn on top of the mask so they
+    // creep across the corners of the viewport regardless of scroll.
+    const edge = document.createElement('div');
+    edge.className = 'venom-pov-edge';
+    document.body.appendChild(edge);
+    const edgeSvg = document.createElementNS(ns, 'svg');
+    edgeSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    edgeSvg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    edgeSvg.innerHTML = ''
+      + '<path d="M 0,0 Q 60,40 50,110 Q 42,180 70,260" stroke-width="16"/>'
+      + '<path d="M ' + W + ',0 Q ' + (W - 60) + ',40 ' + (W - 50) + ',110 Q ' + (W - 42) + ',180 ' + (W - 70) + ',260" stroke-width="16"/>'
+      + '<path d="M 0,' + H + ' Q 60,' + (H - 40) + ' 50,' + (H - 110) + ' Q 42,' + (H - 180) + ' 70,' + (H - 260) + '" stroke-width="14"/>'
+      + '<path d="M ' + W + ',' + H + ' Q ' + (W - 60) + ',' + (H - 40) + ' ' + (W - 50) + ',' + (H - 110) + ' Q ' + (W - 42) + ',' + (H - 180) + ' ' + (W - 70) + ',' + (H - 260) + '" stroke-width="14"/>'
+      + '<path d="M 80,0 Q 110,50 90,100" stroke-width="9"/>'
+      + '<path d="M ' + (W - 80) + ',0 Q ' + (W - 110) + ',50 ' + (W - 90) + ',100" stroke-width="9"/>';
+    edge.appendChild(edgeSvg);
+
+    function paintEyes (offsetX, offsetY) {
+      const w = window.innerWidth, h = window.innerHeight;
+      // Eyes centered in the viewport, sized relative to screen
+      const cxL = w * 0.34 + offsetX;
+      const cyL = h * 0.52 + offsetY;
+      const cxR = w * 0.66 + offsetX;
+      const cyR = h * 0.52 + offsetY;
+      const hw = Math.min(w * 0.26, 340);
+      const hh = Math.min(h * 0.28, 220);
+
+      const dL = sharpEyePath(cxL, cyL, hw, hh, 'L');
+      const dR = sharpEyePath(cxR, cyR, hw, hh, 'R');
+      maskWrap.querySelector('#vn-pov-eye-l').setAttribute('d', dL);
+      maskWrap.querySelector('#vn-pov-eye-r').setAttribute('d', dR);
+      maskWrap.querySelector('#vn-pov-rim-l').setAttribute('d', dL);
+      maskWrap.querySelector('#vn-pov-rim-r').setAttribute('d', dR);
+    }
+    paintEyes(0, 0);
+
+    // Resize handler — repaint mask + edge for new viewport.
+    window.addEventListener('resize', () => {
+      const w2 = window.innerWidth, h2 = window.innerHeight;
+      maskSvg.setAttribute('viewBox', '0 0 ' + w2 + ' ' + h2);
+      edgeSvg.setAttribute('viewBox', '0 0 ' + w2 + ' ' + h2);
+      paintEyes(0, 0);
+    });
+
+    // Subtle parallax — eyes follow the cursor a few pixels.
+    let targetOX = 0, targetOY = 0, curOX = 0, curOY = 0;
+    document.addEventListener('mousemove', (e) => {
+      const dx = (e.clientX - window.innerWidth / 2) / window.innerWidth;
+      const dy = (e.clientY - window.innerHeight / 2) / window.innerHeight;
+      targetOX = dx * 18;
+      targetOY = dy * 12;
+    }, { passive: true });
+    function loop () {
+      curOX += (targetOX - curOX) * 0.06;
+      curOY += (targetOY - curOY) * 0.06;
+      paintEyes(curOX, curOY);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    // Symbiote cursor — always on while in POV mode.
+    const cur = document.createElement('div');
+    cur.className = 'venom-cursor is-on';
+    cur.innerHTML = ''
+      + '<svg viewBox="0 0 22 22" style="width:100%; height:100%; overflow:visible;">'
+      +   '<path d="M 11,2 L 16,11 L 11,20 L 6,11 Z" fill="#000" stroke="#b8b0e8" stroke-width="0.8"/>'
+      +   '<path d="M 11,4 L 13,11 L 11,18 L 9,11 Z" fill="#1a0e26"/>'
+      +   '<circle cx="11" cy="11" r="1.4" fill="#b8b0e8"/>'
+      +   '<path d="M 11,11 Q 11,18 7,24 Q 5,28 8,32" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.7"/>'
+      +   '<path d="M 11,11 Q 13,18 17,22" stroke="#000" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.45"/>'
+      + '</svg>';
+    document.body.appendChild(cur);
+    document.body.classList.add('venom-bound');
+    document.addEventListener('mousemove', (e) => {
+      cur.style.left = e.clientX + 'px';
+      cur.style.top = e.clientY + 'px';
+    }, { passive: true });
+
+    // Release / re-bind toggle.
+    const release = document.querySelector('[data-venom-release]');
+    if (release) {
+      let released = false;
+      release.addEventListener('click', () => {
+        released = !released;
+        document.body.classList.toggle('is-released', released);
+        release.textContent = released ? '◉ RE-BIND' : '↺ RELEASE';
+      });
+    }
+  })();
+
+  /* ── AUTOMATIONS PAGE — scroll reveals + anatomy highlighter
+     Adds .is-in to .auto-reveal elements as they enter view, and
+     toggles .is-active on the scroll-tied .auto-anatomy__panel
+     elements so the sticky core card on the left can dim/light
+     according to which panel is being read. */
+  (function initAutomationsPage () {
+    if (!document.querySelector('.auto-page')) return;
+
+    // Generic reveal observer
+    const reveals = document.querySelectorAll('.auto-reveal');
+    if (reveals.length && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+      reveals.forEach(el => io.observe(el));
+    }
+
+    // Anatomy panels — switch active panel + recolor the sticky core card
+    const panels = document.querySelectorAll('[data-anatomy-panel]');
+    const coreCard = document.querySelector('[data-anatomy-core]');
+    if (panels.length && coreCard && 'IntersectionObserver' in window) {
+      const corePresets = {
+        crm:  { dot: '#ef9f27', label: 'Mittiva CRM',  sub: 'The source of truth. Every contact, every conversation, every deal stage in one place.', meta: [['ROLE','System of record'],['NODE','170, 80'],['LATENCY','< 50ms'],['RETENTION','Forever']] },
+        ai:   { dot: '#a59cff', label: 'AI',           sub: 'The orchestrator. Decides what should happen, when, and through which channel.', meta: [['ROLE','Decisioning'],['NODE','340, 245'],['LATENCY','< 800ms'],['MODEL','Mittiva Mind v3']] },
+        meta: { dot: '#378add', label: 'Meta',         sub: 'Reach and delivery. Instagram, WhatsApp, Facebook, and Ads — one connected layer.', meta: [['ROLE','Reach + delivery'],['NODE','510, 80'],['LATENCY','Realtime'],['SURFACES','IG · WA · FB · Ads']] }
+      };
+      function paintCore (which) {
+        const p = corePresets[which];
+        if (!p) return;
+        coreCard.setAttribute('data-core', which);
+        const h = coreCard.querySelector('.auto-anatomy__core-h');
+        const s = coreCard.querySelector('.auto-anatomy__core-sub');
+        const ml = coreCard.querySelector('.auto-anatomy__core-meta');
+        if (h) h.textContent = p.label;
+        if (s) s.textContent = p.sub;
+        if (ml) {
+          ml.innerHTML = '';
+          p.meta.forEach(([k, v]) => {
+            const dt = document.createElement('dt'); dt.textContent = k;
+            const dd = document.createElement('dd'); dd.textContent = v;
+            ml.appendChild(dt); ml.appendChild(dd);
+          });
+        }
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            panels.forEach(p => p.classList.toggle('is-active', p === e.target));
+            paintCore(e.target.getAttribute('data-anatomy-panel'));
+          }
+        });
+      }, { threshold: 0.55 });
+      panels.forEach(p => io.observe(p));
+    }
+  })();
 })();

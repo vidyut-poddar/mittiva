@@ -246,18 +246,90 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">Websites</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--specimen">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">05</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">05</span>
-                <span class="service-deck__cat">Web · Fast, conversion-first</span>
+                <span class="service-deck__cat">Web · A hero, well-set</span>
                 <h3 class="service-deck__title-h">Website Development</h3>
-                <p class="service-deck__copy">A site that loads under a second, ranks on Google, and pushes the visitor toward one clear next step.</p>
-                <ul class="service-deck__features">
-                  <li>Lean HTML / CSS / JS — no bloat</li>
-                  <li>Hosting and CDN included</li>
-                  <li>PageSpeed 90+ on mobile</li>
-                  <li>SEO foundations baked in</li>
-                </ul>
+                <!-- Rotating type-specimen carousel: 5 real-feeling SMB
+                     hero pages, each in its own typographic register.
+                     Cycled by initWebsiteCardSpecimens() in main.js,
+                     gated by IntersectionObserver so it only runs when
+                     the card is on screen. -->
+                <div class="specimen-stage" data-card-specimens aria-hidden="true">
+                  <div class="specimen specimen--chai is-on" data-spec="0">
+                    <div class="specimen__crown">SPEC №01 · MYLAPORE · F&amp;B</div>
+                    <div class="specimen__body">
+                      <div class="specimen__title">Hand-pulled chai.<br/>Mylapore corner.</div>
+                      <div class="specimen__sub">Six in the morning to midnight.</div>
+                    </div>
+                    <div class="specimen__foot">
+                      <span>— EST. 1972</span>
+                      <span>SET BY MITTIVA</span>
+                    </div>
+                  </div>
+                  <div class="specimen specimen--photo" data-spec="1">
+                    <div class="specimen__crown">SPEC №02 · BANDRA · PHOTOGRAPHY</div>
+                    <div class="specimen__body">
+                      <div class="specimen__title specimen__title--italic">Your wedding,<br/>shot on film.</div>
+                      <div class="specimen__sub">Sixteen weddings a year.</div>
+                    </div>
+                    <div class="specimen__foot">
+                      <span>— MAYA OLIVEIRA</span>
+                      <span>SET BY MITTIVA</span>
+                    </div>
+                  </div>
+                  <div class="specimen specimen--oil" data-spec="2">
+                    <div class="specimen__crown">SPEC №03 · COIMBATORE · PROVISIONS</div>
+                    <div class="specimen__body">
+                      <div class="specimen__title specimen__title--lower">cold-pressed<br/>groundnut oil.</div>
+                      <div class="specimen__sub">the way amma made it.</div>
+                    </div>
+                    <div class="specimen__foot">
+                      <span>— SHIPS PAN-INDIA</span>
+                      <span>SET BY MITTIVA</span>
+                    </div>
+                  </div>
+                  <div class="specimen specimen--block" data-spec="3">
+                    <div class="specimen__crown">SPEC №04 · PONDICHERRY · TEXTILES</div>
+                    <div class="specimen__body">
+                      <div class="specimen__ornament">— · —</div>
+                      <div class="specimen__title">Block-printed<br/>in Pondicherry.</div>
+                      <div class="specimen__sub">Since nineteen-sixty-two.</div>
+                      <div class="specimen__ornament">— · —</div>
+                    </div>
+                    <div class="specimen__foot">
+                      <span>— LAKSHMI &amp; DAUGHTERS</span>
+                      <span>SET BY MITTIVA</span>
+                    </div>
+                  </div>
+                  <div class="specimen specimen--tubes" data-spec="4">
+                    <div class="specimen__crown">SPEC №05 · GUINDY · MANUFACTURING</div>
+                    <div class="specimen__body">
+                      <div class="specimen__title specimen__title--mono">Specialty tubes,<br/><span class="specimen__accent">for specialty work.</span></div>
+                      <div class="specimen__sub">Stainless, copper, brass — Chennai since 1987.</div>
+                    </div>
+                    <div class="specimen__foot">
+                      <span>— JAVERI TUBES</span>
+                      <span>SET BY MITTIVA</span>
+                    </div>
+                  </div>
+                  <div class="specimen-dots" data-card-specimen-dots>
+                    <span class="specimen-dot is-on"></span>
+                    <span class="specimen-dot"></span>
+                    <span class="specimen-dot"></span>
+                    <span class="specimen-dot"></span>
+                    <span class="specimen-dot"></span>
+                  </div>
+                </div>
+                <div class="specimen-meta">
+                  <span>Four hundred voices · one studio</span>
+                  <span>№05</span>
+                </div>
+                <a href="websites.html" class="service-deck__cta-link" aria-label="See the work">
+                  See the work
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
               </div>
             </div>
           </article>
@@ -296,18 +368,28 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">Automations</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--bridge">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">07</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">07</span>
-                <span class="service-deck__cat">Ops · Cross-tool workflows</span>
+                <span class="service-deck__cat">Ops · Load-bearing workflows</span>
                 <h3 class="service-deck__title-h">Automations</h3>
-                <p class="service-deck__copy">The 30-minute task you do every morning — gone. Spreadsheets, email, CRM, WhatsApp, all talking.</p>
-                <ul class="service-deck__features">
-                  <li>Lead-to-CRM-to-WhatsApp chains</li>
-                  <li>Invoice + reminder workflows</li>
-                  <li>Inventory sync e-com ↔ POS</li>
-                  <li>Auto weekly reports to inbox</li>
-                </ul>
+                <!-- The bridge — fully meshed graph of 13 nodes (3 cores +
+                     10 deck nodes) drawn in the silhouette of a suspension
+                     bridge. Built by initAutomationsBridge() in main.js.
+                     Mesh edges + cable extensions + side spans give the
+                     "section of a larger network" feel. Signal pulses
+                     route through varied CRM/AI/Meta combinations. -->
+                <div class="bridge-card" aria-hidden="true">
+                  <div class="bridge-card__eyebrow">
+                    <span class="bridge-card__live-dot"></span>
+                    <span>Live · every signal carried across</span>
+                  </div>
+                  <div class="bridge-card__stage" data-card-bridge></div>
+                </div>
+                <a href="automations.html" class="service-deck__cta-link" aria-label="See the automation network">
+                  See the network
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
               </div>
             </div>
           </article>
@@ -413,8 +495,8 @@
             <li><a href="services.html#conversation">Conversation AI</a></li>
             <li><a href="social.html">Social Media</a></li>
             <li><a href="crm.html">CRM</a></li>
-            <li><a href="services.html#web">Websites</a></li>
-            <li><a href="services.html#automations">Automations</a></li>
+            <li><a href="websites.html">Websites</a></li>
+            <li><a href="automations.html">Automations</a></li>
           </ul>
         </div>
         <div class="footer__col">

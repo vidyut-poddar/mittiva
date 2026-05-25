@@ -101,59 +101,91 @@
 
   <section>
     <div class="container">
-      <div class="contact-grid">
-        <div class="reveal">
-          <span class="eyebrow">Book a call</span>
-          <h2 style="margin:0 0 24px;">Pick a slot.</h2>
+      <!-- Stacked layout: calendar takes the full width up top (primary
+           conversion), info cards sit underneath in a horizontal row
+           (secondary, reference info). The calendar needs the room. -->
+      <div class="contact-stack">
+
+        <div class="reveal contact-stack__booking">
+          <div class="contact-stack__head">
+            <span class="eyebrow">Book a call</span>
+            <h2 style="margin:0;">Pick a slot.</h2>
+          </div>
           <!-- LeadConnector booking widget. The iframe is sized via the
-               CSS class .booking-embed (height locked so layout doesn't
-               jump while the widget loads). The form_embed.js script at
-               the bottom of body handles internal resize messages. -->
+               CSS class .booking-embed below. The form_embed.js script
+               at the bottom of body handles widget hydration + internal
+               resize messages. Loaded eagerly because the calendar IS
+               the page's primary purpose. -->
           <div class="booking-embed">
             <iframe
               src="https://api.leadconnectorhq.com/widget/booking/2i82QXKHHFu4gdEMXbc5"
               title="Book a call with Mittiva"
-              loading="lazy"
               id="2i82QXKHHFu4gdEMXbc5_1779711521593"
               scrolling="no"></iframe>
           </div>
         </div>
 
-        <aside class="reveal">
-          <span class="eyebrow">Other ways</span>
-          <h3 style="margin:0 0 32px;">Find us here.</h3>
-          <div class="info-grid" style="grid-template-columns: 1fr; gap:16px;">
+        <div class="reveal contact-stack__info">
+          <div class="contact-stack__head">
+            <span class="eyebrow">Other ways</span>
+            <h3 style="margin:0;">Find us here.</h3>
+          </div>
+          <div class="info-row">
             <div class="info-card"><span class="eyebrow">Email</span><h3>hello@mittiva.io</h3><p><a href="mailto:hello@mittiva.io">Send an email</a></p></div>
             <div class="info-card"><span class="eyebrow">Studio</span><h3>Chennai, India</h3><p>By appointment — we run a workshop, not a showroom.</p></div>
             <div class="info-card"><span class="eyebrow">Hours</span><h3>Mon — Sat</h3><p>10:00 to 19:00 IST · Voice agents work 24/7</p></div>
           </div>
-        </aside>
+        </div>
+
       </div>
     </div>
     <style>
-      .contact-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:80px; align-items:start; }
-      @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; gap:48px; } }
-      /* Booking widget container — fills the column, locks a generous
-         min-height so the page doesn't reflow as the iframe boots. */
+      /* Vertical stack: calendar on top, info row below. */
+      .contact-stack {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(40px, 6vw, 80px);
+      }
+      .contact-stack__head {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      /* Booking widget container — fills the row, locks a generous
+         min-height so the page doesn't reflow as the iframe boots.
+         max-width keeps the calendar UI from sprawling too wide on
+         ultra-wide screens (LC's grid looks best around 1000–1100px). */
       .booking-embed {
         width: 100%;
-        min-height: 760px;
-        border-radius: 8px;
+        max-width: 1100px;
+        margin: 0 auto;
+        min-height: 820px;
+        border-radius: 10px;
         overflow: hidden;
-        background: var(--bg-elev, transparent);
+        background: var(--bg-elev, var(--card-bg, transparent));
         border: 1px solid var(--border, rgba(176, 192, 216, 0.12));
         isolation: isolate;
       }
       .booking-embed iframe {
         width: 100%;
-        min-height: 760px;
+        min-height: 820px;
         border: 0;
         display: block;
         background: transparent;
       }
       @media (max-width: 600px) {
         .booking-embed,
-        .booking-embed iframe { min-height: 880px; }
+        .booking-embed iframe { min-height: 980px; }
+      }
+      /* Info cards: 3 across on desktop, stacks on mobile. */
+      .info-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      @media (max-width: 800px) {
+        .info-row { grid-template-columns: 1fr; gap: 14px; }
       }
     </style>
   </section>

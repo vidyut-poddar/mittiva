@@ -28,6 +28,28 @@
     });
   });
 
+  /* ───── EMAIL LINK HYDRATION ───── */
+  /* Anti-scraper: emails are stored in HTML as separate data-user + data-host
+     attributes (never as a full "user@host" string in static markup). On DOM
+     ready we reassemble the address into:
+       · the href as `mailto:user@host` (with optional ?subject= from data-subject)
+       · the visible text content (unless data-keep-label="1", which means the
+         author wanted a custom label like "Send an email" preserved)
+     Bots that only parse static HTML never see the address; humans get a
+     working mailto: click. The visible fallback (`user [at] host`) reads
+     correctly for users with JS disabled too. */
+  document.querySelectorAll('a.email-link').forEach((a) => {
+    const user = a.getAttribute('data-user');
+    const host = a.getAttribute('data-host');
+    if (!user || !host) return;
+    const addr = user + '@' + host;
+    const subject = a.getAttribute('data-subject');
+    a.setAttribute('href', 'mailto:' + addr + (subject ? '?' + subject : ''));
+    if (a.getAttribute('data-keep-label') !== '1') {
+      a.textContent = addr;
+    }
+  });
+
   /* ───── MENU OVERLAY ───── */
   const menuBtn = document.querySelector('[data-menu-btn]');
   if (menuBtn) {

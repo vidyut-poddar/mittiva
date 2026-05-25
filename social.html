@@ -279,7 +279,18 @@
     <ul class="nav__links" role="list" aria-label="Primary navigation">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="services.html">Services</a></li>
+      <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
       <li><a href="founders.html">Founders</a></li>
       <li><a href="careers.html">Careers</a></li>
       <li><a href="contact.html">Contact</a></li>
@@ -315,7 +326,7 @@
       <div class="menu-overlay__meta">
         <span>Mittiva · Estd. 2026</span>
         <span>Chennai · India</span>
-        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+        <a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a>
       </div>
     </aside>
   </nav>
@@ -647,7 +658,7 @@
               <text x="38" y="13" fill="#7fdb9b" font-family="Inter,sans-serif" font-size="9" font-weight="700" letter-spacing="0.16em" text-anchor="middle">MON 9:00am</text>
             </g>
             <g transform="translate(20, 56)" font-family="Inter,sans-serif">
-              <text x="0" y="14" fill="rgba(176,192,216,0.55)" font-size="9" font-weight="700" letter-spacing="0.18em">FROM: MITTIVA &lt;hello@mittiva.io&gt;</text>
+              <text x="0" y="14" fill="rgba(176,192,216,0.55)" font-size="9" font-weight="700" letter-spacing="0.18em">FROM: MITTIVA &lt;hello [at] mittiva.io&gt;</text>
               <text x="0" y="32" fill="#fff" font-family="Inter Tight,sans-serif" font-size="16" font-weight="800" letter-spacing="-0.012em">Week of May 25 — a small reframe.</text>
               <text x="0" y="58" fill="rgba(255,255,255,0.82)" font-size="11" font-style="italic">"Your IG carousels are outperforming reels by 3.4x.</text>
               <text x="0" y="74" fill="rgba(255,255,255,0.82)" font-size="11" font-style="italic">Let's lean in next week — three concrete moves below."</text>
@@ -703,7 +714,18 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="services.html">Services</a></li>
+            <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
             <li><a href="founders.html">Founders</a></li>
             <li><a href="careers.html">Careers</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -723,7 +745,7 @@
         <div class="footer__col">
           <h4>Reach Us</h4>
           <ul>
-            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a></li>
             <li><a href="contact.html">Send a brief</a></li>
             <li>Chennai · India</li>
           </ul>

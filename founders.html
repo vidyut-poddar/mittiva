@@ -40,7 +40,18 @@
     <ul class="nav__links" role="list" aria-label="Primary navigation">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="services.html">Services</a></li>
+      <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
       <li><a href="founders.html" class="is-current" aria-current="page">Founders</a></li>
       <li><a href="careers.html">Careers</a></li>
       <li><a href="contact.html">Contact</a></li>
@@ -77,7 +88,7 @@
       <div class="menu-overlay__meta">
         <span>Mittiva · Estd. 2026</span>
         <span>Chennai · India</span>
-        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+        <a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a>
       </div>
     </aside>
   </nav>
@@ -147,7 +158,7 @@
               <dt>Role</dt>      <dd>Co-Founder</dd>
               <dt>Owns</dt>      <dd>Build, Systems &amp; Architecture</dd>
               <dt>Based</dt>     <dd>Chennai, India</dd>
-              <dt>Reach him</dt> <dd><a href="mailto:vid@mittiva.io">vid@mittiva.io</a></dd>
+              <dt>Reach him</dt> <dd><a class="email-link" data-user="vid" data-host="mittiva.io" href="#email">vid <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a></dd>
             </dl>
           </div>
         </article>
@@ -191,7 +202,7 @@
               <dt>Role</dt>      <dd>Co-Founder</dd>
               <dt>Owns</dt>      <dd>Customers, Brand &amp; Story</dd>
               <dt>Based</dt>     <dd>Chennai, India</dd>
-              <dt>Reach him</dt> <dd><a href="mailto:sanskar@mittiva.io">sanskar@mittiva.io</a></dd>
+              <dt>Reach him</dt> <dd><a class="email-link" data-user="sanskar" data-host="mittiva.io" href="#email">sanskar <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a></dd>
             </dl>
           </div>
         </article>
@@ -246,14 +257,25 @@
         <div class="footer__col"><h4>Navigate</h4><ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="services.html">Services</a></li>
+            <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
             <li><a href="founders.html">Founders</a></li>
             <li><a href="careers.html">Careers</a></li>
             <li><a href="contact.html">Contact</a></li>
           </ul></div>
         <div class="footer__col"><h4>Build</h4><ul><li><a href="services.html#voice">Voice AI</a></li><li><a href="services.html#conversation">Conversation AI</a></li>
             <li><a href="social.html">Social Media</a></li><li><a href="crm.html">CRM</a></li><li><a href="websites.html">Websites</a></li><li><a href="automations.html">Automations</a></li></ul></div>
-        <div class="footer__col"><h4>Reach Us</h4><ul><li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li><li><a href="contact.html">Send a brief</a></li><li>Chennai · India</li></ul></div>
+        <div class="footer__col"><h4>Reach Us</h4><ul><li><a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a></li><li><a href="contact.html">Send a brief</a></li><li>Chennai · India</li></ul></div>
       </div>
       <div class="footer__bottom">
         <span>© 2026 MITTIVA · MADE IN CHENNAI</span>

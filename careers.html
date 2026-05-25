@@ -41,7 +41,18 @@
     <ul class="nav__links" role="list" aria-label="Primary navigation">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="services.html">Services</a></li>
+      <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
       <li><a href="founders.html">Founders</a></li>
       <li><a href="careers.html" class="is-current" aria-current="page">Careers</a></li>
       <li><a href="contact.html">Contact</a></li>
@@ -78,7 +89,7 @@
       <div class="menu-overlay__meta">
         <span>Mittiva · Estd. 2026</span>
         <span>Chennai · India</span>
-        <a href="mailto:hello@mittiva.io">hello@mittiva.io</a>
+        <a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a>
       </div>
     </aside>
   </nav>
@@ -373,7 +384,7 @@
           here — and one thing you've finished that nobody made you finish.
         </p>
         <div class="mantra__actions">
-          <a href="mailto:hello@mittiva.io?subject=Joining%20Mittiva" class="btn btn--primary">Write to us
+          <a class="btn btn--primary email-link" data-user="hello" data-host="mittiva.io" data-subject="subject=Joining%20Mittiva" data-keep-label="1" href="#email">Write to us
             <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
           <a href="about.html" class="btn btn--ghost">Read our story</a>
@@ -395,7 +406,18 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
-            <li><a href="services.html">Services</a></li>
+            <li class="nav__item nav__item--has-dropdown" data-nav-dropdown><a href="services.html" aria-haspopup="true" aria-expanded="false">Services
+            <svg class="nav__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <ul class="nav__dropdown" role="menu" aria-label="Services">
+            <li role="none"><a role="menuitem" href="services.html#voice">Voice AI</a></li>
+            <li role="none"><a role="menuitem" href="services.html#conversation">Conversation AI</a></li>
+            <li role="none"><a role="menuitem" href="social.html">Social Media</a></li>
+            <li role="none"><a role="menuitem" href="websites.html">Websites</a></li>
+            <li role="none"><a role="menuitem" href="automations.html">Automations</a></li>
+            <li role="none"><a role="menuitem" href="crm.html">CRM &amp; Funnels</a></li>
+            <li role="none" class="nav__dropdown-foot"><a role="menuitem" href="services.html">All services →</a></li>
+          </ul></li>
             <li><a href="founders.html">Founders</a></li>
             <li><a href="careers.html">Careers</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -415,7 +437,7 @@
         <div class="footer__col">
           <h4>Reach Us</h4>
           <ul>
-            <li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li>
+            <li><a class="email-link" data-user="hello" data-host="mittiva.io" href="#email">hello <span class="email-link__at" aria-hidden="true">[at]</span> mittiva.io</a></li>
             <li><a href="contact.html">Send a brief</a></li>
             <li>Chennai · India</li>
           </ul>

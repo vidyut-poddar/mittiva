@@ -471,8 +471,70 @@
     // it (plain class selector, no :has()) to kill all hover effects the
     // instant a flip begins — guaranteed to apply before the next paint.
     const deckWrap = document.querySelector('.service-deck-wrap');
+    const deck     = document.querySelector('.service-deck');
     const lockDeck = () => deckWrap && deckWrap.classList.add('is-locked');
     const unlockDeck = () => deckWrap && deckWrap.classList.remove('is-locked');
+
+    /* Smoothly scroll so the flipped card sits at the vertical center of
+       the viewport. The card lands at the deck's center post-flip (CSS
+       top/left 50%), so centering the .service-deck element on screen
+       centers the active card.
+
+       We can't use window.scrollTo({ behavior: 'smooth' }) — browsers
+       finish that in ~300–400ms, well before the 1040ms flip completes,
+       so the scroll feels detached. Instead, hand-roll a rAF tween that
+       spans the full flip duration with a cinematic ease, so motion +
+       flip land together as a single beat. */
+    const prefersReducedMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* The 3-phase flip takes 1040ms total:
+         0–280ms  : elevate
+         280–760ms: rotate
+         760–1040ms: settle to viewport-center + zoom
+
+       If the page scroll runs the full 1040ms, the user perceives it as
+       "the layout is still moving while the card lands" — the scroll
+       trails the flip. Resolving the scroll EARLY (by the time the
+       rotate phase ends) means the card's final settle happens on a
+       page that's already at rest, and the two motions read as a single
+       beat instead of two.
+
+       So: 720ms total with a strong ease-out (fast accel, gentle decay)
+       — page slides 90%+ into place during the elevate + rotate phases,
+       and the card's settle-to-center confirms the new center. */
+    const SCROLL_DURATION = 720;
+    const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+    let scrollRaf = null;
+    function scrollCardToCenter () {
+      if (prefersReducedMotion) return;
+      const target = deck || deckWrap;
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const targetCenter   = rect.top + window.scrollY + rect.height / 2;
+      const viewportCenter = window.innerHeight / 2;
+      const endY = Math.max(0, targetCenter - viewportCenter);
+      const startY = window.scrollY;
+      const delta = endY - startY;
+      // If we're already close enough, skip the scroll to avoid jitter.
+      if (Math.abs(delta) < 24) return;
+
+      // Cancel any in-flight scroll so the new click takes over cleanly.
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      const t0 = performance.now();
+      function tick (now) {
+        const elapsed = now - t0;
+        const p = Math.min(1, elapsed / SCROLL_DURATION);
+        const eased = easeOutQuart(p);
+        window.scrollTo(0, startY + delta * eased);
+        if (p < 1) {
+          scrollRaf = requestAnimationFrame(tick);
+        } else {
+          scrollRaf = null;
+        }
+      }
+      scrollRaf = requestAnimationFrame(tick);
+    }
 
     function flipIn(card) {
       // Clear any leftover state
@@ -554,6 +616,11 @@
         deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
         // Open this one
         flipIn(card);
+        // Smoothly bring the deck (and thus the flipping card) into the
+        // vertical center of the viewport. Kicked off immediately so the
+        // scroll runs in parallel with the 1040ms flip sequence and both
+        // finish at roughly the same time.
+        scrollCardToCenter();
       });
     });
 

@@ -11,8 +11,8 @@
   <!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#04060E" />
-  <title>Contact — Mittiva</title>
-  <meta name="description" content="Get in touch with Mittiva. We're based in Chennai and build practical AI for SMBs. Drop a brief — we respond within 24 hours." />
+  <title>Contact — Book a call — Mittiva</title>
+  <meta name="description" content="Book a 30-minute call with Mittiva. We're based in Chennai and build practical AI for Indian SMBs — voice agents, automations, websites that convert." />
   <link rel="canonical" href="https://mittiva.io/contact.html" />
   <link rel="icon" type="image/svg+xml" href="assets/mittiva-icon-dark.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,7 +68,7 @@
       <li><a href="careers.html"><span class="num">06</span>Careers</a></li>
     </ul>
     <aside class="menu-overlay__aside">
-      <p class="menu-overlay__quote">"A paragraph is enough. We'll come back inside 24 hours with a 15-minute idea — no pitch."</p>
+      <p class="menu-overlay__quote">"Thirty minutes. Seven questions. We listen first, then we tell you if we're a fit."</p>
       <div class="menu-overlay__meta">
         <span>Mittiva · Estd. 2026</span>
         <span>Chennai · India</span>
@@ -82,20 +82,19 @@
       <div class="hero__head">
         <div class="hero__caption reveal">
           <span>Contact</span>
-          <span>Send a brief</span>
-          <span>24-hr reply</span>
+          <span>Book a call</span>
+          <span>30 minutes</span>
         </div>
         <h1 class="stacked-title">
-          <span>Tell us</span>
-          <span>What's</span>
-          <span><em>Eating</em></span>
-          <span>Your Time.</span>
+          <span>Pick a Time.</span>
+          <span>We'll <em>Listen</em>.</span>
+          <span>Then We'll</span>
+          <span>Build.</span>
         </h1>
       </div>
       <p class="lede reveal" style="max-width:60ch;">
-        A paragraph is enough. We'll come back inside 24 hours with a 15-minute idea —
-        no pitch, no obligation. If it's a fit, we book a call. If it's not, we'll point
-        you to the right tool.
+        Thirty minutes is plenty. We listen, we ask seven questions, and we tell you if we're a fit.
+        If we are — we scope and quote within the week. If we're not — we point you to someone who is.
       </p>
     </div>
   </section>
@@ -104,41 +103,20 @@
     <div class="container">
       <div class="contact-grid">
         <div class="reveal">
-          <span class="eyebrow">Send a brief</span>
-          <h2 style="margin:0 0 32px;">Drop us a note.</h2>
-          <form class="form" data-contact-form action="https://formspree.io/f/PASTE_FORMSPREE_ENDPOINT_HERE" method="POST">
-            <div class="form__row">
-              <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" required autocomplete="name" /></div>
-              <div class="field"><label for="business">Business name</label><input id="business" name="business" type="text" autocomplete="organization" /></div>
-            </div>
-            <div class="form__row">
-              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></div>
-              <div class="field"><label for="phone">Phone / WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" /></div>
-            </div>
-            <div class="field">
-              <label for="interest">What are you interested in?</label>
-              <select id="interest" name="interest">
-                <option value="">Pick one — or leave it blank</option>
-                <option>Voice AI (Inbound + Outbound)</option>
-                <option>Conversation AI (WhatsApp / Chat)</option>
-                <option>Automations</option>
-                <option>CRM, Forms &amp; Funnels</option>
-                <option>Website Development</option>
-                <option>Email Marketing Design Kit</option>
-                <option>Social Media Automations</option>
-                <option>AI Changing Room</option>
-                <option>I'm not sure — help me figure it out</option>
-              </select>
-            </div>
-            <div class="field"><label for="message">Tell us about your business</label><textarea id="message" name="message" required placeholder="What do you do? What's the one thing taking the most time right now?"></textarea></div>
-            <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
-              <button type="submit" class="btn btn--primary">Send brief
-                <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-              </button>
-              <span class="form__hint">Response within 24 hours.</span>
-            </div>
-            <div class="form__msg" data-form-msg role="status" aria-live="polite"></div>
-          </form>
+          <span class="eyebrow">Book a call</span>
+          <h2 style="margin:0 0 24px;">Pick a slot.</h2>
+          <!-- LeadConnector booking widget. The iframe is sized via the
+               CSS class .booking-embed (height locked so layout doesn't
+               jump while the widget loads). The form_embed.js script at
+               the bottom of body handles internal resize messages. -->
+          <div class="booking-embed">
+            <iframe
+              src="https://api.leadconnectorhq.com/widget/booking/2i82QXKHHFu4gdEMXbc5"
+              title="Book a call with Mittiva"
+              loading="lazy"
+              id="2i82QXKHHFu4gdEMXbc5_1779711521593"
+              scrolling="no"></iframe>
+          </div>
         </div>
 
         <aside class="reveal">
@@ -155,6 +133,28 @@
     <style>
       .contact-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:80px; align-items:start; }
       @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; gap:48px; } }
+      /* Booking widget container — fills the column, locks a generous
+         min-height so the page doesn't reflow as the iframe boots. */
+      .booking-embed {
+        width: 100%;
+        min-height: 760px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--bg-elev, transparent);
+        border: 1px solid var(--border, rgba(176, 192, 216, 0.12));
+        isolation: isolate;
+      }
+      .booking-embed iframe {
+        width: 100%;
+        min-height: 760px;
+        border: 0;
+        display: block;
+        background: transparent;
+      }
+      @media (max-width: 600px) {
+        .booking-embed,
+        .booking-embed iframe { min-height: 880px; }
+      }
     </style>
   </section>
 
@@ -169,8 +169,8 @@
         <p class="section-head-stacked__lede reveal">Three steps. No pitch deck. No 30-day waiting room.</p>
       </div>
       <div class="info-grid reveal-stagger">
-        <div class="info-card"><span class="eyebrow">Within 24 hrs</span><h3>We reply.</h3><p>A real reply from Vidyut or Sanskar — not a chatbot, ironically.</p></div>
-        <div class="info-card"><span class="eyebrow">Within 3 days</span><h3>We call.</h3><p>20 minutes. We listen, ask questions, propose one or two ideas.</p></div>
+        <div class="info-card"><span class="eyebrow">On the call</span><h3>We listen.</h3><p>Thirty minutes with Vidyut or Sanskar. Seven questions, no slide deck.</p></div>
+        <div class="info-card"><span class="eyebrow">Within 3 days</span><h3>We propose.</h3><p>One or two ideas you can act on — sized to your business, not ours.</p></div>
         <div class="info-card"><span class="eyebrow">Within 1 week</span><h3>You decide.</h3><p>If it makes sense we scope and quote. If not, we send you elsewhere — no hard feelings.</p></div>
       </div>
     </div>
@@ -194,7 +194,7 @@
           </ul></div>
         <div class="footer__col"><h4>Build</h4><ul><li><a href="services.html#voice">Voice AI</a></li><li><a href="services.html#conversation">Conversation AI</a></li>
             <li><a href="social.html">Social Media</a></li><li><a href="crm.html">CRM</a></li><li><a href="websites.html">Websites</a></li><li><a href="automations.html">Automations</a></li></ul></div>
-        <div class="footer__col"><h4>Reach Us</h4><ul><li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li><li><a href="contact.html">Send a brief</a></li><li>Chennai · India</li></ul></div>
+        <div class="footer__col"><h4>Reach Us</h4><ul><li><a href="mailto:hello@mittiva.io">hello@mittiva.io</a></li><li><a href="contact.html">Book a call</a></li><li>Chennai · India</li></ul></div>
       </div>
       <div class="footer__bottom">
         <span>© 2026 MITTIVA · MADE IN CHENNAI</span>
@@ -204,5 +204,9 @@
   </footer>
 
   <script src="main.js" defer></script>
+  <!-- LeadConnector booking widget bootstrap. Lazy + async so it doesn't
+       block first paint; the widget will hydrate the iframe once the
+       script loads. -->
+  <script src="https://link.msgsndr.com/js/form_embed.js" defer></script>
 </body>
 </html>

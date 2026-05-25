@@ -111,16 +111,20 @@
             <span class="eyebrow">Book a call</span>
             <h2 style="margin:0;">Pick a slot.</h2>
           </div>
-          <!-- LeadConnector booking widget — using the exact embed pattern
-               LC ships (inline style on iframe, form_embed.js loaded INLINE
-               immediately after the iframe so its postMessage listener is
-               registered by the time the iframe sends its first resize
-               event). Container forces a white background so we always
-               see the widget's chrome even if LC's loading state is
-               transparent — important on a dark theme. -->
+          <!-- LeadConnector booking widget.
+               URL switched from api.leadconnectorhq.com → link.msgsndr.com
+               because the latter is LC's public-facing embed host and is
+               served with the X-Frame-Options / CSP frame-ancestors headers
+               required for cross-origin embedding. If you still see a
+               blank white box after deploying, the cause is almost
+               certainly that the embedding domain isn't whitelisted on
+               LC's calendar settings — go to your LC dashboard, find the
+               calendar 2i82QXKHHFu4gdEMXbc5, and add mittiva.io (and any
+               other domain you embed from) to its "Allowed Domains" /
+               "Embed Domains" list. -->
           <div class="booking-embed">
             <iframe
-              src="https://api.leadconnectorhq.com/widget/booking/2i82QXKHHFu4gdEMXbc5"
+              src="https://link.msgsndr.com/widget/booking/2i82QXKHHFu4gdEMXbc5"
               style="width:100%;border:none;overflow:hidden;background:#ffffff;min-height:820px;"
               scrolling="no"
               id="2i82QXKHHFu4gdEMXbc5_1779711521593"
@@ -131,7 +135,7 @@
           </div>
           <p class="booking-fallback">
             Trouble loading the calendar?
-            <a href="https://api.leadconnectorhq.com/widget/booking/2i82QXKHHFu4gdEMXbc5" target="_blank" rel="noopener">Open it in a new tab →</a>
+            <a href="https://link.msgsndr.com/widget/booking/2i82QXKHHFu4gdEMXbc5" target="_blank" rel="noopener">Open it in a new tab →</a>
           </p>
         </div>
 

@@ -2341,15 +2341,20 @@ section:has(.service-deck-wrap) {
      2) :not(:has(.is-elevated, .is-rotated, .is-flipped)) → CSS-only
         fallback in case JS hasn't run yet.
    Either layer matching ALONE is sufficient to kill the hover effect. */
+/* Hover lift — pulls the card UP (Y axis) only. No Z push, no
+   z-index bump. Cards keep their natural nth-child stacking, so
+   the hovered card may be slightly covered by its left-side
+   neighbours (which have higher z-index in the fan) — the user
+   prefers that to the "popping toward me" effect a Z push or
+   z-index override creates. */
 .service-deck-wrap:not(.is-locked) .service-deck:not(:has(.is-elevated, .is-rotated, .is-flipped)):has(.service-deck__card:hover) .service-deck__card:hover {
   transform:
     translate3d(
       calc(-50% + var(--fan-x) + var(--shuffle-sway)),
-      calc(-60% + var(--shuffle-lift)),
-      calc(var(--shuffle-z) + 90px)
+      calc(-82% + var(--shuffle-lift)),
+      var(--shuffle-z)
     )
-    rotateZ(calc(var(--fan-r) * 0.5 + var(--shuffle-spin)));
-  z-index: 50;
+    rotateZ(calc(var(--fan-r) * 0.4 + var(--shuffle-spin)));
 }
 
 /* Hover-driven fan-out also gated by .is-locked for the same reason */
@@ -2511,8 +2516,16 @@ section:has(.service-deck-wrap) {
   opacity: 0.9;
   filter: drop-shadow(0 6px 16px rgba(176, 192, 216, 0.22));
 }
+/* Card title sits at the TOP of the card (not centred with the
+   logo) so when the card lifts on hover and only its upper
+   portion is visible above the fan line, the title still reads.
+   Absolutely positioned so it's outside the flex flow — the
+   logo stays vertically centred on its own. */
 .service-deck__back-mark {
-  position: relative;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 2;
   font-family: 'Inter Tight', sans-serif;
   font-weight: 800;
@@ -2520,8 +2533,9 @@ section:has(.service-deck-wrap) {
   letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--accent-light);
-  margin-top: 20px;
   opacity: 0.85;
+  margin: 0;
+  white-space: nowrap;
 }
 
 /* ── FRONT face — service content (bigger card = bigger type) ──
@@ -4287,6 +4301,284 @@ body[data-page="contact"] .nav__cta { display: none !important; }
   --bridge-text: #2a3a4a;
   --bridge-text-soft: #5a6a7a;
   --bridge-text-mute: #7a8a9a;
+}
+
+/* ============================================================
+   CRM KANBAN — card 08 front face
+   ============================================================
+   Three-column pipeline (NEW · WARM · WON) that lives inside
+   the front face of card 08. Cards are spawned in NEW, drift
+   across to WARM, then to WON; old cards fade out so column
+   heights stay bounded (cap of 3 visible per column). Header
+   counts are cumulative — WON only climbs. Driven by
+   initCrmKanban() in main.js, gated by IntersectionObserver.
+   ============================================================ */
+.service-deck__front--kanban {
+  text-align: center;
+  gap: 0;
+  padding-top: 30px;
+  padding-bottom: 18px;
+}
+.service-deck__front--kanban > .service-deck__cat {
+  flex: 0 0 auto;
+  margin: 20px 0 6px;
+  font-size: 10px;
+}
+.service-deck__front--kanban > .service-deck__title-h {
+  flex: 0 0 auto;
+  font-size: 20px;
+  margin: 0 0 10px;
+}
+.service-deck__front--kanban .service-deck__cta-link {
+  margin-top: 8px;
+  align-self: center;
+}
+
+.crm-kanban {
+  position: relative;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  margin: 6px 0 8px;
+  min-height: 200px;
+  text-align: left;
+}
+
+.crm-kanban__col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  padding: 6px 4px 6px;
+  background: rgba(138, 154, 176, 0.05);
+  border: 1px solid rgba(138, 154, 176, 0.10);
+  overflow: hidden;
+  isolation: isolate;
+}
+[data-theme="light"] .crm-kanban__col {
+  background: rgba(42, 58, 74, 0.04);
+  border-color: rgba(42, 58, 74, 0.10);
+}
+
+/* Column accent dot lives on top-left as a tiny status pip. */
+.crm-kanban__col::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--col-dot, #8a9ab0);
+  box-shadow: 0 0 6px var(--col-dot, #8a9ab0);
+}
+.crm-kanban__col--new  { --col-dot: #5a7a9a; }   /* cool steel */
+.crm-kanban__col--warm { --col-dot: #ef9f27; }   /* mittiva amber */
+.crm-kanban__col--won  { --col-dot: #1d9e75; }   /* mittiva green */
+
+.crm-kanban__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 4px 6px 12px;
+  border-bottom: 1px solid rgba(138, 154, 176, 0.10);
+  margin-bottom: 6px;
+  flex: 0 0 auto;
+}
+[data-theme="light"] .crm-kanban__head {
+  border-bottom-color: rgba(42, 58, 74, 0.10);
+}
+.crm-kanban__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.crm-kanban__count {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  transition: transform 280ms var(--ease);
+}
+.crm-kanban__count.is-bump {
+  transform: scale(1.18);
+}
+
+/* The stack is a relative container — micro-cards are absolutely
+   positioned inside it so we can animate them between columns by
+   transforming them out and back in with new content. */
+.crm-kanban__stack {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 120px;
+}
+
+/* Micro-card — small lozenge with avatar dot + 2 lines. Lives
+   inside a column stack. data-pos drives vertical position via
+   translateY; data-state drives the entry/exit transitions. */
+.crm-card {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 0;
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 5px;
+  row-gap: 2px;
+  padding: 5px 6px 5px 5px;
+  background: var(--bg-surface);
+  border: 1px solid rgba(138, 154, 176, 0.16);
+  border-radius: 3px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 4px 10px -6px rgba(0, 0, 0, 0.55);
+  transform: translate3d(var(--cx, 0), var(--cy, 0), 0);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 720ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 360ms ease;
+}
+[data-theme="light"] .crm-card {
+  background: #ffffff;
+  border-color: rgba(42, 58, 74, 0.12);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.02) inset,
+    0 4px 10px -6px rgba(0, 0, 0, 0.18);
+}
+.crm-card.is-on { opacity: 1; }
+/* Stale cards drop opacity progressively (set via inline style) */
+
+.crm-card__avatar {
+  grid-row: 1 / span 2;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--av-bg, #5a7a9a);
+  align-self: center;
+  position: relative;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 800;
+  font-size: 7px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+}
+.crm-card__name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 1;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.crm-card__value {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 7px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.crm-card--won .crm-card__value {
+  color: #1d9e75;
+  font-weight: 700;
+}
+
+/* A check pip overlays the avatar when card hits WON */
+.crm-card__check {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1d9e75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1.5px var(--bg-surface);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 220ms ease, transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+[data-theme="light"] .crm-card__check {
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+.crm-card__check::after {
+  content: '';
+  width: 3px;
+  height: 1.5px;
+  border-left: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  transform: rotate(-45deg) translate(0px, -0.5px);
+}
+.crm-card.is-won .crm-card__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Footer revenue strip — sits under the kanban, ties the
+   simulation back to a business outcome. */
+.crm-kanban__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 4px 0;
+  border-top: 1px solid rgba(138, 154, 176, 0.10);
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+[data-theme="light"] .crm-kanban__footer {
+  border-top-color: rgba(42, 58, 74, 0.10);
+}
+.crm-kanban__footer-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.crm-kanban__rev {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: #1d9e75;
+  font-variant-numeric: tabular-nums;
+  transition: transform 280ms var(--ease);
+}
+.crm-kanban__rev.is-bump { transform: scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .crm-card,
+  .crm-kanban__count,
+  .crm-kanban__rev,
+  .crm-card__check { transition: none; }
+}
+
+/* Mobile: kanban shrinks gracefully inside the smaller card. */
+@media (max-width: 768px) {
+  .service-deck__front--kanban > .service-deck__title-h { font-size: 17px; }
+  .crm-kanban { min-height: 180px; gap: 3px; }
+  .crm-kanban__head { padding-left: 10px; padding-bottom: 5px; }
+  .crm-kanban__label { font-size: 7px; letter-spacing: 0.12em; }
+  .crm-kanban__count { font-size: 10px; }
+  .crm-card { padding: 4px 5px 4px 4px; }
+  .crm-card__name { font-size: 7.5px; }
+  .crm-card__value { font-size: 6.5px; }
+  .crm-kanban__rev { font-size: 12px; }
 }
 
 /* ── AUTOMATIONS PAGE ─────────────────────────────────────── */

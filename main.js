@@ -1290,6 +1290,278 @@
     }
   })();
 
+  /* ── CRM KANBAN (card 08 front face) ───────────────────────
+     Live pipeline simulation. Three columns: NEW · WARM · WON.
+     Cards spawn in NEW, move across to WARM, then to WON, then
+     fade out. Each column caps at 3 visible — old cards drop
+     off the bottom (set is-on=false + opacity fade). Header
+     counts are cumulative — WON only ever climbs. Revenue ticker
+     in the footer ticks up whenever a card reaches WON.
+     Gated by IntersectionObserver so it pauses off-screen and
+     the deck back-face never burns cycles. */
+  (function initCrmKanban () {
+    const kanban = document.querySelector('[data-card-kanban]');
+    if (!kanban) return;
+
+    const stacks = {
+      new:  kanban.querySelector('[data-stack="new"]'),
+      warm: kanban.querySelector('[data-stack="warm"]'),
+      won:  kanban.querySelector('[data-stack="won"]')
+    };
+    if (!stacks.new || !stacks.warm || !stacks.won) return;
+
+    const countNodes = {
+      new:  kanban.querySelector('.crm-kanban__col--new  [data-count]'),
+      warm: kanban.querySelector('.crm-kanban__col--warm [data-count]'),
+      won:  kanban.querySelector('.crm-kanban__col--won  [data-count]')
+    };
+    const revNode = document.querySelector('[data-rev]');
+
+    // Realistic Indian SMB deal pool — names + initials + value bands
+    const pool = [
+      { name: 'Pondi Textiles', initials: 'PT', value: 42000 },
+      { name: 'Mylapore Chai',  initials: 'MC', value: 18500 },
+      { name: 'Javeri Tubes',   initials: 'JT', value: 96000 },
+      { name: 'Kochi Spices',   initials: 'KS', value: 31000 },
+      { name: 'Nadar Logistics',initials: 'NL', value: 67500 },
+      { name: 'Saraswati Press',initials: 'SP', value: 24000 },
+      { name: 'Tirupur Knits',  initials: 'TK', value: 88000 },
+      { name: 'Adyar Dental',   initials: 'AD', value: 36500 },
+      { name: 'Begum Bakery',   initials: 'BB', value: 15500 },
+      { name: 'Hosur Hardware', initials: 'HH', value: 52000 },
+      { name: 'Anna Auto Parts',initials: 'AA', value: 41500 },
+      { name: 'Trichy Tiles',   initials: 'TT', value: 73000 },
+      { name: 'Velachery Vet',  initials: 'VV', value: 22500 },
+      { name: 'Madurai Mango',  initials: 'MM', value: 28000 },
+      { name: 'Coorg Coffee',   initials: 'CC', value: 47000 },
+      { name: 'Royapettah RX',  initials: 'RX', value: 33500 }
+    ];
+    const avatarPalette = [
+      '#5a7a9a', '#ef9f27', '#1d9e75', '#a59cff',
+      '#d97757', '#4a8bdb', '#b86bb8', '#6ba66b'
+    ];
+
+    const MAX_PER_COL = 3;
+    const STEP_Y = 32;          // vertical spacing between cards in a column
+    const SLIDE_OFF = 60;       // px to slide off the edge when entering/leaving
+    let totalWon = 34;          // seed value from HTML
+    let totalRev = 482000;      // seed ₹4,82,000
+    let counts = { new: 4, warm: 7, won: 34 };
+    let timer = null;
+    let running = false;
+    let stepIdx = 0;
+
+    function fmtRupee (n) {
+      // Indian number format: 4,82,000
+      const s = String(n);
+      if (s.length <= 3) return '₹' + s;
+      const last3 = s.slice(-3);
+      const rest = s.slice(0, -3);
+      const withCommas = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+      return '₹' + withCommas + ',' + last3;
+    }
+
+    function pickDeal () {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function pickAv () {
+      return avatarPalette[Math.floor(Math.random() * avatarPalette.length)];
+    }
+
+    function makeCard (deal, color) {
+      const card = document.createElement('div');
+      card.className = 'crm-card';
+      card.innerHTML =
+        '<div class="crm-card__avatar" style="--av-bg:' + color + '">' + deal.initials +
+        '<span class="crm-card__check" aria-hidden="true"></span></div>' +
+        '<div class="crm-card__name">' + deal.name + '</div>' +
+        '<div class="crm-card__value">' + fmtRupee(deal.value) + '</div>';
+      card.dataset.deal = deal.name;
+      card.dataset.value = String(deal.value);
+      card.dataset.color = color;
+      return card;
+    }
+
+    function bump (node) {
+      if (!node) return;
+      node.classList.remove('is-bump');
+      // Force reflow to restart the animation
+      void node.offsetWidth;
+      node.classList.add('is-bump');
+      setTimeout(function () { node.classList.remove('is-bump'); }, 300);
+    }
+
+    function refreshCounts () {
+      if (countNodes.new)  countNodes.new.textContent  = counts.new;
+      if (countNodes.warm) countNodes.warm.textContent = counts.warm;
+      if (countNodes.won)  countNodes.won.textContent  = counts.won;
+    }
+
+    // Place cards within a stack using --cy, fading older ones.
+    function reflow (col) {
+      const stack = stacks[col];
+      const cards = Array.from(stack.querySelectorAll('.crm-card'));
+      // Newest first (last appended is index 0 visually)
+      cards.reverse();
+      cards.forEach(function (c, i) {
+        if (i >= MAX_PER_COL) {
+          // Push out and fade
+          c.style.setProperty('--cy', (i * STEP_Y) + 'px');
+          c.style.opacity = '0';
+          c.classList.remove('is-on');
+          setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); }, 600);
+        } else {
+          c.style.setProperty('--cy', (i * STEP_Y) + 'px');
+          c.style.setProperty('--cx', '0px');
+          // Older cards in the column fade slightly
+          c.style.opacity = String(1 - (i * 0.20));
+          c.classList.add('is-on');
+        }
+      });
+    }
+
+    function spawnNew () {
+      const deal = pickDeal();
+      const color = pickAv();
+      const card = makeCard(deal, color);
+      card.style.setProperty('--cx', (-SLIDE_OFF) + 'px');
+      card.style.setProperty('--cy', '0px');
+      stacks.new.appendChild(card);
+      // next frame, trigger slide-in
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          card.classList.add('is-on');
+          reflow('new');
+        });
+      });
+      counts.new += 1;
+      refreshCounts();
+      bump(countNodes.new);
+    }
+
+    function moveFirstAcross (fromCol, toCol) {
+      const stack = stacks[fromCol];
+      // The oldest visible card is the FIRST child (since we
+      // append newest at end). Take the first in DOM order.
+      const card = stack.querySelector('.crm-card.is-on');
+      if (!card) return false;
+
+      // Slide it out to the right edge of its current column
+      card.style.setProperty('--cx', SLIDE_OFF + 'px');
+      card.style.opacity = '0';
+
+      setTimeout(function () {
+        if (card.parentNode) card.parentNode.removeChild(card);
+        // Re-create in destination so it slides in from the left
+        const deal = { name: card.dataset.deal, value: parseInt(card.dataset.value, 10), initials: card.querySelector('.crm-card__avatar').textContent.trim().slice(0, 2) };
+        const color = card.dataset.color;
+        const incoming = makeCard(deal, color);
+        if (toCol === 'won') incoming.classList.add('crm-card--won');
+        incoming.style.setProperty('--cx', (-SLIDE_OFF) + 'px');
+        incoming.style.setProperty('--cy', '0px');
+        stacks[toCol].appendChild(incoming);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            incoming.classList.add('is-on');
+            if (toCol === 'won') {
+              // small delay before the green check pops in
+              setTimeout(function () { incoming.classList.add('is-won'); }, 180);
+            }
+            reflow(toCol);
+          });
+        });
+        reflow(fromCol);
+        // Update counts: source decreases, destination increases
+        if (fromCol === 'new')  counts.new  = Math.max(0, counts.new - 1);
+        if (fromCol === 'warm') counts.warm = Math.max(0, counts.warm - 1);
+        if (toCol === 'warm') {
+          counts.warm += 1;
+          bump(countNodes.warm);
+        }
+        if (toCol === 'won') {
+          counts.won += 1;
+          totalWon += 1;
+          totalRev += deal.value;
+          bump(countNodes.won);
+          if (revNode) {
+            revNode.textContent = fmtRupee(totalRev);
+            bump(revNode);
+          }
+        }
+        refreshCounts();
+      }, 380);
+      return true;
+    }
+
+    // Seed each column with a few baseline cards so the pipeline
+    // doesn't start empty — the visitor sees a live system, not
+    // a blank canvas.
+    function seed () {
+      // Clear any leftovers
+      Object.values(stacks).forEach(function (s) { s.innerHTML = ''; });
+      function seedCol (col, n) {
+        for (let i = 0; i < n; i++) {
+          const card = makeCard(pickDeal(), pickAv());
+          if (col === 'won') {
+            card.classList.add('crm-card--won', 'is-won');
+          }
+          card.style.setProperty('--cy', (i * STEP_Y) + 'px');
+          card.style.setProperty('--cx', '0px');
+          card.style.opacity = String(1 - (i * 0.20));
+          card.classList.add('is-on');
+          stacks[col].appendChild(card);
+        }
+      }
+      seedCol('new',  2);
+      seedCol('warm', 3);
+      seedCol('won',  3);
+    }
+
+    /* The simulation runs as a sequence of beats. Each beat we
+       pick one of three actions weighted toward forward motion:
+         · spawn a new deal (NEW gets a fresh card)
+         · promote oldest NEW → WARM
+         · promote oldest WARM → WON
+       Rough cadence: every 2.6s a beat fires. */
+    function beat () {
+      stepIdx += 1;
+      // Cycle through the 3 actions in a slightly randomised order
+      // so the pipeline feels alive, not metronomic.
+      const r = Math.random();
+      if (r < 0.36) {
+        spawnNew();
+      } else if (r < 0.70) {
+        if (!moveFirstAcross('new', 'warm')) spawnNew();
+      } else {
+        if (!moveFirstAcross('warm', 'won')) {
+          if (!moveFirstAcross('new', 'warm')) spawnNew();
+        }
+      }
+    }
+
+    function start () {
+      if (running) return;
+      running = true;
+      if (!stacks.new.children.length) seed();
+      // first beat after a brief settle so the seed renders cleanly
+      timer = setInterval(beat, 2600);
+    }
+    function stop () {
+      running = false;
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.05 });
+      io.observe(kanban);
+    } else {
+      start();
+    }
+  })();
+
   /* ── AUTOMATIONS BRIDGE ────────────────────────────────────
      Fully meshed graph of 13 nodes (3 cores: Mittiva CRM, AI,
      Meta + 10 deck nodes) drawn in the silhouette of a

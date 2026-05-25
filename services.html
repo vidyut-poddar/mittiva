@@ -414,18 +414,45 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">CRM</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--kanban">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">08</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">08</span>
-                <span class="service-deck__cat">CRM · One source of truth</span>
+                <span class="service-deck__cat">CRM · The pipeline</span>
                 <h3 class="service-deck__title-h">CRM &amp; Funnels</h3>
-                <p class="service-deck__copy">Leads, conversations, deal stages, and revenue numbers in one place — simple enough that your team uses it daily.</p>
-                <ul class="service-deck__features">
-                  <li>Custom intake forms anywhere</li>
-                  <li>Sales pipeline with clear stages</li>
-                  <li>Post-sale surveys + NPS</li>
-                  <li>Revenue + conversion dashboard</li>
-                </ul>
+                <!-- Live 3-column kanban (NEW · WARM · WON). Cards
+                     periodically move across the pipeline. Cap of 3
+                     visible per column with old ones fading out so
+                     the column heights stay bounded. Counts in the
+                     headers are cumulative — WON only ever climbs.
+                     Driven by initCrmKanban() in main.js, gated by
+                     IntersectionObserver so it pauses off-screen. -->
+                <div class="crm-kanban" data-card-kanban aria-hidden="true">
+                  <div class="crm-kanban__col crm-kanban__col--new">
+                    <div class="crm-kanban__head">
+                      <span class="crm-kanban__label">New</span>
+                      <span class="crm-kanban__count" data-count>4</span>
+                    </div>
+                    <div class="crm-kanban__stack" data-stack="new"></div>
+                  </div>
+                  <div class="crm-kanban__col crm-kanban__col--warm">
+                    <div class="crm-kanban__head">
+                      <span class="crm-kanban__label">Warm</span>
+                      <span class="crm-kanban__count" data-count>7</span>
+                    </div>
+                    <div class="crm-kanban__stack" data-stack="warm"></div>
+                  </div>
+                  <div class="crm-kanban__col crm-kanban__col--won">
+                    <div class="crm-kanban__head">
+                      <span class="crm-kanban__label">Won</span>
+                      <span class="crm-kanban__count" data-count>34</span>
+                    </div>
+                    <div class="crm-kanban__stack" data-stack="won"></div>
+                  </div>
+                </div>
+                <div class="crm-kanban__footer">
+                  <span class="crm-kanban__footer-label">Revenue this week</span>
+                  <span class="crm-kanban__rev" data-rev>₹4,82,000</span>
+                </div>
                 <a href="crm.html" class="service-deck__cta-link" aria-label="See the six sides of Mittiva CRM">
                   See the six sides
                   <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>

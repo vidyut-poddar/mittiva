@@ -98,35 +98,48 @@
     </aside>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO — two-column on desktop: text left, oversized Mittiva mark
+       on the right. The mark is the icon SVG scaled up; both theme
+       variants are present so it inverts cleanly in light mode. On
+       mobile the grid collapses to a single column and the mark is
+       hidden to keep the headline + CTA above the fold. -->
   <section class="hero">
     <div class="container">
-      <div class="hero__head">
-        <div class="hero__caption reveal">
-          <span>Chennai · 2026</span>
-          <span>AI Studio</span>
-          <span>For SMBs</span>
-        </div>
-        <h1 class="stacked-title">
-          <span>AI</span>
-          <span>For the</span>
-          <span><em>Everyday</em></span>
-          <span>Business.</span>
-        </h1>
-      </div>
+      <div class="hero__grid">
+        <div class="hero__main">
+          <div class="hero__head">
+            <div class="hero__caption reveal">
+              <span>Chennai · 2026</span>
+              <span>AI Studio</span>
+              <span>For SMBs</span>
+            </div>
+            <h1 class="stacked-title">
+              <span>AI</span>
+              <span>For the</span>
+              <span><em>Everyday</em></span>
+              <span>Business.</span>
+            </h1>
+          </div>
 
-      <div class="reveal" style="max-width:560px;">
-        <p class="hero__sub">
-          Mittiva builds practical AI for small and mid-sized businesses
-          in Chennai — voice agents that answer your phone, automations
-          that run while you sleep, websites that actually convert.
-        </p>
-        <div class="hero__actions">
-          <a href="contact.html" class="btn btn--primary">Start a conversation
-            <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-          <a href="services.html" class="btn btn--ghost">See what we build</a>
+          <div class="reveal" style="max-width:560px;">
+            <p class="hero__sub">
+              Mittiva builds practical AI for small and mid-sized businesses
+              in Chennai — voice agents that answer your phone, automations
+              that run while you sleep, websites that actually convert.
+            </p>
+            <div class="hero__actions">
+              <a href="contact.html" class="btn btn--primary">Start a conversation
+                <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </a>
+              <a href="services.html" class="btn btn--ghost">See what we build</a>
+            </div>
+          </div>
         </div>
+
+        <aside class="hero__brand reveal" aria-hidden="true">
+          <img src="assets/mittiva-icon-dark.svg"  alt="" class="hero__brand-img logo-dark"  width="540" height="600" />
+          <img src="assets/mittiva-icon-light.svg" alt="" class="hero__brand-img logo-light" width="540" height="600" />
+        </aside>
       </div>
     </div>
   </section>

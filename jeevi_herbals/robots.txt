@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /assets/scripts.js
+
+Sitemap: https://www.jeeviherbals.com/sitemap.xml

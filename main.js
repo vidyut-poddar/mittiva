@@ -1411,6 +1411,236 @@
     }
   })();
 
+  /* ── PIXEL DISSOLVE (card 04 front face: AI Changing Room) ─
+     12×16 grid that cycles through six garment silhouettes —
+     pants → t-shirt → dress → bag → jacket → sneaker. Each
+     shape emerges from noise via a per-pixel threshold (stable
+     pseudo-random per (x,y)), holds, then dissolves into the
+     next. Mirrors what the live product at fit.mittiva.io
+     actually does: render a figure pixel-by-pixel from an AI
+     model. IntersectionObserver gates so the rAF loop pauses
+     when the card is off-screen. */
+  (function initPixelDissolve () {
+    const grid = document.querySelector('[data-pixel-grid]');
+    if (!grid) return;
+    const nameEl  = document.querySelector('[data-pixel-name]');
+    const countEl = document.querySelector('[data-pixel-count]');
+
+    const GARMENTS = [
+      { name: 'pants', shape: [
+        '............',
+        '............',
+        '...OOOOOO...',
+        '...OOOOOO...',
+        '...OOOOOO...',
+        '..OOOOOOOO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '..OO....OO..',
+        '............',
+        '............'
+      ]},
+      { name: 't-shirt', shape: [
+        '............',
+        '............',
+        '.OO......OO.',
+        '.OOO....OOO.',
+        'OOOOO..OOOOO',
+        'OOOOOOOOOOOO',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '............',
+        '............'
+      ]},
+      { name: 'dress', shape: [
+        '............',
+        '............',
+        '....OOOO....',
+        '....OOOO....',
+        '...OOOOOO...',
+        '..OOOOOOOO..',
+        '..OOOOOOOO..',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        'OOOOOOOOOOOO',
+        'OOOOOOOOOOOO',
+        'OOOOOOOOOOOO',
+        'OOOOOOOOOOOO',
+        '............',
+        '............'
+      ]},
+      { name: 'bag', shape: [
+        '............',
+        '....OOOO....',
+        '...OO..OO...',
+        '..OO....OO..',
+        '..OO....OO..',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '............',
+        '............'
+      ]},
+      { name: 'jacket', shape: [
+        '............',
+        '............',
+        '.OO......OO.',
+        '.OOO....OOO.',
+        'OOOO.OO.OOOO',
+        'OOOOO..OOOOO',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '.OOOO..OOOO.',
+        '............',
+        '............'
+      ]},
+      { name: 'sneaker', shape: [
+        '............',
+        '............',
+        '............',
+        '............',
+        '............',
+        '............',
+        '..OOOO......',
+        '.OOOOOOOO...',
+        'OOOOOOOOOO..',
+        'OOOOOOOOOOOO',
+        '.OOOOOOOOOO.',
+        '.OOOOOOOOOO.',
+        '..O.OO.OO.O.',
+        '............',
+        '............',
+        '............'
+      ]}
+    ];
+
+    const W = 12, H = 16;
+    const cells = new Array(W * H);
+    const noise = new Array(W * H);
+    // Stable per-pixel pseudo-random in [0, 1)
+    for (let i = 0; i < W * H; i++) {
+      const x = i % W, y = (i / W) | 0;
+      const s = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+      noise[i] = s - Math.floor(s);
+    }
+    // Build cells once
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < W * H; i++) {
+      const d = document.createElement('div');
+      d.className = 'px';
+      cells[i] = d;
+      frag.appendChild(d);
+    }
+    grid.appendChild(frag);
+
+    const HOLD = 2200;          // ms — time held on current shape
+    const TRANS = 900;           // ms — dissolve transition
+    const CYCLE = HOLD + TRANS;
+    const TOTAL = GARMENTS.length * CYCLE;
+
+    let running = false;
+    let rafId = null;
+    let lastIdx = -1;
+    let startedAt = 0;
+    let accumulated = 0;
+
+    function paint (cell, on, x, y) {
+      let cls = 'px';
+      if (on) {
+        const p = (x + y) % 3;
+        cls = (p === 0) ? 'px on-bright' : (p === 1) ? 'px on-mid' : 'px on-dim';
+      }
+      if (cell.className !== cls) cell.className = cls;
+    }
+
+    function frame (now) {
+      const t = (accumulated + (now - startedAt)) % TOTAL;
+      const idx = Math.floor(t / CYCLE);
+      const subT = t % CYCLE;
+      const cur = GARMENTS[idx];
+      const nxt = GARMENTS[(idx + 1) % GARMENTS.length];
+
+      if (idx !== lastIdx) {
+        if (nameEl) nameEl.textContent = cur.name;
+        if (countEl) {
+          const n = idx + 1;
+          countEl.textContent = (n < 10 ? '0' : '') + n;
+        }
+        lastIdx = idx;
+      }
+
+      for (let y = 0; y < H; y++) {
+        const rowC = cur.shape[y];
+        const rowN = nxt.shape[y];
+        for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          const inC = rowC.charCodeAt(x) === 79; // 'O' === 79
+          const inN = rowN.charCodeAt(x) === 79;
+          let on;
+          if (subT < HOLD) {
+            on = inC;
+          } else {
+            const p = (subT - HOLD) / TRANS;
+            const nz = noise[i];
+            if (inC && !inN) on = p < nz;
+            else if (!inC && inN) on = p > (1 - nz);
+            else on = inC;
+          }
+          paint(cells[i], on, x, y);
+        }
+      }
+
+      if (running) rafId = requestAnimationFrame(frame);
+    }
+
+    function start () {
+      if (running) return;
+      running = true;
+      startedAt = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+    function stop () {
+      if (!running) return;
+      running = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      // Preserve where we were so resume is seamless.
+      accumulated = (accumulated + (performance.now() - startedAt)) % TOTAL;
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.05 });
+      io.observe(grid);
+    } else {
+      start();
+    }
+  })();
+
   /* ── CRM KANBAN (card 08 front face) ───────────────────────
      Live pipeline simulation. Three columns: NEW · WARM · WON.
      Cards spawn in NEW, move across to WARM, then to WON, then

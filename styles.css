@@ -4737,6 +4737,95 @@ body[data-page="contact"] .nav__cta { display: none !important; }
    counts are cumulative — WON only climbs. Driven by
    initCrmKanban() in main.js, gated by IntersectionObserver.
    ============================================================ */
+/* ============================================================
+   PIXEL DISSOLVE — card 04 front face (AI Changing Room)
+   ============================================================
+   12×16 grid of pixels that cycles through garment silhouettes
+   (pants, t-shirt, dress, bag, jacket, sneaker). Each shape
+   emerges from noise, holds, then dissolves into the next.
+   Driven by initPixelDissolve() in main.js, gated by
+   IntersectionObserver so it pauses off-screen.
+   ============================================================ */
+.service-deck__front--pixel {
+  text-align: center;
+  gap: 0;
+  padding-top: 30px;
+  padding-bottom: 18px;
+}
+.service-deck__front--pixel > .service-deck__cat {
+  flex: 0 0 auto;
+  margin: 20px 0 6px;
+  font-size: var(--fs-micro);
+}
+.service-deck__front--pixel > .service-deck__title-h {
+  flex: 0 0 auto;
+  margin: 0 0 12px;
+}
+.service-deck__front--pixel .service-deck__cta-link {
+  margin-top: 10px;
+  align-self: center;
+}
+
+.pixel-dissolve {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 4px 0 8px;
+}
+.pixel-dissolve__grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(16, 1fr);
+  gap: 1px;
+  /* Container width caps so the grid never exceeds the card's usable
+     inner width. Aspect ratio matches the 12:16 cell grid (= 3:4). */
+  width: clamp(120px, 60%, 168px);
+  aspect-ratio: 12 / 16;
+}
+.pixel-dissolve__grid .px {
+  background: #2a3550;
+  opacity: 0.14;
+  border-radius: 1px;
+  transition: opacity 240ms ease, background-color 240ms ease;
+}
+[data-theme="light"] .pixel-dissolve__grid .px {
+  background: #c8d4e0;
+  opacity: 0.5;
+}
+.pixel-dissolve__grid .px.on-bright { background: #E8F0F8; opacity: 1; }
+.pixel-dissolve__grid .px.on-mid    { background: #B0C0D8; opacity: 1; }
+.pixel-dissolve__grid .px.on-dim    { background: #7A8AA8; opacity: 0.88; }
+[data-theme="light"] .pixel-dissolve__grid .px.on-bright { background: #2a3a4a; }
+[data-theme="light"] .pixel-dissolve__grid .px.on-mid    { background: #4a5a70; }
+[data-theme="light"] .pixel-dissolve__grid .px.on-dim    { background: #6a7a90; opacity: 0.85; }
+
+.pixel-dissolve__foot {
+  flex: 0 0 auto;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--fs-nano);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 4px 0 4px;
+}
+.pixel-dissolve__foot strong {
+  color: var(--accent-light, #B0C0D8);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-dissolve__grid .px { transition: none; }
+}
+
+/* Mobile: tighter grid + smaller foot label. */
+@media (max-width: 768px) {
+  .pixel-dissolve__grid { width: clamp(110px, 58%, 150px); }
+  .pixel-dissolve__foot { font-size: 7px; }
+}
+
 .service-deck__front--kanban {
   text-align: center;
   gap: 0;

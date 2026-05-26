@@ -677,7 +677,7 @@ export default function ChangingRoomDashboard() {
                 href="/api/ghl/auth"
                 className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition-all text-[10px] uppercase tracking-widest glow-effect border border-indigo-500/20"
               >
-                Link GHL Location
+                Connect my Mittiva CRM
               </a>
 
               <a
@@ -1259,8 +1259,8 @@ export default function ChangingRoomDashboard() {
                 </span>
                 <p className="text-zinc-500 lowercase leading-normal">
                   {ghlSyncStatus.synced 
-                    ? `image synced back to ghl contact field properties successfully.`
-                    : `GHL code: ${ghlSyncStatus.error}`
+                    ? `image synced back to Mittiva CRM contact field properties successfully.`
+                    : `Mittiva CRM code: ${ghlSyncStatus.error}`
                   }
                 </p>
               </div>

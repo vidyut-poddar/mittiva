@@ -1,0 +1,27 @@
+<svg width="1024" height="1024" viewBox="0 0 108 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <line x1="12" y1="12" x2="12" y2="88" stroke="#B0C0D8" stroke-width="1.2" opacity="0.5"/>
+  <line x1="96" y1="12" x2="96" y2="88" stroke="#B0C0D8" stroke-width="1.2" opacity="0.5"/>
+  <line x1="12" y1="12" x2="54" y2="12" stroke="#B0C0D8" stroke-width="1" opacity="0.42"/>
+  <line x1="54" y1="12" x2="96" y2="12" stroke="#B0C0D8" stroke-width="1" opacity="0.42"/>
+  <line x1="12" y1="50" x2="34" y2="50" stroke="#B0C0D8" stroke-width="1" opacity="0.32"/>
+  <line x1="34" y1="50" x2="54" y2="12" stroke="#B0C0D8" stroke-width="1" opacity="0.32"/>
+  <line x1="54" y1="12" x2="74" y2="50" stroke="#B0C0D8" stroke-width="1" opacity="0.32"/>
+  <line x1="74" y1="50" x2="96" y2="50" stroke="#B0C0D8" stroke-width="1" opacity="0.32"/>
+  <line x1="12" y1="88" x2="4" y2="108" stroke="#B0C0D8" stroke-width="0.8" opacity="0.2"/>
+  <line x1="12" y1="88" x2="20" y2="108" stroke="#B0C0D8" stroke-width="0.8" opacity="0.2"/>
+  <line x1="96" y1="88" x2="88" y2="108" stroke="#B0C0D8" stroke-width="0.8" opacity="0.2"/>
+  <line x1="96" y1="88" x2="104" y2="108" stroke="#B0C0D8" stroke-width="0.8" opacity="0.2"/>
+  <circle cx="12" cy="12" r="6" fill="#B0C0D8"/>
+  <circle cx="54" cy="12" r="9" fill="#B0C0D8"/>
+  <circle cx="96" cy="12" r="6" fill="#B0C0D8"/>
+  <circle cx="12" cy="50" r="4" fill="#B0C0D8" opacity="0.85"/>
+  <circle cx="34" cy="50" r="3.5" fill="#B0C0D8" opacity="0.75"/>
+  <circle cx="74" cy="50" r="3.5" fill="#B0C0D8" opacity="0.75"/>
+  <circle cx="96" cy="50" r="4" fill="#B0C0D8" opacity="0.85"/>
+  <circle cx="12" cy="88" r="3.5" fill="#B0C0D8" opacity="0.6"/>
+  <circle cx="96" cy="88" r="3.5" fill="#B0C0D8" opacity="0.6"/>
+  <circle cx="4" cy="108" r="2.5" fill="#B0C0D8" opacity="0.35"/>
+  <circle cx="20" cy="108" r="2.5" fill="#B0C0D8" opacity="0.35"/>
+  <circle cx="88" cy="108" r="2.5" fill="#B0C0D8" opacity="0.35"/>
+  <circle cx="104" cy="108" r="2.5" fill="#B0C0D8" opacity="0.35"/>
+</svg>

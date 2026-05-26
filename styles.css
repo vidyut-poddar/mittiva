@@ -253,26 +253,30 @@ section { padding: var(--section-y) 0; position: relative; }
 .nav > * { pointer-events: auto; }
 
 .nav__brand {
+  /* Sized between the original compact pill (14px/22px) and the
+     2x bump — lands at ~1.45x for desktop. Padding scaled to
+     match the new contents while keeping the pill compact. */
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: 'Inter Tight', 'Inter', sans-serif;
   font-weight: 800;
-  font-size: 14px;
-  letter-spacing: -0.01em;
-  padding: 6px 12px 6px 6px;
+  font-size: 20px;
+  letter-spacing: -0.012em;
+  padding: 7px 16px 7px 8px;
   border-radius: 999px;
   background: rgba(12, 16, 32, 0.6);
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid var(--border);
   transition: background 300ms var(--ease), border-color 300ms var(--ease);
+  line-height: 1;
 }
 [data-theme="light"] .nav__brand {
   background: rgba(238, 244, 250, 0.7);
 }
 .nav__brand:hover { border-color: var(--accent-mid); }
-.nav__brand img { height: 22px; width: auto; display: block; }
+.nav__brand img { height: 32px; width: auto; display: block; }
 .nav__brand .logo-light { display: none; }
 [data-theme="light"] .nav__brand .logo-dark { display: none; }
 [data-theme="light"] .nav__brand .logo-light { display: block; }
@@ -630,13 +634,16 @@ section { padding: var(--section-y) 0; position: relative; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 32px;
-  align-items: center;
+  /* align-items: start so the M-constellation lines up with the top
+     of the headline column instead of centering vertically against
+     the much-taller stacked-title. */
+  align-items: start;
 }
 .hero__main { min-width: 0; }
 .hero__brand {
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .hero__brand-img {
   width: 100%;
@@ -672,7 +679,14 @@ section { padding: var(--section-y) 0; position: relative; }
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     gap: clamp(32px, 4vw, 64px);
   }
-  .hero__brand { display: flex; }
+  .hero__brand {
+    display: flex;
+    /* Push the mark down past the eyebrow caption + gap so its top
+       edge lines up with the top of the stacked-title "AI" line,
+       not with the eyebrow above the headline. ~14px eyebrow +
+       20px hero__head gap = ~34px to clear. */
+    padding-top: 34px;
+  }
 }
 
 /* Horizontal scroll caption gallery */
@@ -3805,6 +3819,191 @@ body.voice-widget-on .voice-widget-host iframe {
 }
 .service-deck__cta-link:hover .arrow { transform: translateX(3px); }
 
+/* ============================================================
+   LEGAL DOCUMENT LAYOUT — terms.html + privacy.html
+   ============================================================
+   Two-column on desktop (sticky TOC on left, prose on right),
+   single column on mobile. Uses the same body/heading tokens
+   as the rest of the site so the legal copy reads as part of
+   the same design system. Disclaimer block at the bottom is
+   visually distinct so visitors notice it. */
+.legal-doc {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.legal-toc {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+}
+.legal-toc__label {
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+.legal-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  counter-reset: legal-toc;
+}
+.legal-toc li {
+  counter-increment: legal-toc;
+  padding-left: 28px;
+  position: relative;
+}
+.legal-toc li::before {
+  content: counter(legal-toc, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  top: 2px;
+}
+.legal-toc a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms var(--ease), color 200ms var(--ease);
+}
+.legal-toc a:hover {
+  border-bottom-color: var(--accent-mid);
+  color: var(--accent-bright);
+}
+
+.legal-doc__body {
+  font-family: 'Inter', sans-serif;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
+  color: var(--text);
+  max-width: 72ch;
+}
+.legal-doc__body h2 {
+  font-family: 'Inter Tight', 'Inter', sans-serif;
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tr-heading);
+  margin: 56px 0 16px;
+  scroll-margin-top: 100px;
+}
+.legal-doc__body h2:first-child {
+  margin-top: 0;
+}
+.legal-doc__body p {
+  margin: 0 0 18px;
+  color: var(--text);
+}
+.legal-doc__body ul {
+  margin: 0 0 22px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.legal-doc__body ul li {
+  color: var(--text);
+}
+.legal-doc__body ul li::marker {
+  color: var(--accent-mid);
+}
+.legal-doc__body a {
+  color: var(--text);
+  border-bottom: 1px solid var(--accent-mid);
+  text-decoration: none;
+  transition: color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.legal-doc__body a:hover {
+  color: var(--accent-bright);
+  border-bottom-color: var(--accent-bright);
+}
+.legal-doc__body code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.92em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(176, 192, 216, 0.10);
+  border: 1px solid var(--border);
+}
+[data-theme="light"] .legal-doc__body code {
+  background: rgba(42, 58, 74, 0.06);
+}
+.legal-doc__body strong {
+  font-weight: 700;
+  color: var(--text);
+}
+.legal-address {
+  font-style: normal;
+  font-family: 'Inter', sans-serif;
+  padding: 16px 20px;
+  border-left: 2px solid var(--accent-mid);
+  background: rgba(176, 192, 216, 0.04);
+  margin: 8px 0 28px;
+  line-height: 1.6;
+}
+[data-theme="light"] .legal-address {
+  background: rgba(42, 58, 74, 0.03);
+}
+.legal-disclaimer {
+  margin-top: 48px;
+  padding: 18px 22px;
+  border-radius: 8px;
+  background: rgba(239, 159, 39, 0.08);
+  border-left: 3px solid #ef9f27;
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+.legal-disclaimer strong {
+  color: #ef9f27;
+}
+[data-theme="light"] .legal-disclaimer strong {
+  color: #ba7517;
+}
+
+/* Desktop: TOC on the left, prose on the right. TOC sticks below
+   the nav so it stays visible as the reader scrolls through long
+   policies. */
+@media (min-width: 900px) {
+  .legal-doc {
+    grid-template-columns: 260px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .legal-toc {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+}
+
+/* Footer legal links (Terms + Privacy on the footer bottom row) */
+.footer__legal-links {
+  display: inline-flex;
+  gap: 18px;
+}
+.footer__legal-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 200ms var(--ease);
+}
+.footer__legal-links a:hover {
+  color: var(--text);
+}
+
 /* Page scroll lock — applied to <html> by main.js when the Mitti panel
    opens. overflow:hidden freezes user scrolling without altering body's
    position, so the dark theme background is preserved (no white flash).
@@ -4385,9 +4584,9 @@ body[data-page="contact"] .nav__cta { display: none !important; }
   .nav { padding: 14px var(--gutter); }
   .nav__pill { height: 40px; padding: 0 14px; gap: 8px; }
   .nav__pill--icon { width: 40px; }
-  .nav__brand { font-size: 14px; padding: 6px 12px 6px 6px; }
-  .nav__brand img { height: 20px; }
-  .nav__brand span { letter-spacing: -0.005em; }
+  .nav__brand { font-size: 18px; padding: 6px 14px 6px 7px; gap: 9px; }
+  .nav__brand img { height: 28px; }
+  .nav__brand span { letter-spacing: -0.008em; }
   .hero__caption { gap: 10px; font-size: var(--fs-micro); }
   .hero__caption span::before { margin-right: 10px; }
   .hero__head { gap: 16px; margin-bottom: 24px; }

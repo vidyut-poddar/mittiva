@@ -173,18 +173,6 @@ html, body, #root {
   max-width: 36ch;
   line-height: 1.5;
 }
-.slot-default .prompt-chip {
-  margin-top: 22px;
-  padding: 10px 16px;
-  border: 1px dashed rgba(245, 235, 215, 0.3);
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  color: rgba(245, 235, 215, 0.6);
-  text-transform: uppercase;
-}
-
 /* Vignette on each scene */
 .scene-layer .vignette {
   position: absolute; inset: 0;
@@ -486,78 +474,6 @@ html, body, #root {
   transition: background 0.15s, transform 0.15s;
 }
 .hud-bottom-right button:hover { background: rgba(40, 30, 20, 0.75); transform: scale(1.06); }
-
-/* "Prompts" reference button → opens a panel */
-.prompts-panel {
-  position: fixed;
-  top: 56px; right: 18px;
-  width: 360px;
-  max-height: 70vh;
-  background: rgba(20, 15, 10, 0.92);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  padding: 18px;
-  color: rgba(245, 235, 215, 0.92);
-  z-index: 250;
-  overflow-y: auto;
-  font-size: 12px;
-  line-height: 1.5;
-  display: none;
-}
-.prompts-panel.open { display: block; }
-.prompts-panel h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  font-size: 18px;
-  margin: 0 0 4px 0;
-}
-.prompts-panel .lede {
-  font-size: 11px;
-  color: rgba(245, 235, 215, 0.55);
-  margin-bottom: 14px;
-}
-.prompts-panel .scene-prompt {
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding-top: 12px;
-  margin-top: 12px;
-}
-.prompts-panel .scene-prompt:first-of-type {
-  border-top: 0; padding-top: 0; margin-top: 0;
-}
-.prompts-panel .scene-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  color: var(--brass);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.prompts-panel .prompt-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: rgba(245, 235, 215, 0.85);
-  background: rgba(0,0,0,0.35);
-  padding: 8px 10px;
-  border-radius: 4px;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.prompts-panel .copy-btn {
-  margin-top: 6px;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.18);
-  color: rgba(245, 235, 215, 0.85);
-  padding: 4px 10px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border-radius: 3px;
-  cursor: pointer;
-}
-.prompts-panel .copy-btn:hover { background: rgba(255,255,255,0.1); }
-.prompts-panel .copied { color: var(--brass); }
 
 /* ============================================================
    CATALOG (book overlay)

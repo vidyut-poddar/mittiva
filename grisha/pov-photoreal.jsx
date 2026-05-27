@@ -159,7 +159,6 @@ const Slot = ({ id, kbClass, placeholderName, label, defaultImg }) => (
           Drop a generated photo on this slot (or click to browse).
           Your image persists across reloads.
         </div>
-        <div className="prompt-chip">↳ Prompt available in the panel (top-right)</div>
       </div>
       {/* The actual image-slot — overlays the default when filled */}
       <image-slot id={id} shape="rect"
@@ -269,37 +268,6 @@ const CatalogOverlay = ({ open, onClose, onShop }) => {
 };
 
 // ===================================================================
-// Prompts panel — shows the AI-generation prompt for each scene
-// ===================================================================
-const PromptsPanel = ({ open, onClose }) => {
-  const [copiedIdx, setCopiedIdx] = useState(-1);
-  const copy = (txt, idx) => {
-    navigator.clipboard?.writeText(txt);
-    setCopiedIdx(idx);
-    setTimeout(() => setCopiedIdx(-1), 1600);
-  };
-  return (
-    <div className={`prompts-panel ${open ? 'open' : ''}`}>
-      <h3>Generate the photos</h3>
-      <div className="lede">
-        Paste each prompt into Midjourney / DALL-E / Sora-Image.
-        Then drag the result onto its matching slot in the experience.
-      </div>
-      {SCENES.map((s, i) => (
-        <div className="scene-prompt" key={s.id}>
-          <div className="scene-name">{s.label} · {s.promptName}</div>
-          <div className="prompt-text">{s.prompt}</div>
-          <button className={`copy-btn ${copiedIdx === i ? 'copied' : ''}`}
-                  onClick={() => copy(s.prompt, i)}>
-            {copiedIdx === i ? '✓ copied' : 'Copy prompt'}
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// ===================================================================
 // Cursor
 // ===================================================================
 const Cursor = ({ x, y, overAction }) => (
@@ -321,7 +289,6 @@ const App = () => {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [hoverAction, setHoverAction] = useState(false);
   const [titleVisible, setTitleVisible] = useState(false);
-  const [promptsOpen, setPromptsOpen] = useState(false);
   // While the user is dragging a file over the window, drop the click-catcher
   // so the drag events reach the image-slot underneath.
   const [isDragging, setIsDragging] = useState(false);
@@ -335,6 +302,19 @@ const App = () => {
   const [direction, setDirection] = useState(1);
   // True during the "punch through the doorway" effect on scene 0.
   const [dollying, setDollying] = useState(false);
+
+  // ---- Tell the preloader we're mounted. We wait one paint so the first
+  //      scene actually has pixels on screen before the loading screen fades.
+  useEffect(() => {
+    let raf1 = requestAnimationFrame(() => {
+      let raf2 = requestAnimationFrame(() => {
+        try { window.dispatchEvent(new Event('grisha:ready')); } catch (e) {}
+      });
+      // eslint-disable-next-line no-unused-vars
+      raf1 = raf2;
+    });
+    return () => cancelAnimationFrame(raf1);
+  }, []);
 
   // ---- Watch scene 0's image-slot for a dropped photo so we can decide
   //      whether to draw the CSS door overlay or trust the photo to carry it.
@@ -387,7 +367,7 @@ const App = () => {
     const onMove = (e) => setMouse({ x: e.clientX, y: e.clientY });
     const onOver = (e) => {
       const t = e.target;
-      const isAction = !!(t && t.closest && t.closest('.flip, .shop-cta, .catalog-close, .hud-bottom-right button, .copy-btn, .prompts-panel image-slot, image-slot'));
+      const isAction = !!(t && t.closest && t.closest('.flip, .shop-cta, .catalog-close, .hud-bottom-right button, image-slot'));
       setHoverAction(isAction);
     };
     window.addEventListener('mousemove', onMove);
@@ -436,7 +416,7 @@ const App = () => {
   // Main click — the click-catcher above each scene fires this on plain clicks.
   const onStageClick = useCallback((e) => {
     // Skip clicks inside HUD / overlays / panels (their own handlers run).
-    if (e && e.target && e.target.closest && e.target.closest('.prompts-panel, .catalog-overlay, .hud-bottom-right, .handoff')) return;
+    if (e && e.target && e.target.closest && e.target.closest('.catalog-overlay, .hud-bottom-right, .handoff')) return;
 
     if (sceneIdx === 0 && !doorPushed) {
       // First click — enter the boutique.
@@ -473,7 +453,7 @@ const App = () => {
   // Keyboard
   useEffect(() => {
     const onKey = (e) => {
-      if (catalogOpen || promptsOpen) return;
+      if (catalogOpen) return;
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
         onStageClick({ target: document.body });
       } else if (e.key === 'ArrowLeft') {
@@ -482,7 +462,7 @@ const App = () => {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onStageClick, back, catalogOpen, promptsOpen]);
+  }, [onStageClick, back, catalogOpen]);
 
   // Catalog → Shop handoff
   const onShop = useCallback(() => {
@@ -604,9 +584,6 @@ const App = () => {
         onShop={onShop}
       />
 
-      {/* Prompts panel */}
-      <PromptsPanel open={promptsOpen} onClose={() => setPromptsOpen(false)} />
-
       {/* Handoff */}
       <div className={`handoff ${handoff ? 'visible' : ''}`}>
         <div className="handoff-card">
@@ -622,7 +599,6 @@ const App = () => {
 
       {/* HUD */}
       <div className="hud-bottom-right">
-        <button title="AI prompts" onClick={(e) => { e.stopPropagation(); setPromptsOpen(o => !o); }}>★</button>
         {(sceneIdx > 0 || handoff) && (
           <button title="Restart" onClick={(e) => { e.stopPropagation(); restart(); }}>↻</button>
         )}

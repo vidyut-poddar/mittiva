@@ -33,7 +33,6 @@ python3 -m http.server 8000
 
 - **Click / Right Arrow / Space / Enter** — advance forward
 - **Left Arrow** — step back
-- **★** (bottom right) — open the AI-prompt panel
 - **♪** — toggle sound
 - **↻** — restart
 

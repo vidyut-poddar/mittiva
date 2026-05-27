@@ -368,7 +368,7 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  transition: var(--transition-smooth);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .nav-container {
@@ -385,7 +385,12 @@ header {
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-pill);
   box-shadow: var(--glass-shadow);
-  transition: var(--transition-smooth);
+  transition: padding 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              margin 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              border-radius 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .scrolled .nav-container {

@@ -9,138 +9,156 @@
 @property --bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: #FAF9F5;
+  initial-value: #FAF6EE;
 }
 @property --primary {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(145, 30%, 10%);
+  initial-value: #32251D;
 }
 @property --primary-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(145, 30%, 18%);
+  initial-value: #5E4839;
+}
+@property --primary-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1D140F;
 }
 @property --bg-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: #EAE6DF;
+  initial-value: #DECDBF;
 }
 @property --bg-card {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 255, 255, 0.7);
+  initial-value: rgba(255, 254, 250, 0.75);
 }
 @property --text {
   syntax: '<color>';
   inherits: true;
-  initial-value: #0F2C1C;
+  initial-value: #32251D;
 }
 @property --text-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: #506357;
+  initial-value: #8B7062;
+}
+@property --accent-sage {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #849283;
+}
+@property --stone-gray {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #B1B5B1;
 }
 @property --glass-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 255, 255, 0.8);
+  initial-value: rgba(255, 254, 250, 0.82);
 }
 @property --glass-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(10, 30, 19, 0.12);
+  initial-value: rgba(212, 163, 67, 0.22);
 }
 @property --accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(38, 85%, 55%);
+  initial-value: hsl(40, 62%, 52%);
 }
 @property --accent-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(38, 85%, 65%);
+  initial-value: hsl(40, 72%, 62%);
 }
 @property --accent-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(38, 85%, 45%);
+  initial-value: hsl(40, 62%, 42%);
 }
 @property --ambient-glow-color {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(243, 166, 40, 0.12);
+  initial-value: rgba(212, 163, 67, 0.12);
 }
 @property --ambient-ray-color-start {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(243, 166, 40, 0);
+  initial-value: rgba(212, 163, 67, 0);
 }
 @property --ambient-ray-color-mid {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(243, 166, 40, 0.02);
+  initial-value: rgba(212, 163, 67, 0.02);
 }
 @property --ambient-ray-color-high {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(243, 166, 40, 0.04);
+  initial-value: rgba(212, 163, 67, 0.04);
 }
 @property --ambient-mist-color-1 {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(14, 38, 25, 0.4);
+  initial-value: rgba(139, 112, 98, 0.15);
 }
 @property --ambient-mist-color-2 {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(6, 18, 12, 0.2);
+  initial-value: rgba(212, 163, 67, 0.05);
 }
 @property --header-bg-scrolled {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(250, 249, 246, 0.96);
+  initial-value: rgba(250, 246, 238, 0.96);
 }
 @property --input-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 255, 255, 0.8);
+  initial-value: rgba(255, 254, 250, 0.85);
 }
 @property --btn-secondary-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(15, 44, 28, 0.15);
+  initial-value: rgba(139, 112, 98, 0.25);
 }
 @property --btn-secondary-hover-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(14, 38, 25, 0.05);
+  initial-value: rgba(139, 112, 98, 0.05);
 }
 
 :root {
-  /* Color Palette - Default Light Theme (Morning) */
-  --bg: #FAF9F5;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --primary-dark: hsl(145, 30%, 5%);
-  --bg-dark: #EAE6DF;
-  --bg-card: rgba(255, 255, 255, 0.7);
-  --text: #0F2C1C;
-  --text-light: #506357;
+  /* Color Palette - Default Cream/Ivory Theme (Morning) */
+  --bg: #FAF6EE;
+  --primary: #32251D;
+  --primary-light: #5E4839;
+  --primary-dark: #1D140F;
+  --bg-dark: #DECDBF;
+  --bg-card: rgba(255, 254, 250, 0.75);
+  --text: #32251D;
+  --text-light: #8B7062;
   --text-white: #ffffff;
   
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(10, 30, 19, 0.12);
-  --glass-shadow: 0 10px 30px 0 rgba(10, 30, 19, 0.05);
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
   
-  --accent: hsl(38, 85%, 55%);
-  --accent-light: hsl(38, 85%, 65%);
-  --accent-dark: hsl(38, 85%, 45%);
+  --glass-bg: rgba(255, 254, 250, 0.82);
+  --glass-border: rgba(212, 163, 67, 0.22);
+  --glass-shadow: 0 10px 30px 0 rgba(139, 112, 98, 0.05);
+  
+  --accent: hsl(40, 62%, 52%);
+  --accent-light: hsl(40, 72%, 62%);
+  --accent-dark: hsl(40, 62%, 42%);
 
-  --header-bg-scrolled: rgba(250, 249, 246, 0.96);
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --btn-secondary-border: rgba(15, 44, 28, 0.15);
-  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
+  --header-bg-scrolled: rgba(250, 246, 238, 0.96);
+  --input-bg: rgba(255, 254, 250, 0.85);
+  --btn-secondary-border: rgba(139, 112, 98, 0.25);
+  --btn-secondary-hover-bg: rgba(139, 112, 98, 0.05);
   
   /* Layout & Sizing */
   --max-width: 1280px;
@@ -1669,10 +1687,13 @@ body {
   transition: --bg 2.5s ease,
               --primary 2.5s ease,
               --primary-light 2.5s ease,
+              --primary-dark 2.5s ease,
               --bg-dark 2.5s ease,
               --bg-card 2.5s ease,
               --text 2.5s ease,
               --text-light 2.5s ease,
+              --accent-sage 2.5s ease,
+              --stone-gray 2.5s ease,
               --glass-bg 2.5s ease,
               --glass-border 2.5s ease,
               --accent 2.5s ease,
@@ -1695,146 +1716,161 @@ body {
 
 /* 1. Morning - Subah (5:30 AM to 12:00 PM) */
 body.ambient-morning {
-  --bg: #FAF9F5;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --bg-dark: #EAE6DF;
-  --bg-card: rgba(255, 255, 255, 0.7);
-  --text: #0F2C1C;
-  --text-light: #506357;
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(10, 30, 19, 0.12);
-  --header-bg-scrolled: rgba(250, 249, 246, 0.96);
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --btn-secondary-border: rgba(15, 44, 28, 0.15);
-  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
+  --bg: #FAF7F0;
+  --primary: #32251D;
+  --primary-light: #5E4839;
+  --primary-dark: #1D140F;
+  --bg-dark: #FAF2E5;
+  --bg-card: rgba(255, 254, 250, 0.75);
+  --text: #32251D;
+  --text-light: #8B7062;
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
+  --glass-bg: rgba(255, 254, 250, 0.82);
+  --glass-border: rgba(212, 163, 67, 0.22);
+  --header-bg-scrolled: rgba(250, 246, 238, 0.96);
+  --input-bg: rgba(255, 254, 250, 0.85);
+  --btn-secondary-border: rgba(139, 112, 98, 0.25);
+  --btn-secondary-hover-bg: rgba(139, 112, 98, 0.05);
 
-  --accent: hsl(42, 90%, 58%);
-  --accent-light: hsl(42, 90%, 68%);
-  --accent-dark: hsl(42, 90%, 48%);
-  --ambient-glow-color: rgba(255, 200, 120, 0.15);
-  --ambient-ray-color-start: rgba(255, 230, 160, 0);
-  --ambient-ray-color-mid: rgba(255, 230, 160, 0.03);
-  --ambient-ray-color-high: rgba(255, 230, 160, 0.05);
+  --accent: hsl(38, 60%, 48%);
+  --accent-light: hsl(38, 70%, 58%);
+  --accent-dark: hsl(38, 60%, 38%);
+  --ambient-glow-color: rgba(212, 163, 67, 0.12);
+  --ambient-ray-color-start: rgba(212, 163, 67, 0);
+  --ambient-ray-color-mid: rgba(212, 163, 67, 0.02);
+  --ambient-ray-color-high: rgba(212, 163, 67, 0.04);
   --ambient-ray-opacity: 0.75;
-  --ambient-mist-color-1: rgba(20, 50, 35, 0.3);
-  --ambient-mist-color-2: rgba(10, 30, 20, 0.15);
+  --ambient-mist-color-1: rgba(139, 112, 98, 0.15);
+  --ambient-mist-color-2: rgba(212, 163, 67, 0.05);
   --ambient-mist-opacity: 0.6;
 }
 
 /* 2. Afternoon - Dopahar (12:00 PM to 4:00 PM) */
 body.ambient-afternoon {
-  --bg: #FCFAF2;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --bg-dark: #ECE7DF;
+  --bg: #FDFBF7;
+  --primary: #2C211A;
+  --primary-light: #554133;
+  --primary-dark: #1A120E;
+  --bg-dark: #F4EFE6;
   --bg-card: rgba(255, 255, 255, 0.7);
-  --text: #142B1F;
-  --text-light: #57685D;
+  --text: #231B16;
+  --text-light: #80675B;
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(10, 30, 19, 0.1);
-  --header-bg-scrolled: rgba(252, 250, 242, 0.96);
+  --glass-border: rgba(212, 163, 67, 0.18);
+  --header-bg-scrolled: rgba(253, 251, 247, 0.96);
   --input-bg: rgba(255, 255, 255, 0.8);
-  --btn-secondary-border: rgba(15, 44, 28, 0.15);
-  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
+  --btn-secondary-border: rgba(128, 103, 91, 0.2);
+  --btn-secondary-hover-bg: rgba(128, 103, 91, 0.05);
 
-  --accent: hsl(38, 95%, 52%);
-  --accent-light: hsl(38, 95%, 62%);
-  --accent-dark: hsl(38, 95%, 42%);
-  --ambient-glow-color: rgba(255, 220, 140, 0.2);
-  --ambient-ray-color-start: rgba(255, 255, 255, 0);
-  --ambient-ray-color-mid: rgba(255, 255, 255, 0.04);
-  --ambient-ray-color-high: rgba(255, 255, 255, 0.06);
+  --accent: hsl(40, 68%, 46%);
+  --accent-light: hsl(40, 78%, 56%);
+  --accent-dark: hsl(40, 68%, 36%);
+  --ambient-glow-color: rgba(255, 220, 140, 0.15);
+  --ambient-ray-color-start: rgba(255, 240, 180, 0);
+  --ambient-ray-color-mid: rgba(255, 240, 180, 0.03);
+  --ambient-ray-color-high: rgba(255, 240, 180, 0.05);
   --ambient-ray-opacity: 0.85;
-  --ambient-mist-color-1: rgba(14, 38, 25, 0.15);
-  --ambient-mist-color-2: rgba(6, 18, 12, 0.05);
+  --ambient-mist-color-1: rgba(128, 103, 91, 0.08);
+  --ambient-mist-color-2: rgba(212, 163, 67, 0.03);
   --ambient-mist-opacity: 0.4;
 }
 
 /* 3. Evening - Shaam (4:00 PM to 7:30 PM) */
 body.ambient-evening {
-  --bg: #FFF5EC;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --bg-dark: #ECE0D5;
-  --bg-card: rgba(255, 255, 255, 0.7);
-  --text: #2E1E12;
-  --text-light: #7D6858;
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(45, 15, 30, 0.1);
-  --header-bg-scrolled: rgba(255, 245, 236, 0.96);
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --btn-secondary-border: rgba(45, 15, 30, 0.15);
-  --btn-secondary-hover-bg: rgba(45, 15, 30, 0.05);
+  --bg: #FFF9F2;
+  --primary: #2D221A;
+  --primary-light: #584438;
+  --primary-dark: #1E140F;
+  --bg-dark: #EFE0D0;
+  --bg-card: rgba(255, 253, 248, 0.7);
+  --text: #2D221A;
+  --text-light: #8E705C;
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
+  --glass-bg: rgba(255, 253, 248, 0.8);
+  --glass-border: rgba(224, 130, 68, 0.2);
+  --header-bg-scrolled: rgba(255, 249, 242, 0.96);
+  --input-bg: rgba(255, 253, 248, 0.8);
+  --btn-secondary-border: rgba(142, 112, 92, 0.2);
+  --btn-secondary-hover-bg: rgba(142, 112, 92, 0.05);
 
-  --accent: hsl(22, 85%, 52%);
-  --accent-light: hsl(22, 85%, 62%);
-  --accent-dark: hsl(22, 85%, 42%);
-  --ambient-glow-color: rgba(220, 60, 120, 0.15);
-  --ambient-ray-color-start: rgba(255, 120, 40, 0);
-  --ambient-ray-color-mid: rgba(255, 120, 40, 0.03);
-  --ambient-ray-color-high: rgba(255, 120, 40, 0.06);
+  --accent: hsl(28, 75%, 48%);
+  --accent-light: hsl(28, 85%, 58%);
+  --accent-dark: hsl(28, 75%, 38%);
+  --ambient-glow-color: rgba(224, 130, 68, 0.12);
+  --ambient-ray-color-start: rgba(255, 140, 70, 0);
+  --ambient-ray-color-mid: rgba(255, 140, 70, 0.025);
+  --ambient-ray-color-high: rgba(255, 140, 70, 0.05);
   --ambient-ray-opacity: 0.70;
-  --ambient-mist-color-1: rgba(45, 15, 30, 0.5);
-  --ambient-mist-color-2: rgba(25, 8, 20, 0.25);
+  --ambient-mist-color-1: rgba(142, 112, 92, 0.3);
+  --ambient-mist-color-2: rgba(224, 130, 68, 0.1);
   --ambient-mist-opacity: 0.75;
 }
 
 /* 4. Early Night - Raat (7:30 PM to 11:00 PM) */
 body.ambient-night-early {
-  --bg: #06120C;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --bg-dark: #040D08;
-  --bg-card: rgba(14, 38, 25, 0.6);
+  --bg: #120E0B;
+  --primary: #1C1612;
+  --primary-light: #2D241E;
+  --primary-dark: #080605;
+  --bg-dark: #0B0806;
+  --bg-card: rgba(30, 24, 20, 0.6);
   --text: hsl(38, 25%, 90%);
-  --text-light: hsl(38, 15%, 70%);
-  --glass-bg: rgba(6, 18, 12, 0.75);
-  --glass-border: rgba(243, 166, 40, 0.15);
-  --header-bg-scrolled: rgba(4, 13, 8, 0.95);
-  --input-bg: rgba(6, 18, 12, 0.7);
-  --btn-secondary-border: rgba(243, 166, 40, 0.2);
-  --btn-secondary-hover-bg: rgba(243, 166, 40, 0.06);
+  --text-light: hsl(38, 15%, 72%);
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
+  --glass-bg: rgba(18, 14, 11, 0.75);
+  --glass-border: rgba(212, 163, 67, 0.18);
+  --header-bg-scrolled: rgba(18, 14, 11, 0.95);
+  --input-bg: rgba(18, 14, 11, 0.7);
+  --btn-secondary-border: rgba(212, 163, 67, 0.2);
+  --btn-secondary-hover-bg: rgba(212, 163, 67, 0.06);
 
-  --accent: hsl(38, 70%, 45%);
-  --accent-light: hsl(38, 70%, 55%);
-  --accent-dark: hsl(38, 70%, 35%);
-  --ambient-glow-color: rgba(14, 38, 25, 0.1);
-  --ambient-ray-color-start: rgba(243, 166, 40, 0);
-  --ambient-ray-color-mid: rgba(243, 166, 40, 0.01);
-  --ambient-ray-color-high: rgba(243, 166, 40, 0.02);
+  --accent: hsl(38, 65%, 48%);
+  --accent-light: hsl(38, 75%, 58%);
+  --accent-dark: hsl(38, 65%, 38%);
+  --ambient-glow-color: rgba(212, 163, 67, 0.08);
+  --ambient-ray-color-start: rgba(212, 163, 67, 0);
+  --ambient-ray-color-mid: rgba(212, 163, 67, 0.015);
+  --ambient-ray-color-high: rgba(212, 163, 67, 0.03);
   --ambient-ray-opacity: 0.40;
-  --ambient-mist-color-1: rgba(8, 22, 14, 0.55);
-  --ambient-mist-color-2: rgba(4, 12, 8, 0.3);
+  --ambient-mist-color-1: rgba(30, 24, 20, 0.5);
+  --ambient-mist-color-2: rgba(11, 8, 6, 0.25);
   --ambient-mist-opacity: 0.8;
 }
 
 /* 5. Late Night / Brahma Muhurta - Ratri (11:00 PM to 5:30 AM) */
 body.ambient-night-late {
-  --bg: #040E0A;
-  --primary: hsl(145, 30%, 10%);
-  --primary-light: hsl(145, 30%, 18%);
-  --bg-dark: #020805;
-  --bg-card: rgba(14, 38, 25, 0.5);
-  --text: hsl(38, 20%, 88%);
-  --text-light: hsl(38, 10%, 65%);
-  --glass-bg: rgba(4, 13, 8, 0.7);
-  --glass-border: rgba(243, 166, 40, 0.12);
-  --header-bg-scrolled: rgba(2, 8, 5, 0.95);
-  --input-bg: rgba(4, 13, 8, 0.7);
-  --btn-secondary-border: rgba(243, 166, 40, 0.15);
-  --btn-secondary-hover-bg: rgba(243, 166, 40, 0.05);
+  --bg: #0A0908;
+  --primary: #141312;
+  --primary-light: #242321;
+  --primary-dark: #040404;
+  --bg-dark: #050504;
+  --bg-card: rgba(20, 19, 18, 0.55);
+  --text: hsl(43, 20%, 88%);
+  --text-light: hsl(43, 10%, 65%);
+  --accent-sage: #849283;
+  --stone-gray: #B1B5B1;
+  --glass-bg: rgba(10, 9, 8, 0.7);
+  --glass-border: rgba(212, 163, 67, 0.15);
+  --header-bg-scrolled: rgba(10, 9, 8, 0.95);
+  --input-bg: rgba(10, 9, 8, 0.7);
+  --btn-secondary-border: rgba(212, 163, 67, 0.15);
+  --btn-secondary-hover-bg: rgba(212, 163, 67, 0.05);
 
-  --accent: hsl(170, 30%, 45%);
-  --accent-light: hsl(170, 30%, 55%);
-  --accent-dark: hsl(170, 30%, 35%);
-  --ambient-glow-color: rgba(14, 45, 60, 0.2);
-  --ambient-ray-color-start: rgba(130, 200, 220, 0);
-  --ambient-ray-color-mid: rgba(130, 200, 220, 0.015);
-  --ambient-ray-color-high: rgba(130, 200, 220, 0.025);
+  --accent: hsl(43, 60%, 46%);
+  --accent-light: hsl(43, 70%, 56%);
+  --accent-dark: hsl(43, 60%, 36%);
+  --ambient-glow-color: rgba(212, 163, 67, 0.06);
+  --ambient-ray-color-start: rgba(212, 163, 67, 0);
+  --ambient-ray-color-mid: rgba(212, 163, 67, 0.01);
+  --ambient-ray-color-high: rgba(212, 163, 67, 0.02);
   --ambient-ray-opacity: 0.30;
-  --ambient-mist-color-1: rgba(6, 22, 28, 0.65);
-  --ambient-mist-color-2: rgba(3, 11, 14, 0.35);
+  --ambient-mist-color-1: rgba(20, 19, 18, 0.6);
+  --ambient-mist-color-2: rgba(5, 5, 4, 0.3);
   --ambient-mist-opacity: 0.85;
 }
 
@@ -1861,9 +1897,9 @@ body.ambient-night-late {
 }
 
 .panel-toggle-btn {
-  background: rgba(14, 38, 25, 0.75);
+  background: var(--primary);
   border: 1px solid var(--glass-border);
-  color: var(--text);
+  color: var(--accent);
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -1874,25 +1910,25 @@ body.ambient-night-late {
   font-size: 1.25rem;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   pointer-events: auto;
   transition: var(--transition-smooth);
 }
 
 .panel-toggle-btn:hover {
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-light);
   transform: rotate(45deg);
 }
 
 .ambient-control-panel.active .panel-toggle-btn {
   transform: rotate(90deg);
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-light);
 }
 
 .panel-content {
-  background: rgba(6, 18, 12, 0.92);
+  background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: 1.5rem;
@@ -1900,7 +1936,7 @@ body.ambient-night-late {
   margin-top: 10px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--glass-shadow);
   display: none;
   opacity: 0;
   transform: translateY(10px);
@@ -1921,7 +1957,7 @@ body.ambient-night-late {
   color: var(--text);
   font-family: var(--font-serif);
   font-style: italic;
-  border-bottom: 1px solid rgba(244, 239, 235, 0.08);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 0.4rem;
 }
 
@@ -1951,10 +1987,10 @@ body.ambient-night-late {
   display: inline-block;
   width: 38px;
   height: 20px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--btn-secondary-border);
   transition: .4s;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
 }
 
 .slider:before {
@@ -1964,7 +2000,7 @@ body.ambient-night-late {
   width: 14px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background-color: var(--bg);
   transition: .4s;
   border-radius: 50%;
 }
@@ -1992,8 +2028,8 @@ input:checked + .slider:before {
 }
 
 .phase-select-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
   color: var(--text-light);
   padding: 0.5rem 0.8rem;
   border-radius: 6px;
@@ -2004,13 +2040,13 @@ input:checked + .slider:before {
 }
 
 .phase-select-btn:hover {
-  background: rgba(243, 166, 40, 0.05);
+  background: var(--btn-secondary-hover-bg);
   color: var(--text);
-  border-color: rgba(243, 166, 40, 0.2);
+  border-color: var(--accent);
 }
 
 .phase-select-btn.active {
-  background: rgba(243, 166, 40, 0.12);
+  background: rgba(212, 163, 67, 0.15);
   color: var(--accent);
   border-color: var(--accent);
   font-weight: 600;

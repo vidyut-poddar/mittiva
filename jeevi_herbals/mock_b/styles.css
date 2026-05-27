@@ -1101,6 +1101,201 @@ footer {
   font-size: 0.85rem;
 }
 
+/* Shimmering God Rays Overlay */
+.god-rays {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 240, 180, 0.0) 0%,
+    rgba(255, 240, 180, 0.04) 10%,
+    rgba(255, 240, 180, 0.0) 20%,
+    rgba(255, 240, 180, 0.07) 30%,
+    rgba(255, 240, 180, 0.0) 40%
+  );
+  background-size: 200% 200%;
+  animation: raysShimmer 20s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  opacity: 0.7;
+}
+
+@keyframes raysShimmer {
+  0%, 100% { background-position: 0% 0%; opacity: 0.5; }
+  50% { background-position: 100% 100%; opacity: 0.95; }
+}
+
+/* Predator Eyes In The Dark */
+.predator-eyes-container {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.predator-eyes {
+  position: absolute;
+  width: 24px;
+  height: 10px;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0;
+  animation: eyesBlinkCycle 5s ease-in-out forwards;
+}
+
+.predator-eye {
+  width: 8px;
+  height: 8px;
+  background-color: var(--eye-color, #ffd32a);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--eye-color, #ffd32a);
+  position: relative;
+}
+
+.predator-eye::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 2px;
+  height: 4px;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+@keyframes eyesBlinkCycle {
+  0% { opacity: 0; transform: scaleY(0); }
+  10% { opacity: 1; transform: scaleY(1); }
+  25% { transform: scaleY(1); }
+  27% { transform: scaleY(0.1); }
+  29% { transform: scaleY(1); }
+  60% { transform: scaleY(1); }
+  62% { transform: scaleY(0.1); }
+  64% { transform: scaleY(1); }
+  90% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(0); }
+}
+
+/* Cameo: Kaa the Python */
+.kaa-container {
+  position: fixed;
+  right: 0;
+  top: 15vh;
+  width: 110px;
+  height: 220px;
+  z-index: 93;
+  pointer-events: none;
+  transform-origin: center right;
+}
+
+.kaa-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+
+.kaa-tongue {
+  transform-origin: 28px 48px;
+  animation: kaaTongueFlick 1.6s ease-in-out infinite;
+}
+
+.kaa-eye-pupil {
+  transform-origin: center;
+  animation: kaaEyeSwirl 3s linear infinite;
+}
+
+@keyframes kaaTongueFlick {
+  0%, 100%, 70%, 90% { transform: scale(0); opacity: 0; }
+  75%, 85% { transform: scale(1) translate(-1px, 1px); opacity: 1; }
+  80% { transform: scale(1) translate(0px, 0px) rotate(15deg); opacity: 1; }
+}
+
+@keyframes kaaEyeSwirl {
+  0% { transform: rotate(0deg) translate(0.5px, 0.5px); }
+  100% { transform: rotate(360deg) translate(0.5px, 0.5px); }
+}
+
+/* Cameo: Bagheera the Panther */
+.bagheera-container {
+  position: fixed;
+  right: 6vw;
+  top: 5vh;
+  width: 180px;
+  height: 135px;
+  z-index: 96;
+  pointer-events: none;
+  transform-origin: center top;
+}
+
+.bagheera-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+}
+
+.bagheera-tail {
+  transform-origin: 35px 75px;
+  animation: pantherTailTwitch 4s ease-in-out infinite alternate;
+}
+
+.bagheera-eye {
+  transform-origin: center;
+  animation: pantherBlink 6s ease-in-out infinite;
+}
+
+.bagheera-eye-pupil {
+  transform-origin: center;
+  animation: pantherBlink 6s ease-in-out infinite;
+}
+
+@keyframes pantherTailTwitch {
+  0%, 70% { transform: rotate(0deg); }
+  80% { transform: rotate(-12deg); }
+  90% { transform: rotate(5deg); }
+  100% { transform: rotate(-3deg); }
+}
+
+@keyframes pantherBlink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
+/* Cameo: Baloo the Bear */
+.baloo-container {
+  position: fixed;
+  left: 2vw;
+  bottom: -15px;
+  width: 140px;
+  height: 140px;
+  z-index: 96;
+  pointer-events: none;
+}
+
+.baloo-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.3));
+}
+
+.baloo-wave-arm {
+  transform-origin: 125px 140px;
+  animation: balooWaving 3s ease-in-out infinite alternate;
+}
+
+.baloo-wave-hand, .baloo-wave-hand-palm {
+  transform-origin: 125px 140px;
+  animation: balooWaving 3s ease-in-out infinite alternate;
+}
+
+@keyframes balooWaving {
+  0%, 40% { transform: rotate(0deg); }
+  55% { transform: rotate(-15deg); }
+  70% { transform: rotate(-2deg); }
+  85% { transform: rotate(-18deg); }
+  100% { transform: rotate(-5deg); }
+}
+
 /* Progressive Fallback Reveals */
 @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   .scroll-fade-in {
@@ -1143,7 +1338,8 @@ footer {
     transition-delay: 0s !important;
   }
   
-  .flying-bird, .swinging-monkey-container, .hopping-deer, #leafCanvas {
+  .flying-bird, .swinging-monkey-container, .hopping-deer, #leafCanvas,
+  .kaa-container, .bagheera-container, .baloo-container, .god-rays, .predator-eyes-container, #fireflyCanvas {
     display: none !important;
   }
 

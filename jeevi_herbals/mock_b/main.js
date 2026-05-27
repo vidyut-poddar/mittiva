@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimationsFallback();
   initBirdSpawner();
   initDeerTrigger();
+  initFireflies();
+  initPredatorEyes();
+  initParallax();
 });
 
 /**
@@ -307,4 +310,179 @@ function initDeerTrigger() {
 
   // Initial trigger
   triggerDeerRun();
+}
+
+/**
+ * 9. Floating Fireflies Canvas Emitter
+ */
+function initFireflies() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'fireflyCanvas';
+  canvas.style.position = 'fixed';
+  canvas.style.inset = '0';
+  canvas.style.pointerEvents = 'none';
+  canvas.style.zIndex = '3';
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  const fireflies = [];
+  const count = 35;
+
+  for (let i = 0; i < count; i++) {
+    fireflies.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2 + 1,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
+      alpha: Math.random(),
+      fadeSpeed: (0.005 + Math.random() * 0.015) * (Math.random() > 0.5 ? 1 : -1)
+    });
+  }
+
+  function animate() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    ctx.clearRect(0, 0, width, height);
+
+    fireflies.forEach(f => {
+      f.x += f.vx;
+      f.y += f.vy;
+      f.alpha += f.fadeSpeed;
+
+      if (f.alpha > 1) {
+        f.alpha = 1;
+        f.fadeSpeed = -f.fadeSpeed;
+      } else if (f.alpha < 0) {
+        f.alpha = 0;
+        f.fadeSpeed = -f.fadeSpeed;
+      }
+
+      // Screen wrapping
+      if (f.x < 0) f.x = width;
+      if (f.x > width) f.x = 0;
+      if (f.y < 0) f.y = height;
+      if (f.y > height) f.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(196, 230, 80, ${f.alpha})`;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = 'rgba(196, 230, 80, 0.8)';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+}
+
+/**
+ * 10. Blinking Predator Eyes in the Dark Margins
+ */
+function initPredatorEyes() {
+  const container = document.querySelector('.predator-eyes-container');
+  if (!container) return;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) return;
+
+  const eyeColors = ['#ffd32a', '#ff5e57', '#0be881', '#ffc048'];
+
+  const spawnEyes = () => {
+    if (document.visibilityState !== 'visible') return;
+    
+    const eyes = document.createElement('div');
+    eyes.className = 'predator-eyes';
+    
+    const eyeL = document.createElement('div');
+    eyeL.className = 'predator-eye';
+    const eyeR = document.createElement('div');
+    eyeR.className = 'predator-eye';
+
+    eyes.appendChild(eyeL);
+    eyes.appendChild(eyeR);
+
+    const side = Math.random() > 0.5 ? 'left' : 'right';
+    const top = Math.random() * 80 + 10;
+    const color = eyeColors[Math.floor(Math.random() * eyeColors.length)];
+
+    eyes.style.top = `${top}vh`;
+    eyes.style.setProperty('--eye-color', color);
+    
+    if (side === 'left') {
+      eyes.style.left = `${Math.random() * 6 + 2}vw`;
+    } else {
+      eyes.style.right = `${Math.random() * 8 + 8}vw`;
+    }
+
+    container.appendChild(eyes);
+
+    eyes.addEventListener('animationend', () => {
+      eyes.remove();
+    });
+  };
+
+  const triggerNextSpawn = () => {
+    const delay = Math.random() * 5000 + 7000;
+    setTimeout(() => {
+      spawnEyes();
+      triggerNextSpawn();
+    }, delay);
+  };
+
+  setTimeout(spawnEyes, 4000);
+  triggerNextSpawn();
+}
+
+/**
+ * 11. 3D Scroll Parallax Effect
+ */
+function initParallax() {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) return;
+
+  const jungleScene = document.querySelector('.jungle-scene');
+  const canopy = document.querySelector('.canopy-leaves');
+  const borderL = document.querySelector('.jungle-border-left');
+  const borderR = document.querySelector('.jungle-border-right');
+  const kaa = document.querySelector('.kaa-container');
+  const bagheera = document.querySelector('.bagheera-container');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+
+    // Background scrolls slowly
+    if (jungleScene) {
+      jungleScene.style.transform = `translate3d(0, ${scrollY * 0.12}px, 0)`;
+    }
+
+    // Foreground canopy scrolls slightly faster in reverse, creating depth
+    if (canopy) {
+      canopy.style.transform = `translate3d(0, ${scrollY * -0.06}px, 0)`;
+    }
+
+    // Border trees move slightly, enhancing vertical depth
+    if (borderL) {
+      borderL.style.transform = `translate3d(0, ${scrollY * 0.04}px, 0)`;
+    }
+    if (borderR) {
+      borderR.style.transform = `translate3d(0, ${scrollY * 0.04}px, 0)`;
+    }
+
+    // Cameos translate with their respective background structures
+    if (kaa) {
+      kaa.style.transform = `translate3d(0, ${scrollY * 0.04}px, 0)`;
+    }
+    if (bagheera) {
+      bagheera.style.transform = `translate3d(0, ${scrollY * -0.06}px, 0)`;
+    }
+  }, { passive: true });
 }

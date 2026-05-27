@@ -243,18 +243,28 @@
                 <img class="service-deck__back-logo" src="assets/mittiva-icon-dark.svg" alt="" />
                 <span class="service-deck__back-mark">AI Changing Room</span>
               </div>
-              <div class="service-deck__face service-deck__front">
+              <div class="service-deck__face service-deck__front service-deck__front--pixel">
                 <span class="service-deck__front-corner service-deck__front-corner--tl">04</span>
                 <span class="service-deck__front-corner service-deck__front-corner--br">04</span>
                 <span class="service-deck__cat">Retail · Try before they buy</span>
                 <h3 class="service-deck__title-h">AI Changing Room</h3>
-                <p class="service-deck__copy">For boutiques and clothing brands. Customers upload a photo and see themselves in your pieces.</p>
-                <ul class="service-deck__features">
-                  <li>Web + WhatsApp embed</li>
-                  <li>Garment library from product photos</li>
-                  <li>Shareable try-on cards</li>
-                  <li>Optional in-store kiosk mode</li>
-                </ul>
+                <!-- Pixel-dissolve grid. JS (initPixelDissolve in main.js)
+                     builds the 12x16 grid of <div class="px"> children and
+                     cycles them through 6 garment shapes (pants, t-shirt,
+                     dress, bag, jacket, sneaker), each emerging from
+                     noise. IntersectionObserver gates the animation so it
+                     pauses when the card is off-screen or the deck is
+                     down. data-pixel-grid hook is what main.js looks for. -->
+                <div class="pixel-dissolve" aria-hidden="true">
+                  <div class="pixel-dissolve__grid" data-pixel-grid></div>
+                </div>
+                <div class="pixel-dissolve__foot">
+                  generating · <strong data-pixel-name>pants</strong> · <span data-pixel-count>01</span>/06
+                </div>
+                <a href="https://fit.mittiva.io" target="_blank" rel="noopener" class="service-deck__cta-link" aria-label="Try the AI Changing Room at fit.mittiva.io">
+                  Try the live demo
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
               </div>
             </div>
           </article>

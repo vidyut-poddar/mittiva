@@ -118,6 +118,52 @@ img {
   z-index: 999; /* Float in front of everything */
 }
 
+/* Shimmering Sun Light Rays (God Rays) */
+.god-rays {
+  position: fixed;
+  inset: 0;
+  z-index: 1; /* Behind text, in front of background radial-gradient */
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    120deg,
+    rgba(243, 166, 40, 0) 0%,
+    rgba(243, 166, 40, 0.02) 8%,
+    rgba(243, 166, 40, 0) 15%,
+    rgba(243, 166, 40, 0.04) 22%,
+    rgba(243, 166, 40, 0) 30%
+  );
+  background-size: 200% 200%;
+  animation: raysShimmer 22s ease-in-out infinite;
+  mix-blend-mode: screen;
+  opacity: 0.65;
+}
+
+@keyframes raysShimmer {
+  0%, 100% { background-position: 0% 0%; opacity: 0.4; }
+  50% { background-position: 100% 100%; opacity: 0.85; }
+}
+
+/* Drifting Forest Mist / Fog Overlay */
+.forest-mist {
+  position: fixed;
+  left: -20%;
+  bottom: 0;
+  width: 140vw;
+  height: 40vh;
+  background: radial-gradient(circle at 50% 100%, rgba(14, 38, 25, 0.4) 0%, rgba(6, 18, 12, 0.2) 50%, transparent 100%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 2; /* Sits on forest floor, behind text content */
+  animation: mistDrift 28s ease-in-out infinite alternate;
+  opacity: 0.75;
+}
+
+@keyframes mistDrift {
+  0% { transform: translate3d(0, 10px, 0) scaleX(1.0); }
+  50% { transform: translate3d(5vw, -5px, 0) scaleX(1.05); }
+  100% { transform: translate3d(-5vw, 15px, 0) scaleX(0.95); }
+}
+
 /* Layout Utilities */
 .container {
   max-width: var(--max-width);
@@ -1105,7 +1151,7 @@ footer {
     transition-delay: 0s !important;
   }
   
-  #leafCanvas {
+  #leafCanvas, .god-rays, .forest-mist {
     display: none !important;
   }
 

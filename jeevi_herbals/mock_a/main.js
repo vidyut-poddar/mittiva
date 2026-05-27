@@ -278,16 +278,88 @@ function initLeafFall() {
     }
   }
 
+  // Floating Fireflies (Glowing Amber Dots)
+  const fireflyCount = 25;
+  const fireflies = [];
+  const fireflyColors = [
+    'rgba(243, 166, 40, ', // Gold
+    'rgba(180, 240, 60, ', // Lime-gold
+    'rgba(220, 190, 80, '  // Warm amber
+  ];
+
+  class Firefly {
+    constructor() {
+      this.reset();
+      this.y = Math.random() * canvas.height; // Distribute across height on load
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 1; // 1px to 3px radius
+      this.speedX = Math.random() * 0.4 - 0.2; // Gentle random horizontal drift
+      this.speedY = Math.random() * 0.4 - 0.2; // Gentle random vertical drift
+      this.colorBase = fireflyColors[Math.floor(Math.random() * fireflyColors.length)];
+      this.alpha = Math.random();
+      this.fadeSpeed = 0.006 + Math.random() * 0.012;
+      if (Math.random() > 0.5) this.fadeSpeed = -this.fadeSpeed;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.alpha += this.fadeSpeed;
+
+      if (this.alpha > 1) {
+        this.alpha = 1;
+        this.fadeSpeed = -this.fadeSpeed;
+      } else if (this.alpha < 0) {
+        this.alpha = 0;
+        this.fadeSpeed = -this.fadeSpeed;
+      }
+
+      // Border wrap-around
+      if (this.x < -10) this.x = canvas.width + 10;
+      if (this.x > canvas.width + 10) this.x = -10;
+      if (this.y < -10) this.y = canvas.height + 10;
+      if (this.y > canvas.height + 10) this.y = -10;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = this.colorBase + this.alpha + ')';
+      ctx.shadowBlur = this.size * 3;
+      ctx.shadowColor = this.colorBase.replace(', ', '') + ')';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
   for (let i = 0; i < leafCount; i++) {
     leaves.push(new Leaf());
   }
 
+  for (let i = 0; i < fireflyCount; i++) {
+    fireflies.push(new Firefly());
+  }
+
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw leaves
     leaves.forEach(leaf => {
       leaf.update();
       leaf.draw();
     });
+
+    // Draw fireflies
+    fireflies.forEach(firefly => {
+      firefly.update();
+      firefly.draw();
+    });
+
     animationFrameId = requestAnimationFrame(animate);
   };
   animate();

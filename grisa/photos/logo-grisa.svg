@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GRISA — stencil-split wordmark.
+     Tall, condensed Didone-style serifs with a thin vertical "cut"
+     through each letter. Drop a custom PNG/SVG at photos/logo-grisa.svg
+     to override this default. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 380"
+     role="img" aria-label="GRISA">
+  <title>GRISA</title>
+
+  <!-- Champagne-gold fill, dark cut to suggest the stencil split -->
+  <defs>
+    <style>
+      .glyph { fill: #d9c997; }
+      .cut   { fill: #050403; }
+    </style>
+  </defs>
+
+  <!-- ─── G ─────────────────────────────────────────────────────── -->
+  <g transform="translate(60,30)">
+    <!-- top serif -->
+    <rect class="glyph" x="0"   y="0"   width="200" height="22"/>
+    <!-- left stem -->
+    <rect class="glyph" x="0"   y="0"   width="38"  height="320"/>
+    <!-- bottom serif (full) -->
+    <rect class="glyph" x="0"   y="298" width="200" height="22"/>
+    <!-- right stem (lower) -->
+    <rect class="glyph" x="162" y="160" width="38"  height="160"/>
+    <!-- inner cross arm of the G -->
+    <rect class="glyph" x="100" y="160" width="100" height="22"/>
+    <!-- top-right cap (short serif on upper right) -->
+    <rect class="glyph" x="162" y="0"   width="38"  height="44"/>
+    <!-- stencil vertical cut -->
+    <rect class="cut"   x="96"  y="0"   width="8"   height="320"/>
+  </g>
+
+  <!-- ─── R ─────────────────────────────────────────────────────── -->
+  <g transform="translate(310,30)">
+    <!-- top serif -->
+    <rect class="glyph" x="0"   y="0"   width="200" height="22"/>
+    <!-- left stem -->
+    <rect class="glyph" x="0"   y="0"   width="38"  height="320"/>
+    <!-- bowl right side -->
+    <rect class="glyph" x="162" y="0"   width="38"  height="150"/>
+    <!-- bowl bottom bar -->
+    <rect class="glyph" x="0"   y="150" width="200" height="22"/>
+    <!-- right leg (descender) -->
+    <polygon class="glyph" points="120,172 200,172 200,212 162,320 124,320 124,212"/>
+    <!-- left foot serif -->
+    <rect class="glyph" x="-8"  y="298" width="54"  height="22"/>
+    <!-- right foot serif -->
+    <rect class="glyph" x="146" y="298" width="60"  height="22"/>
+    <!-- stencil vertical cut -->
+    <rect class="cut"   x="96"  y="0"   width="8"   height="320"/>
+  </g>
+
+  <!-- ─── I (two parallel bars — the stencil cut splits it) ─────── -->
+  <g transform="translate(560,30)">
+    <!-- top serif -->
+    <rect class="glyph" x="0"   y="0"   width="200" height="22"/>
+    <!-- left bar -->
+    <rect class="glyph" x="40"  y="0"   width="38"  height="320"/>
+    <!-- right bar -->
+    <rect class="glyph" x="122" y="0"   width="38"  height="320"/>
+    <!-- bottom serif -->
+    <rect class="glyph" x="0"   y="298" width="200" height="22"/>
+  </g>
+
+  <!-- ─── S ─────────────────────────────────────────────────────── -->
+  <g transform="translate(810,30)">
+    <!-- top serif -->
+    <rect class="glyph" x="0"   y="0"   width="200" height="22"/>
+    <!-- upper stem (left side of top bowl) -->
+    <rect class="glyph" x="0"   y="0"   width="38"  height="150"/>
+    <!-- middle bar -->
+    <rect class="glyph" x="0"   y="150" width="200" height="22"/>
+    <!-- lower stem (right side of bottom bowl) -->
+    <rect class="glyph" x="162" y="150" width="38"  height="170"/>
+    <!-- top-right cap -->
+    <rect class="glyph" x="162" y="0"   width="38"  height="60"/>
+    <!-- bottom-left cap -->
+    <rect class="glyph" x="0"   y="260" width="38"  height="60"/>
+    <!-- bottom serif -->
+    <rect class="glyph" x="0"   y="298" width="200" height="22"/>
+    <!-- stencil vertical cut -->
+    <rect class="cut"   x="96"  y="0"   width="8"   height="320"/>
+  </g>
+
+  <!-- ─── A ─────────────────────────────────────────────────────── -->
+  <g transform="translate(1060,30)">
+    <!-- apex -->
+    <polygon class="glyph" points="80,0 120,0 200,320 162,320 100,82 38,320 0,320"/>
+    <!-- crossbar -->
+    <rect class="glyph" x="44"  y="200" width="112" height="22"/>
+    <!-- left foot serif -->
+    <rect class="glyph" x="-12" y="298" width="60"  height="22"/>
+    <!-- right foot serif -->
+    <rect class="glyph" x="152" y="298" width="60"  height="22"/>
+    <!-- stencil vertical cut -->
+    <rect class="cut"   x="96"  y="60"  width="8"   height="260"/>
+  </g>
+</svg>

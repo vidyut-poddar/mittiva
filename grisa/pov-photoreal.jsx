@@ -179,7 +179,8 @@ const DoorOverlay = ({ open, pushed }) => (
     <div className="door-backdrop" />
     <div className={`door-frame ${open ? 'opened' : ''}`}>
       <div className="brand-above">
-        <div className="name">GRISA</div>
+        <img className="name-logo" src="photos/logo-grisa.svg" alt="GRISA"
+             width="1400" height="380" decoding="async" />
         <div className="sub">Ballygunge · Kolkata</div>
       </div>
       <div className={`door-pane left ${open ? 'open' : ''}`}>

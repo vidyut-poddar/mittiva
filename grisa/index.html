@@ -30,9 +30,9 @@
 <meta name="twitter:description" content="Walk through the doors of Grisa, a quiet-luxury boutique in Ballygunge, Kolkata." />
 <meta name="twitter:image" content="https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-03-tree.png" />
 
-<!-- Favicon (inline SVG — no extra request) ─────────────────────────────── -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231f3a35'/><text x='32' y='42' font-family='Georgia,serif' font-size='32' font-weight='400' text-anchor='middle' fill='%23ede5d4' letter-spacing='1'>G</text></svg>" />
-<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231f3a35'/><text x='32' y='42' font-family='Georgia,serif' font-size='32' font-weight='400' text-anchor='middle' fill='%23ede5d4' letter-spacing='1'>G</text></svg>" />
+<!-- Favicon (inline SVG — no extra request, stencil-cut G in champagne gold) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%23050403'/><g fill='%23d9c997'><rect x='16' y='12' width='32' height='4'/><rect x='16' y='12' width='6' height='40'/><rect x='16' y='48' width='32' height='4'/><rect x='40' y='30' width='6' height='22'/><rect x='28' y='30' width='18' height='4'/><rect x='40' y='12' width='6' height='8'/></g><rect x='30' y='12' width='2' height='40' fill='%23050403'/></svg>" />
+<link rel="apple-touch-icon" href="photos/logo-grisa.svg" />
 
 <!-- Performance — connection hints ──────────────────────────────────────── -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,8 +40,9 @@
 <link rel="preconnect" href="https://unpkg.com" crossorigin />
 <link rel="dns-prefetch" href="https://unpkg.com" />
 
-<!-- Preload the hero photo so scene 0 (the storefront) renders immediately. -->
-<link rel="preload" as="image" href="photos/scene-03-tree.png" fetchpriority="high" />
+<!-- Preload the logo (used by the preloader) + the hero photo. -->
+<link rel="preload" as="image" href="photos/logo-grisa.svg" fetchpriority="high" />
+<link rel="preload" as="image" href="photos/scene-03-tree.png" />
 <link rel="preload" as="style" href="pov-photoreal.css" />
 
 <!-- Critical fonts (font-display: swap so the preloader never blocks paint) -->
@@ -58,7 +59,7 @@
   "description": "A quiet-luxury fashion boutique in Ballygunge, Kolkata. Hand-made designer pieces, S/S 2026 catalogue.",
   "url": "https://vidyut-poddar.github.io/mittiva/grisa/",
   "image": "https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-03-tree.png",
-  "logo": "https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-05-book.png",
+  "logo": "https://vidyut-poddar.github.io/mittiva/grisa/photos/logo-grisa.svg",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Ballygunge",
@@ -140,15 +141,14 @@
     animation: pre-fade 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
   }
   .preloader-mark {
-    font-weight: 300;
-    font-size: clamp(56px, 11vw, 140px);
-    letter-spacing: 0.32em;
-    line-height: 1;
-    color: #f4ecd7;
-    text-shadow: 0 0 60px rgba(178, 136, 74, 0.18);
-    /* Slow elegant entrance — letters resolve from a slight blur */
+    display: block;
+    margin: 0 auto;
+    width: clamp(280px, 52vw, 620px);
+    height: auto;
+    filter: drop-shadow(0 0 60px rgba(178, 136, 74, 0.18));
+    /* Slow elegant entrance — wordmark resolves from a slight blur */
     opacity: 0;
-    filter: blur(8px);
+    transform: scale(1.08);
     animation: pre-mark 1.8s cubic-bezier(0.2, 0.6, 0.2, 1) 0.35s forwards;
   }
   .preloader-flourish {
@@ -225,8 +225,9 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes pre-mark {
-    0%   { opacity: 0; filter: blur(8px); letter-spacing: 0.5em; }
-    100% { opacity: 1; filter: blur(0px);  letter-spacing: 0.32em; }
+    0%   { opacity: 0; transform: scale(1.08); filter: drop-shadow(0 0 0 transparent) blur(6px); }
+    60%  { opacity: 1; filter: drop-shadow(0 0 60px rgba(178, 136, 74, 0.18)) blur(0px); }
+    100% { opacity: 1; transform: scale(1.0); filter: drop-shadow(0 0 60px rgba(178, 136, 74, 0.18)) blur(0px); }
   }
   @keyframes pre-bar {
     0%   { width: 0%; }
@@ -262,7 +263,8 @@
 <div id="preloader" role="status" aria-live="polite" aria-label="Grisa is loading">
   <div class="preloader-inner">
     <div class="preloader-eyebrow">Ballygunge · Kolkata</div>
-    <div class="preloader-mark">GRISA</div>
+    <img class="preloader-mark" src="photos/logo-grisa.svg" alt="GRISA"
+         width="1400" height="380" decoding="async" fetchpriority="high" />
     <div class="preloader-flourish"></div>
     <div class="preloader-sub">A boutique grows like a garden</div>
     <div class="preloader-bar"><div class="preloader-bar-fill"></div></div>
@@ -275,7 +277,7 @@
 <noscript>
   <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#050403;color:#ede5d4;font-family:Georgia,serif;padding:24px;text-align:center;z-index:99998;">
     <div>
-      <h1 style="font-weight:300;letter-spacing:0.3em;font-size:42px;margin:0 0 12px;">GRISA</h1>
+      <img src="photos/logo-grisa.svg" alt="GRISA" style="display:block;margin:0 auto 18px;width:min(420px,70vw);height:auto;" />
       <p style="opacity:0.7;max-width:520px;line-height:1.6;">
         A quiet-luxury fashion boutique in Ballygunge, Kolkata. The immersive walk-through requires JavaScript.
         Visit our shop at <a href="https://shop.grisa.in" style="color:#b2884a;">shop.grisa.in</a>.

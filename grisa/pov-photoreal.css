@@ -328,6 +328,13 @@ html, body, #root {
   letter-spacing: 0.55em;
   margin-right: -0.55em;
 }
+.brand-above .name-logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 20px rgba(178, 136, 74, 0.15));
+}
 .brand-above .sub {
   font-size: 10px;
   letter-spacing: 0.55em;
@@ -678,4 +685,5 @@ html, body, #root {
   .spread { padding: 28px; }
   .door-frame { width: 78vw; }
   .brand-above .name { font-size: 32px; letter-spacing: 0.4em; }
+  .brand-above .name-logo { height: 40px; }
 }

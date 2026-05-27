@@ -1,0 +1,765 @@
+/* Grisha — Photoreal POV (image-slot driven storyboard) */
+
+:root {
+  --paper: #ede5d4;
+  --paper-warm: #f4ecd7;
+  --ink: #1a1714;
+  --ink-soft: #4a4540;
+  --ink-faint: #8a857e;
+  --accent: #8b3a2a;
+  --brass: #b2884a;
+  --teal: #1f3a35;
+}
+
+* { box-sizing: border-box; }
+html, body, #root {
+  margin: 0; padding: 0; height: 100%; width: 100%;
+  background: #050403;
+  overflow: hidden;
+  font-family: 'Schibsted Grotesk', 'Inter Tight', system-ui, sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: 'Cormorant Garamond', serif; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.cap { text-transform: uppercase; letter-spacing: 0.25em; }
+
+.stage {
+  position: fixed; inset: 0;
+  background: #050403;
+  overflow: hidden;
+  cursor: none;
+}
+
+.pov-cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: rgba(245, 235, 215, 0.92);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: width 0.25s, height 0.25s;
+}
+.pov-cursor.over-action {
+  width: 48px; height: 48px;
+  background: transparent;
+  border: 1.5px solid rgba(245, 235, 215, 0.95);
+  mix-blend-mode: normal;
+}
+
+/* ============================================================
+   SCENE LAYER — full-bleed image-slot per scene
+   Scenes crossfade with subtle perspective motion so forward/backward
+   movement reads as a camera walk, not a slideshow.
+   ============================================================ */
+.scene-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition:
+    opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 1.6s cubic-bezier(0.45, 0.05, 0.3, 1),
+    filter   1.4s ease;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: opacity, transform, filter;
+  perspective: 1200px;
+  perspective-origin: 50% 55%;
+  /* Inactive scenes off-frame depending on whether they're ahead or behind us */
+  transform: scale(1.02);
+  filter: blur(0px);
+}
+.scene-layer.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  filter: blur(0px);
+  z-index: 2;
+}
+/* Scenes that sit ahead of the camera in the corridor (we haven't reached yet,
+   or we just walked past): they emerge from depth on forward motion, recede on backward. */
+.scene-layer.ahead {
+  transform: scale(0.88) translateZ(-160px);
+  filter: blur(4px);
+  z-index: 1;
+}
+/* Scenes behind the camera (already visited / we're walking back to): they
+   come up from below on backward motion, fall away on forward. */
+.scene-layer.behind {
+  transform: scale(1.12) translateZ(120px);
+  filter: blur(6px);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Each scene wraps its image-slot in a Ken-Burns motion container */
+.kb {
+  position: absolute;
+  inset: -8%;          /* slight overshoot so motion never reveals edges */
+  transform-origin: 50% 50%;
+  animation: kb-default 16s ease-in-out infinite alternate;
+}
+.scene-layer.active .kb { animation-play-state: running; }
+.scene-layer:not(.active) .kb { animation-play-state: paused; }
+
+/* Different scenes get different motion paths so it feels alive */
+.kb.zoom-in     { animation-name: kb-zoom-in; }
+.kb.pan-right   { animation-name: kb-pan-right; }
+.kb.pan-up      { animation-name: kb-pan-up; }
+.kb.dolly-fwd   { animation-name: kb-dolly-fwd; }
+.kb.subtle      { animation-name: kb-subtle; }
+
+@keyframes kb-zoom-in {
+  0%   { transform: scale(1.0) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-2%, 1%); }
+}
+@keyframes kb-pan-right {
+  0%   { transform: scale(1.08) translate(-3%, 0); }
+  100% { transform: scale(1.08) translate(3%, 0); }
+}
+@keyframes kb-pan-up {
+  0%   { transform: scale(1.08) translate(0, 3%); }
+  100% { transform: scale(1.10) translate(0, -2%); }
+}
+@keyframes kb-dolly-fwd {
+  0%   { transform: scale(1.0); }
+  100% { transform: scale(1.18); }
+}
+@keyframes kb-subtle {
+  0%   { transform: scale(1.04) translate(-1%, 0); }
+  100% { transform: scale(1.06) translate(1%, -1%); }
+}
+
+/* The image-slot fills the kb container */
+.kb image-slot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  --is-bg: #1a1410;
+}
+
+/* Image-slot empty-state styling — looks intentional, not "TODO" */
+.slot-default {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, #2a201a 0%, #100a06 70%, #050403 100%);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 40px;
+}
+.slot-default .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: rgba(245, 235, 215, 0.55);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.slot-default .name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(28px, 3.4vw, 48px);
+  color: rgba(245, 235, 215, 0.9);
+  margin-bottom: 18px;
+  max-width: 80%;
+}
+.slot-default .hint {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(245, 235, 215, 0.45);
+  max-width: 36ch;
+  line-height: 1.5;
+}
+.slot-default .prompt-chip {
+  margin-top: 22px;
+  padding: 10px 16px;
+  border: 1px dashed rgba(245, 235, 215, 0.3);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: rgba(245, 235, 215, 0.6);
+  text-transform: uppercase;
+}
+
+/* Vignette on each scene */
+.scene-layer .vignette {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 55%, transparent 30%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Warm color grade overlay (toned-back when image-slot empty) */
+.scene-layer .grade {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(40, 25, 10, 0.05) 0%, transparent 30%, rgba(40, 25, 10, 0.18) 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Click-catcher — absorbs clicks for scene advancement while letting drag-and-drop
+   pass through to the image-slot beneath (toggled via inline pointer-events). */
+.click-catcher {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: transparent;
+  cursor: none;
+}
+
+/* Dolly-through — scene 0 has a perspective camera; on entry the photo plane
+   accelerates forward and past the viewer, blurring + dimming, while scene 1
+   crossfades up. Feels like punching through the doorway, not zooming in. */
+.scene-layer.dolly-through {
+  perspective: 900px;
+  perspective-origin: 50% 55%;
+}
+.scene-layer.dolly-through .kb {
+  animation: none !important;
+  transform-style: preserve-3d;
+  transform: translate3d(0, -20px, 760px);
+  filter: blur(6px) brightness(1.15);
+  transition:
+    transform 1.6s cubic-bezier(0.55, 0.0, 0.3, 1),
+    filter   1.6s ease-in,
+    opacity  1.6s ease-in;
+  opacity: 0;
+}
+/* While dollying, drop the vignette so the warm bleed reads cleanly */
+.scene-layer.dolly-through .vignette,
+.scene-layer.dolly-through .grade { opacity: 0; transition: opacity 0.4s ease 0.2s; }
+
+/* Warm threshold glow — bleeds from the doorway as you pass through */
+.threshold-glow {
+  position: fixed; inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 55%,
+      rgba(255, 220, 170, 0.95) 0%,
+      rgba(245, 200, 150, 0.55) 35%,
+      rgba(200, 140, 90, 0.15) 65%,
+      transparent 90%);
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.5, 0, 0.5, 1);
+}
+.threshold-glow.on { opacity: 1; }
+.threshold-glow.off { opacity: 0; transition-duration: 0.7s; }
+
+/* ============================================================
+   DOOR SCENE — door panels rendered on top of the storefront photo
+   ============================================================ */
+.door-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  perspective: 1800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.door-frame {
+  position: relative;
+  width: 56vw;
+  height: 82vh;
+  max-width: 700px;
+  max-height: 1000px;
+  display: flex;
+  border: 14px solid var(--teal);
+  background: var(--teal);
+  box-shadow: 0 60px 120px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.4);
+  transform-style: preserve-3d;
+}
+.door-pane {
+  position: relative;
+  flex: 1;
+  background:
+    linear-gradient(135deg,
+      rgba(14, 26, 24, 0.92) 0%,
+      rgba(50, 80, 72, 0.55) 35%,
+      rgba(20, 38, 34, 0.92) 100%);
+  border: 1px solid #0a1816;
+  transition: transform 1.6s cubic-bezier(0.45, 0.05, 0.3, 1);
+  backface-visibility: hidden;
+}
+.door-pane.left  { transform-origin: left center; }
+.door-pane.right { transform-origin: right center; }
+.door-pane.left.open  { transform: rotateY(-95deg); }
+.door-pane.right.open { transform: rotateY(95deg); }
+.door-pane::after {
+  content: '';
+  position: absolute; inset: 18px;
+  border: 1px solid rgba(255, 240, 210, 0.16);
+}
+.door-handle {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 6px; height: 22%;
+  background:
+    linear-gradient(to right, #5a3d18 0%, #a07034 30%, #e8c178 50%, #a07034 70%, #5a3d18 100%);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.door-pane.left .door-handle  { right: 16px; }
+.door-pane.right .door-handle { left: 16px; }
+.door-etch {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: 0.7em;
+  color: rgba(245, 235, 215, 0.45);
+  text-shadow: 0 0 14px rgba(245, 235, 215, 0.2);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Brand mark above the doors */
+.brand-above {
+  position: absolute;
+  top: -82px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: rgba(245, 235, 215, 0.92);
+  white-space: nowrap;
+}
+.brand-above .name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 44px;
+  letter-spacing: 0.55em;
+  margin-right: -0.55em;
+}
+.brand-above .sub {
+  font-size: 10px;
+  letter-spacing: 0.55em;
+  color: rgba(245, 235, 215, 0.5);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+/* Warm interior glow that peeks out when doors open */
+.door-glow {
+  position: absolute;
+  inset: 14px;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 210, 150, 0.65) 0%, rgba(220, 160, 100, 0.2) 40%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.6s ease 0.3s;
+  z-index: -1;
+}
+.door-frame.opened .door-glow { opacity: 1; }
+
+/* Subtle door-context backdrop dim — sits behind the doorframe to focus the eye */
+.door-backdrop {
+  position: absolute; inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 55%, transparent 32%, rgba(0,0,0,0.55) 100%);
+}
+
+/* ============================================================
+   SCENE TITLE / QUOTE — floats over the photo
+   ============================================================ */
+.scene-title {
+  position: fixed;
+  bottom: 16vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  text-align: center;
+  color: rgba(250, 240, 220, 0.96);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  max-width: 80vw;
+}
+.scene-title.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.scene-title.hide {
+  transform: translate(-50%, -12px);
+}
+.scene-title .quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(22px, 3vw, 42px);
+  line-height: 1.4;
+  text-shadow: 0 6px 40px rgba(0,0,0,0.85);
+  white-space: pre-line;
+}
+.scene-title .by {
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  color: rgba(250, 240, 220, 0.55);
+  margin-top: 14px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   PROMPT — "click to continue" cue
+   ============================================================ */
+.prompt {
+  position: fixed;
+  bottom: 7vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 130;
+  color: rgba(245, 235, 215, 0.85);
+  font-size: 11px;
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  text-align: center;
+  pointer-events: none;
+  animation: breathe 2.8s ease-in-out infinite;
+}
+.prompt.gone { opacity: 0; transition: opacity 0.5s; }
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, 0); }
+  50%      { opacity: 1; transform: translate(-50%, -3px); }
+}
+.prompt .glyph { display: inline-block; margin: 0 12px; opacity: 0.7; }
+
+/* ============================================================
+   PROGRESS BAR — bottom edge
+   ============================================================ */
+.progress {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: rgba(245, 235, 215, 0.1);
+  z-index: 150;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--brass);
+  transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   HUD — top label + bottom-right buttons
+   ============================================================ */
+.hud-top {
+  position: fixed;
+  top: 22px; left: 22px;
+  z-index: 200;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  color: rgba(245, 235, 215, 0.5);
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+}
+.hud-bottom-right {
+  position: fixed;
+  bottom: 18px; right: 18px;
+  display: flex; gap: 10px;
+  z-index: 200;
+}
+.hud-bottom-right button {
+  width: 40px; height: 40px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(20, 15, 10, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(245, 235, 215, 0.85);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+.hud-bottom-right button:hover { background: rgba(40, 30, 20, 0.75); transform: scale(1.06); }
+
+/* "Prompts" reference button → opens a panel */
+.prompts-panel {
+  position: fixed;
+  top: 56px; right: 18px;
+  width: 360px;
+  max-height: 70vh;
+  background: rgba(20, 15, 10, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 18px;
+  color: rgba(245, 235, 215, 0.92);
+  z-index: 250;
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.5;
+  display: none;
+}
+.prompts-panel.open { display: block; }
+.prompts-panel h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 18px;
+  margin: 0 0 4px 0;
+}
+.prompts-panel .lede {
+  font-size: 11px;
+  color: rgba(245, 235, 215, 0.55);
+  margin-bottom: 14px;
+}
+.prompts-panel .scene-prompt {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.prompts-panel .scene-prompt:first-of-type {
+  border-top: 0; padding-top: 0; margin-top: 0;
+}
+.prompts-panel .scene-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--brass);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.prompts-panel .prompt-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(245, 235, 215, 0.85);
+  background: rgba(0,0,0,0.35);
+  padding: 8px 10px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.prompts-panel .copy-btn {
+  margin-top: 6px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(245, 235, 215, 0.85);
+  padding: 4px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.prompts-panel .copy-btn:hover { background: rgba(255,255,255,0.1); }
+.prompts-panel .copied { color: var(--brass); }
+
+/* ============================================================
+   CATALOG (book overlay)
+   ============================================================ */
+.catalog-overlay {
+  position: fixed; inset: 0;
+  z-index: 300;
+  background: radial-gradient(ellipse at center, rgba(40, 30, 18, 0.95) 0%, rgba(8, 6, 4, 0.99) 80%);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.catalog-overlay.visible { opacity: 1; pointer-events: auto; }
+.book {
+  position: relative;
+  width: min(86vw, 1100px);
+  height: min(72vh, 680px);
+  display: flex;
+  box-shadow: 0 60px 140px rgba(0,0,0,0.85);
+}
+.book-page {
+  flex: 1;
+  background: #f4ecd7;
+  position: relative;
+  overflow: hidden;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(120, 90, 50, 0.14) 100%);
+}
+.book-page.left  { box-shadow: inset -14px 0 36px rgba(90, 74, 42, 0.18); border-right: 1px solid rgba(90, 74, 42, 0.3); }
+.book-page.right { box-shadow: inset 14px 0 36px rgba(90, 74, 42, 0.18); }
+
+.spread { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 54px; }
+.spread .eyebrow { font-size: 10px; letter-spacing: 0.55em; color: var(--accent); text-transform: uppercase; }
+.spread .title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 4.4vw, 60px);
+  line-height: 1; margin-top: 16px;
+  white-space: pre-line;
+}
+.spread .body {
+  font-size: 14px; line-height: 1.65;
+  color: var(--ink-soft);
+  margin-top: 22px;
+  max-width: 36ch;
+}
+.spread .meta {
+  margin-top: auto;
+  font-size: 9px; letter-spacing: 0.45em;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px;
+  font-size: 9px; letter-spacing: 0.4em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink-soft);
+  color: var(--ink-soft);
+  border-radius: 100px;
+  margin-top: 16px;
+  align-self: flex-start;
+}
+.page-no {
+  position: absolute; bottom: 22px;
+  font-size: 9px; letter-spacing: 0.4em;
+  color: var(--ink-faint);
+  font-family: 'JetBrains Mono', monospace;
+}
+.book-page.left .page-no { left: 32px; }
+.book-page.right .page-no { right: 32px; }
+.spread-illus image-slot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  --is-bg: #1a1410;
+}
+.spread-illus { width: 100%; height: 100%; }
+.flip {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px;
+  border: 1px solid rgba(245, 235, 215, 0.45);
+  background: rgba(245, 235, 215, 0.08);
+  color: rgba(245, 235, 215, 0.9);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; z-index: 10;
+  font-family: serif; cursor: pointer;
+  transition: background 0.15s, transform 0.15s, opacity 0.2s;
+}
+.flip:hover { background: rgba(245, 235, 215, 0.18); transform: translateY(-50%) scale(1.06); }
+.flip.prev { left: -78px; } .flip.next { right: -78px; }
+.flip.disabled { opacity: 0.15; pointer-events: none; }
+.book-dots {
+  position: absolute; bottom: -42px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 10px;
+}
+.book-dots .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(245, 235, 215, 0.25);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.book-dots .dot.active { background: var(--accent); transform: scale(1.6); }
+.catalog-close {
+  position: absolute; top: 28px; right: 28px;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(245, 235, 215, 0.4);
+  background: rgba(20, 15, 10, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(245, 235, 215, 0.75);
+  border-radius: 50%; font-family: serif; font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 12;
+}
+.catalog-close:hover { background: rgba(40, 30, 20, 0.6); color: var(--paper); }
+.shop-cta {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 16px 30px;
+  background: var(--accent);
+  color: var(--paper);
+  font-size: 11px; letter-spacing: 0.4em;
+  text-transform: uppercase;
+  border: none; cursor: pointer;
+  font-family: inherit;
+  margin-top: 28px;
+  align-self: flex-start;
+  transition: gap 0.2s, background 0.2s;
+}
+.shop-cta:hover { background: #6f2a1c; gap: 22px; }
+
+/* Handoff */
+.handoff {
+  position: fixed; inset: 0;
+  background: var(--paper);
+  z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.handoff.visible { opacity: 1; pointer-events: auto; }
+.handoff-card { text-align: center; max-width: 520px; padding: 40px; }
+.handoff-card .url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.3em;
+  color: var(--ink-faint);
+  margin-bottom: 28px;
+}
+.handoff-card .head {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(38px, 5vw, 60px);
+  letter-spacing: 0.16em;
+  line-height: 1.15;
+}
+.handoff-card .sub {
+  font-size: 11px; letter-spacing: 0.45em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-top: 22px;
+}
+.handoff-dots { display: inline-flex; gap: 8px; margin-top: 32px; }
+.handoff-dots span {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent);
+  animation: dotwave 1.5s ease-in-out infinite;
+}
+.handoff-dots span:nth-child(2) { animation-delay: 0.15s; }
+.handoff-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dotwave {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50%      { opacity: 1; transform: translateY(-5px); }
+}
+
+/* Global wipe */
+.wipe {
+  position: fixed; inset: 0;
+  background: var(--paper);
+  z-index: 350;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.5, 0, 0.5, 1);
+}
+.wipe.on { opacity: 1; }
+
+/* Camera "walk forward" zoom transition applied to whole scene-layer */
+.scene-layer.dolly-out {
+  animation: dollyOut 1.6s cubic-bezier(0.5, 0.05, 0.3, 1) forwards;
+}
+@keyframes dollyOut {
+  0%   { transform: scale(1) translateZ(0); }
+  100% { transform: scale(1.4) translateZ(0); opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  .flip.prev { left: -8px; background: rgba(20,15,10,0.6); }
+  .flip.next { right: -8px; background: rgba(20,15,10,0.6); }
+  .spread { padding: 28px; }
+  .door-frame { width: 78vw; }
+  .brand-above .name { font-size: 32px; letter-spacing: 0.4em; }
+}

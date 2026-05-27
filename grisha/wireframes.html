@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Grisha — Boutique Entry Wireframes</title>
+<meta name="viewport" content="width=1280" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Cormorant+Garamond:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="sketch.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  body { font-family: 'Kalam', cursive; color: #1a1714; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="primitives.jsx"></script>
+<script type="text/babel" src="variations-a.jsx"></script>
+<script type="text/babel" src="variations-b.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const DESKTOP_W = 540;
+const DESKTOP_H = 340;
+const MOBILE_W = 200;
+const MOBILE_H = 360;
+
+const App = () => (
+  <DesignCanvas
+    title="Grisha — Entry Experience"
+    subtitle="5 wireframe directions for the boutique landing → reception → catalog → GHL shop hand‑off. Sketchy / lo‑fi by intent.">
+
+    {/* ============ V1 ============ */}
+    <DCSection id="v1" title="01 · Classic Foyer"
+      subtitle="One illustrated foyer scene. Doors open inline → hotspots reveal Reception + 3 rooms. Catalog opens as a fullscreen book. Grounded, fastest to build.">
+      <DCArtboard id="v1-d1" label="Desktop · 01 Arrival" width={DESKTOP_W} height={DESKTOP_H}><V1_Desktop_01/></DCArtboard>
+      <DCArtboard id="v1-d2" label="Desktop · 02 Foyer" width={DESKTOP_W} height={DESKTOP_H}><V1_Desktop_02/></DCArtboard>
+      <DCArtboard id="v1-d3" label="Desktop · 03 Catalog" width={DESKTOP_W} height={DESKTOP_H}><V1_Desktop_03/></DCArtboard>
+      <DCArtboard id="v1-d4" label="Desktop · 04 Handoff" width={DESKTOP_W} height={DESKTOP_H}><V1_Desktop_04/></DCArtboard>
+      <DCArtboard id="v1-m1" label="Mobile · 01" width={MOBILE_W} height={MOBILE_H}><V1_Mobile frame={1}/></DCArtboard>
+      <DCArtboard id="v1-m2" label="Mobile · 02" width={MOBILE_W} height={MOBILE_H}><V1_Mobile frame={2}/></DCArtboard>
+      <DCArtboard id="v1-m3" label="Mobile · 03" width={MOBILE_W} height={MOBILE_H}><V1_Mobile frame={3}/></DCArtboard>
+    </DCSection>
+
+    {/* ============ V2 ============ */}
+    <DCSection id="v2" title="02 · Cinematic Scroll Walk-in"
+      subtitle="Vertical scroll drives the camera forward. Doors → corridor → reception → catalog. Scroll-jacked, story-like. Heaviest motion design.">
+      <DCArtboard id="v2-d1" label="Desktop · 0% scroll" width={DESKTOP_W} height={DESKTOP_H}><V2_Desktop_01/></DCArtboard>
+      <DCArtboard id="v2-d2" label="Desktop · 50% scroll" width={DESKTOP_W} height={DESKTOP_H}><V2_Desktop_02/></DCArtboard>
+      <DCArtboard id="v2-d3" label="Desktop · 80% scroll" width={DESKTOP_W} height={DESKTOP_H}><V2_Desktop_03/></DCArtboard>
+      <DCArtboard id="v2-d4" label="Desktop · 100% scroll" width={DESKTOP_W} height={DESKTOP_H}><V2_Desktop_04/></DCArtboard>
+      <DCArtboard id="v2-m1" label="Mobile · 0%" width={MOBILE_W} height={MOBILE_H}><V2_Mobile frame={1}/></DCArtboard>
+      <DCArtboard id="v2-m2" label="Mobile · 50%" width={MOBILE_W} height={MOBILE_H}><V2_Mobile frame={2}/></DCArtboard>
+      <DCArtboard id="v2-m3" label="Mobile · 100%" width={MOBILE_W} height={MOBILE_H}><V2_Mobile frame={3}/></DCArtboard>
+    </DCSection>
+
+    {/* ============ V3 ============ */}
+    <DCSection id="v3" title="03 · Floor Plan (top‑down)"
+      subtitle="After doors open, switch to a top-down architectural plan. Cursor or arrow keys move a dot through rooms. Reception → catalog overlay → Shop. Most legible IA, least photo‑real.">
+      <DCArtboard id="v3-d1" label="Desktop · 01 Doors" width={DESKTOP_W} height={DESKTOP_H}><V3_Desktop_01/></DCArtboard>
+      <DCArtboard id="v3-d2" label="Desktop · 02 Plan" width={DESKTOP_W} height={DESKTOP_H}><V3_Desktop_02/></DCArtboard>
+      <DCArtboard id="v3-d3" label="Desktop · 03 Catalog" width={DESKTOP_W} height={DESKTOP_H}><V3_Desktop_03/></DCArtboard>
+      <DCArtboard id="v3-m1" label="Mobile · 01" width={MOBILE_W} height={MOBILE_H}><V3_Mobile frame={1}/></DCArtboard>
+      <DCArtboard id="v3-m2" label="Mobile · 02" width={MOBILE_W} height={MOBILE_H}><V3_Mobile frame={2}/></DCArtboard>
+      <DCArtboard id="v3-m3" label="Mobile · 03" width={MOBILE_W} height={MOBILE_H}><V3_Mobile frame={3}/></DCArtboard>
+    </DCSection>
+
+    {/* ============ V4 ============ */}
+    <DCSection id="v4" title="04 · Split-Screen Reception"
+      subtitle="Doors part horizontally → screen splits into two columns. Left: receptionist line + room links. Right: live catalog. Most narrative; fewest taps to Shop.">
+      <DCArtboard id="v4-d1" label="Desktop · 01 Doors" width={DESKTOP_W} height={DESKTOP_H}><V4_Desktop_01/></DCArtboard>
+      <DCArtboard id="v4-d2" label="Desktop · 02 Split" width={DESKTOP_W} height={DESKTOP_H}><V4_Desktop_02/></DCArtboard>
+      <DCArtboard id="v4-d3" label="Desktop · 03 Focused" width={DESKTOP_W} height={DESKTOP_H}><V4_Desktop_03/></DCArtboard>
+      <DCArtboard id="v4-m1" label="Mobile · 01" width={MOBILE_W} height={MOBILE_H}><V4_Mobile frame={1}/></DCArtboard>
+      <DCArtboard id="v4-m2" label="Mobile · 02" width={MOBILE_W} height={MOBILE_H}><V4_Mobile frame={2}/></DCArtboard>
+      <DCArtboard id="v4-m3" label="Mobile · 03" width={MOBILE_W} height={MOBILE_H}><V4_Mobile frame={3}/></DCArtboard>
+    </DCSection>
+
+    {/* ============ V5 — WILDCARD ============ */}
+    <DCSection id="v5" title="05 · First-Person POV  ✦ wildcard"
+      subtitle="You see two hands push the doors apart. Camera walks in. Cursor controls gaze (parallax). The book floats up to your face, opens, then dissolves through into the GHL shop. Most ambitious; risk = on slow connections this feels heavy.">
+      <DCArtboard id="v5-d1" label="Desktop · 01 Hands" width={DESKTOP_W} height={DESKTOP_H}><V5_Desktop_01/></DCArtboard>
+      <DCArtboard id="v5-d2" label="Desktop · 02 Inside" width={DESKTOP_W} height={DESKTOP_H}><V5_Desktop_02/></DCArtboard>
+      <DCArtboard id="v5-d3" label="Desktop · 03 Book rises" width={DESKTOP_W} height={DESKTOP_H}><V5_Desktop_03/></DCArtboard>
+      <DCArtboard id="v5-d4" label="Desktop · 04 Zoom-through" width={DESKTOP_W} height={DESKTOP_H}><V5_Desktop_04/></DCArtboard>
+      <DCArtboard id="v5-m1" label="Mobile · 01" width={MOBILE_W} height={MOBILE_H}><V5_Mobile frame={1}/></DCArtboard>
+      <DCArtboard id="v5-m2" label="Mobile · 02" width={MOBILE_W} height={MOBILE_H}><V5_Mobile frame={2}/></DCArtboard>
+      <DCArtboard id="v5-m3" label="Mobile · 03" width={MOBILE_W} height={MOBILE_H}><V5_Mobile frame={3}/></DCArtboard>
+    </DCSection>
+
+    {/* ============ Shared flow card ============ */}
+    <DCSection id="flow" title="Shared flow — every variation routes here"
+      subtitle="The end state is identical across all 5 directions: a soft hand-off to the GHL funnel sub-domain.">
+      <DCArtboard id="flow-1" label="Flow diagram" width={780} height={260}>
+        <div className="sk-paper-clean" style={{ width: '100%', height: '100%', padding: 24, position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%', gap: 12 }}>
+            {[
+              { l: 'Closed Doors', s: 'grisha.in', em: '✦' },
+              { l: 'Open + Foyer', s: 'reveal scene', em: '→' },
+              { l: 'Reception', s: 'meet / read', em: '👤' },
+              { l: 'Catalog (book)', s: 'flip pages', em: '📖' },
+              { l: 'Shop', s: 'shop.grisha.in', em: '↗', accent: true },
+            ].map((s, i, arr) => (
+              <React.Fragment key={i}>
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                  <div className={s.accent ? 'sk-box-accent' : 'sk-box'}
+                       style={{ padding: 16, minHeight: 90, display: 'flex', flexDirection: 'column',
+                                alignItems: 'center', justifyContent: 'center',
+                                background: s.accent ? 'var(--paper)' : 'var(--paper-warm)' }}>
+                    <div style={{ fontSize: 22 }}>{s.em}</div>
+                    <div style={{ fontWeight: 700, marginTop: 4 }}>{s.l}</div>
+                    <div className="sk-mono" style={{ fontSize: 10, color: 'var(--ink-faint)', marginTop: 2 }}>{s.s}</div>
+                  </div>
+                </div>
+                {i < arr.length - 1 && (
+                  <div style={{ flex: '0 0 auto', color: 'var(--ink-faint)', fontSize: 22 }}>→</div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </DCArtboard>
+      <DCArtboard id="flow-2" label="GHL hand-off note" width={360} height={260}>
+        <div className="sk-paper-clean" style={{ width: '100%', height: '100%', padding: 18 }}>
+          <div className="sk-cap" style={{ fontSize: 11, letterSpacing: 2, color: 'var(--accent)' }}>GHL HAND-OFF — RECIPE</div>
+          <ol style={{ paddingLeft: 18, lineHeight: 1.4, fontSize: 13, marginTop: 8 }}>
+            <li>CTA fires a full-bleed wipe (warm paper colour).</li>
+            <li>During wipe, browser navigates to <span className="sk-mono">shop.grisha.in</span>.</li>
+            <li>GHL page loads with the same warm bg + 200 ms entry fade so the seam disappears.</li>
+            <li>Back button restores the boutique state (use sessionStorage).</li>
+          </ol>
+          <Note style={{ marginTop: 8 }} rotate={-1.5}>
+            Share fonts &amp; bg colour across both domains — the rest is just timing.
+          </Note>
+        </div>
+      </DCArtboard>
+    </DCSection>
+
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

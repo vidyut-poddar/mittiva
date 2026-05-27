@@ -22,12 +22,124 @@
 
   <!-- Swinging Jungle Monkey (Visual Reference 4) -->
   <div class="swinging-monkey-container">
-    <img src="assets/cartoon_monkey.png" alt="Swinging Cartoon Monkey" class="monkey-img">
+    <svg viewBox="0 0 120 220" class="monkey-svg">
+      <!-- Vine -->
+      <path d="M 60 0 Q 56 60 64 120 Q 60 140 60 160" stroke="#8e5a30" stroke-width="3" fill="none" />
+      <path d="M 62 40 Q 75 42 70 35" stroke="#27ae60" stroke-width="2.5" fill="none" stroke-linecap="round" /> <!-- leaf -->
+      <path d="M 58 90 Q 45 92 50 85" stroke="#27ae60" stroke-width="2.5" fill="none" stroke-linecap="round" /> <!-- leaf -->
+      
+      <!-- Monkey Group for physics sways -->
+      <g class="monkey-body-group">
+        <!-- Tail -->
+        <path class="monkey-tail" d="M 60 190 Q 75 220 95 210 Q 105 200 95 190 Q 90 195 92 200" stroke="#7d5230" stroke-width="4" fill="none" stroke-linecap="round" />
+        
+        <!-- Left Leg -->
+        <path d="M 50 185 Q 40 205 32 205" stroke="#7d5230" stroke-width="6" fill="none" stroke-linecap="round" />
+        <!-- Right Leg -->
+        <path d="M 70 185 Q 80 205 88 205" stroke="#7d5230" stroke-width="6" fill="none" stroke-linecap="round" />
+        
+        <!-- Body -->
+        <circle cx="60" cy="170" r="22" fill="#7d5230" />
+        <circle cx="60" cy="172" r="14" fill="#f5cd79" /> <!-- Belly -->
+        
+        <!-- Left Arm (Holding Vine) -->
+        <path d="M 42 160 Q 30 140 58 125" stroke="#7d5230" stroke-width="5.5" fill="none" stroke-linecap="round" />
+        <!-- Right Arm (Holding Vine) -->
+        <path d="M 78 160 Q 90 140 62 125" stroke="#7d5230" stroke-width="5.5" fill="none" stroke-linecap="round" />
+        
+        <!-- Ears -->
+        <circle cx="40" cy="142" r="7" fill="#7d5230" />
+        <circle cx="40" cy="142" r="4.5" fill="#f5cd79" />
+        <circle cx="80" cy="142" r="7" fill="#7d5230" />
+        <circle cx="80" cy="142" r="4.5" fill="#f5cd79" />
+        
+        <!-- Head -->
+        <circle cx="60" cy="142" r="19" fill="#7d5230" />
+        <!-- Face mask (peach) -->
+        <path d="M 45 145 C 45 133 52 133 60 138 C 68 133 75 133 75 145 C 75 156 68 158 60 156 C 52 158 45 156 45 145 Z" fill="#f5cd79" />
+        
+        <!-- Eyes -->
+        <circle cx="53" cy="140" r="3.5" fill="#ffffff" />
+        <circle cx="53" cy="140" r="2" fill="#2c3e50" />
+        <circle cx="54" cy="139" r="0.75" fill="#ffffff" />
+        
+        <circle cx="67" cy="140" r="3.5" fill="#ffffff" />
+        <circle cx="67" cy="140" r="2" fill="#2c3e50" />
+        <circle cx="68" cy="139" r="0.75" fill="#ffffff" />
+        
+        <!-- Nose / Mouth -->
+        <circle cx="60" cy="146" r="1.5" fill="#7d5230" />
+        <path d="M 54 148 Q 60 153 66 148" stroke="#7d5230" stroke-width="1.5" fill="none" stroke-linecap="round" />
+        
+        <!-- Rosy Cheeks -->
+        <circle cx="48" cy="146" r="2" fill="#ff7675" opacity="0.6" />
+        <circle cx="72" cy="146" r="2" fill="#ff7675" opacity="0.6" />
+      </g>
+    </svg>
   </div>
 
   <!-- Hopping Deer Silhouette -->
   <div class="hopping-deer" id="hoppingDeer">
-    <img src="assets/cartoon_deer.png" alt="Leaping Cartoon Deer" class="deer-img">
+    <svg viewBox="0 0 120 100" class="deer-svg">
+      <!-- Back legs (drawn behind body) -->
+      <g class="deer-leg back-left">
+        <path d="M 45 60 L 38 85 C 38 88, 35 88, 35 85 L 41 60 Z" fill="#9e663c" />
+        <path d="M 38 85 L 35 85 L 36 88 L 39 88 Z" fill="#573820" /> <!-- hoof -->
+      </g>
+      <g class="deer-leg back-right">
+        <path d="M 75 60 L 82 85 C 82 88, 85 88, 85 85 L 77 60 Z" fill="#9e663c" />
+        <path d="M 82 85 L 85 85 L 84 88 L 81 88 Z" fill="#573820" /> <!-- hoof -->
+      </g>
+
+      <!-- Tail -->
+      <path class="deer-tail" d="M 38 52 C 34 50, 32 45, 34 40 C 37 42, 38 46, 38 52 Z" fill="#c78652" />
+      <path d="M 37 50 C 35 48, 34 45, 35 42 C 37 44, 37 47, 37 50 Z" fill="#ffffff" /> <!-- tail inner -->
+      
+      <!-- Body -->
+      <ellipse cx="60" cy="58" rx="24" ry="16" fill="#c78652" />
+      <ellipse cx="58" cy="58" rx="20" ry="12" fill="#ffffff" opacity="0.15" /> <!-- belly highlight -->
+      
+      <!-- Bambi spots -->
+      <circle cx="52" cy="48" r="1.5" fill="#ffffff" />
+      <circle cx="60" cy="47" r="2.0" fill="#ffffff" />
+      <circle cx="68" cy="50" r="1.5" fill="#ffffff" />
+      
+      <!-- Chest / Neck (pointing forward and up) -->
+      <path d="M 76 50 Q 86 45 88 30 L 76 38 Z" fill="#c78652" />
+      <path d="M 78 48 C 84 45 85 38 82 32 Z" fill="#ffffff" /> <!-- neck front white -->
+      
+      <!-- Head -->
+      <circle cx="88" cy="24" r="12" fill="#c78652" />
+      <!-- Muzzle / Nose -->
+      <ellipse cx="96" cy="26" rx="6" ry="4" fill="#f5cd79" />
+      <circle cx="100" cy="24" r="2" fill="#2c3e50" />
+      
+      <!-- Ears -->
+      <g class="deer-ear">
+        <path d="M 82 16 Q 74 6 80 12 Z" fill="#c78652" />
+        <path d="M 82 16 Q 76 9 79 13 Z" fill="#f8c291" />
+      </g>
+      
+      <!-- Antlers (Cute small branches) -->
+      <path d="M 90 14 C 92 8, 96 6, 95 4 M 92 10 C 95 10, 97 8, 97 8" stroke="#8e5a30" stroke-width="2" fill="none" stroke-linecap="round" />
+      <path d="M 86 14 C 84 8, 80 6, 81 4 M 84 10 C 81 10, 79 8, 79 8" stroke="#8e5a30" stroke-width="2" fill="none" stroke-linecap="round" />
+
+      <!-- Eye: Big cute Disney eye -->
+      <circle cx="91" cy="20" r="3.5" fill="#ffffff" />
+      <circle cx="91.5" cy="20" r="2.2" fill="#2c3e50" />
+      <circle cx="92.5" cy="19" r="0.75" fill="#ffffff" />
+      <circle cx="89.5" cy="21" r="0.75" fill="#ffffff" />
+      
+      <!-- Front legs (drawn in front of body) -->
+      <g class="deer-leg front-left">
+        <path d="M 73 60 L 68 85 C 68 88, 65 88, 65 85 L 71 60 Z" fill="#c78652" />
+        <path d="M 68 85 L 65 85 L 66 88 L 69 88 Z" fill="#573820" /> <!-- hoof -->
+      </g>
+      <g class="deer-leg front-right">
+        <path d="M 78 60 L 85 85 C 85 88, 88 88, 88 85 L 80 60 Z" fill="#c78652" />
+        <path d="M 85 85 L 88 85 L 87 88 L 84 88 Z" fill="#573820" /> <!-- hoof -->
+      </g>
+    </svg>
   </div>
 
   <!-- Decorative Jungle Palm Trunks on Left/Right Borders (Visual Reference 2) -->

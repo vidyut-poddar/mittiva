@@ -225,46 +225,85 @@ section {
 /* Swinging Monkey (Visual Ref 4) */
 .swinging-monkey-container {
   position: fixed;
-  top: 2vh;
+  top: 0vh;
   left: 8vw;
-  width: 180px;
-  height: 180px;
+  width: 140px;
+  height: 256px;
   z-index: 98;
   pointer-events: none;
-  transform-origin: top center;
+  transform-origin: 60px 0px; /* Swing from where the vine starts at top */
   animation: monkeySwing 3.2s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
 }
 
-.monkey-img {
+.monkey-svg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  mix-blend-mode: screen;
+}
+
+.monkey-body-group {
+  transform-origin: 60px 125px; /* Pivot where arms hold the vine */
+  animation: monkeyBodySway 3.2s ease-in-out infinite alternate;
+}
+
+.monkey-tail {
+  transform-origin: 60px 190px;
+  animation: tailWag 2.5s ease-in-out infinite alternate;
 }
 
 @keyframes monkeySwing {
-  0% { transform: rotate(-10deg); }
-  100% { transform: rotate(10deg); }
+  0% { transform: rotate(-8deg); }
+  100% { transform: rotate(8deg); }
+}
+
+@keyframes monkeyBodySway {
+  0% { transform: rotate(-6deg); }
+  100% { transform: rotate(6deg); }
+}
+
+@keyframes tailWag {
+  0% { transform: rotate(-12deg); }
+  100% { transform: rotate(15deg); }
 }
 
 /* Hopping Deer (Visual Ref 4) */
 .hopping-deer {
   position: fixed;
-  bottom: 0.5vh;
+  bottom: 2vh;
   left: -200px;
-  width: 140px;
-  height: 140px;
+  width: 132px;
+  height: 110px;
   z-index: 90;
   pointer-events: none;
   animation: deerRun 15s linear infinite;
 }
 
-.deer-img {
+.deer-svg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  mix-blend-mode: screen;
   animation: deerHop 0.45s ease-in-out infinite alternate;
+}
+
+/* Leg Run Cycle Animation */
+.deer-leg.back-left {
+  transform-origin: 45px 60px;
+  animation: legSwingBack 0.4s ease-in-out infinite alternate;
+}
+.deer-leg.back-right {
+  transform-origin: 75px 60px;
+  animation: legSwingFront 0.4s ease-in-out infinite alternate;
+}
+.deer-leg.front-left {
+  transform-origin: 73px 60px;
+  animation: legSwingBack 0.4s ease-in-out infinite alternate;
+}
+.deer-leg.front-right {
+  transform-origin: 78px 60px;
+  animation: legSwingFront 0.4s ease-in-out infinite alternate;
+}
+
+.deer-tail {
+  transform-origin: 38px 52px;
+  animation: tailShake 0.4s ease-in-out infinite alternate;
 }
 
 @keyframes deerRun {
@@ -274,7 +313,22 @@ section {
 
 @keyframes deerHop {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-12px); }
+  100% { transform: translateY(-10px); }
+}
+
+@keyframes legSwingBack {
+  0% { transform: rotate(-25deg); }
+  100% { transform: rotate(20deg); }
+}
+
+@keyframes legSwingFront {
+  0% { transform: rotate(20deg); }
+  100% { transform: rotate(-25deg); }
+}
+
+@keyframes tailShake {
+  0% { transform: rotate(-10deg); }
+  100% { transform: rotate(15deg); }
 }
 
 /* Flying Birds Overlay */
@@ -289,15 +343,13 @@ section {
 .flying-bird {
   position: absolute;
   width: 65px;
-  height: 65px;
+  height: 52px;
   opacity: 0.95;
 }
 
-.bird-img {
+.bird-svg {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  mix-blend-mode: screen;
 }
 
 .bird-glide-ltr {
@@ -324,9 +376,29 @@ section {
   animation: birdBob 1.8s ease-in-out infinite alternate;
 }
 
+.wing-left {
+  transform-origin: 45px 40px;
+  animation: flapL 0.16s ease-in-out infinite alternate;
+}
+
+.wing-right {
+  transform-origin: 55px 45px;
+  animation: flapR 0.16s ease-in-out infinite alternate;
+}
+
 @keyframes birdBob {
   0% { transform: translateY(-6px); }
   100% { transform: translateY(6px); }
+}
+
+@keyframes flapL {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-45deg); }
+}
+
+@keyframes flapR {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(45deg); }
 }
 
 /* Top Navigation */

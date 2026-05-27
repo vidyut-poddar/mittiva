@@ -206,10 +206,37 @@ function initBirdSpawner() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return;
 
-  // Single illustrated bird image
+  // Detailed vector cartoon bird with flapping wings
   const birdInner = `
     <div class="bird-svg-wrap">
-      <img src="assets/cartoon_bird.png" alt="Flying Cartoon Bird" class="bird-img" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen;">
+      <svg viewBox="0 0 100 80" class="bird-svg" style="width: 100%; height: 100%;">
+        <!-- Left Wing (behind body) -->
+        <g class="wing-left">
+          <path d="M 45 40 C 30 20, 20 25, 25 45 C 30 55, 40 50, 45 40 Z" fill="#2a82c9" />
+          <path d="M 40 38 C 30 22, 25 28, 28 42 Z" fill="#ffd43f" />
+        </g>
+        <!-- Tail Feathers -->
+        <path d="M 35 55 C 20 65, 15 60, 20 50 Z" fill="#2a82c9" />
+        <path d="M 30 58 C 18 68, 15 65, 18 55 Z" fill="#ffd43f" />
+        <!-- Body -->
+        <circle cx="55" cy="48" r="22" fill="#3598db" /> <!-- Main blue body -->
+        <ellipse cx="60" cy="54" rx="14" ry="12" fill="#ffd43f" /> <!-- Yellow belly -->
+        <!-- Head / Face Details -->
+        <circle cx="65" cy="38" r="16" fill="#3598db" />
+        <!-- Eyes: Big Disney style -->
+        <circle cx="70" cy="34" r="5.5" fill="#ffffff" />
+        <circle cx="71" cy="34" r="3" fill="#2c3e50" />
+        <circle cx="72.5" cy="32.5" r="1" fill="#ffffff" />
+        <!-- Beak -->
+        <path d="M 78 36 Q 86 38 78 44 Z" fill="#e67e22" />
+        <!-- Rosy Cheek -->
+        <circle cx="63" cy="42" r="3.5" fill="#ff7675" opacity="0.6" />
+        <!-- Right Wing (in front of body) -->
+        <g class="wing-right">
+          <path d="M 55 45 C 45 25, 35 30, 40 50 C 45 60, 50 55, 55 45 Z" fill="#3598db" />
+          <path d="M 52 42 C 45 28, 38 32, 42 47 Z" fill="#ffd43f" />
+        </g>
+      </svg>
     </div>
   `;
 

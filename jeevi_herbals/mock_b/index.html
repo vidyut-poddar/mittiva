@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeevi Herbals - Traditional Ayurvedic Wisdom</title>
+  <meta name="description" content="Immerse yourself in traditional Ayurvedic care. Handcrafted skincare and hair care products sourced ethically from the wild forests of the Godavari Belt.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-mood="dusk">
+
+  <!-- Top-down Leaf Canopy Framing (Visual Reference 5) -->
+  <div class="canopy-leaves"></div>
+
+  <!-- Persistent Jungle Scene Background (Visual Reference 1) -->
+  <div class="jungle-scene">
+    <div class="js-vignette"></div>
+  </div>
+
+  <!-- Dynamic Flying Birds Container -->
+  <div id="birdContainer" class="bird-container"></div>
+
+  <!-- Swinging Jungle Monkey (Visual Reference 4) -->
+  <div class="swinging-monkey-container">
+    <svg viewBox="0 0 100 200" class="monkey-svg">
+      <!-- Hanging Vine -->
+      <path d="M 50 0 Q 48 50 52 100 Q 50 120 50 140" stroke="#2a1d12" stroke-width="2.5" fill="none" />
+      <!-- Monkey head -->
+      <circle cx="50" cy="140" r="14" fill="#5a3920" />
+      <circle cx="43" cy="140" r="4" fill="#c9912d" /> <!-- inner ear L -->
+      <circle cx="57" cy="140" r="4" fill="#c9912d" /> <!-- inner ear R -->
+      <!-- Face -->
+      <ellipse cx="50" cy="143" rx="10" ry="8" fill="#f3e8c8" />
+      <circle cx="47" cy="141" r="1.5" fill="#000" />
+      <circle cx="53" cy="141" r="1.5" fill="#000" />
+      <path d="M 47 146 Q 50 149 53 146" stroke="#000" stroke-width="1" fill="none" />
+      <!-- Body -->
+      <ellipse cx="50" cy="168" rx="16" ry="18" fill="#5a3920" />
+      <!-- Belly -->
+      <ellipse cx="50" cy="170" rx="10" ry="11" fill="#f3e8c8" />
+      <!-- Arms holding the vine up -->
+      <path d="M 34 165 Q 25 110 50 115" stroke="#5a3920" stroke-width="4.5" fill="none" stroke-linecap="round" />
+      <path d="M 66 165 Q 75 110 50 115" stroke="#5a3920" stroke-width="4.5" fill="none" stroke-linecap="round" />
+      <!-- Legs hanging down -->
+      <path d="M 42 184 Q 40 200 35 200" stroke="#5a3920" stroke-width="4" fill="none" stroke-linecap="round" />
+      <path d="M 58 184 Q 60 200 65 200" stroke="#5a3920" stroke-width="4" fill="none" stroke-linecap="round" />
+      <!-- Tail -->
+      <path d="M 50 186 Q 60 215 75 205" stroke="#5a3920" stroke-width="3" fill="none" stroke-linecap="round" />
+    </svg>
+  </div>
+
+  <!-- Hopping Deer Silhouette -->
+  <div class="hopping-deer" id="hoppingDeer">
+    <svg viewBox="0 0 100 80" class="deer-svg">
+      <path d="M 20 45 Q 35 45 50 40 Q 55 30 50 20 Q 50 10 55 5 Q 57 10 52 20 Q 62 10 66 12 Q 62 20 54 25 Q 58 40 70 42 Q 74 42 76 46 Q 70 48 65 46 Q 60 55 62 65 M 22 45 Q 20 55 18 65 M 48 41 Q 48 55 46 65 M 54 41 Q 56 55 58 65" stroke="#2a1d12" stroke-width="3.5" fill="#2a1d12" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M 20 45 C 10 42 5 48 8 50 C 12 52 18 48 20 45" fill="#2a1d12" />
+    </svg>
+  </div>
+
+  <!-- Decorative Jungle Palm Trunks on Left/Right Borders (Visual Reference 2) -->
+  <div class="jungle-border-left"></div>
+  <div class="jungle-border-right"></div>
+
+  <!-- Top Navigation -->
+  <header id="header">
+    <div class="topnav" id="topnav">
+      <a href="#" class="topnav-mark">
+        <span class="glyph">🌿</span>
+        <span class="wordmark">JEEVI<small>— Herbals —</small></span>
+      </a>
+      <ul class="topnav-links" id="navLinks">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#concern">Shop Concerns</a></li>
+        <li><a href="#sourcing">Godavari Forest</a></li>
+        <li><a href="#testimonials">Reviews</a></li>
+      </ul>
+      <div class="nav-actions" style="display: flex; gap: 1rem; pointer-events: auto;">
+        <a href="#concern" class="btn btn-primary" style="padding: 0.6rem 1.4rem; font-size: 0.85rem; border-radius: 4px;">Explore Blends</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-stream">
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <span class="hero-eyebrow"><span class="ornament"></span>Ayurveda from the Godavari forest<span class="ornament"></span></span>
+        <h1 class="hero-title" id="heroTitle">
+          <span>Untamed</span> <span>Purity,</span> <span>Wild</span> <span>Ayurvedic</span> <span>Secrets</span>
+        </h1>
+        <p class="hero-sub">
+          Handcrafted using pure botanical extracts sourced directly from the pesticide-free forest canopy of the Godavari Belt.
+        </p>
+        <div class="hero-actions" style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 2rem;">
+          <a href="#concern" class="btn btn-accent">Enter the Forest</a>
+          <a href="#sourcing" class="btn btn-secondary">Our Harvest Story</a>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        scroll down
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <!-- USP Ribbon -->
+    <div class="usp-ribbon">
+      <div class="usp-track">
+        <div class="usp-item"><span class="usp-icon">🍃</span> Foraged Botanical Herbs</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Cruelty-Free & Authentic</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> 100% Toxin & Chemical Free</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Hand-blended in Small Batches</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Empowering Forest Gatherers</div>
+        
+        <!-- Duplicate for loop -->
+        <div class="usp-item"><span class="usp-icon">🍃</span> Foraged Botanical Herbs</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Cruelty-Free & Authentic</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> 100% Toxin & Chemical Free</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Hand-blended in Small Batches</div>
+        <div class="usp-item"><span class="usp-icon">🍃</span> Empowering Forest Gatherers</div>
+      </div>
+    </div>
+
+    <!-- Concern Explorer Grid -->
+    <section class="concerns scroll-fade-in" id="concern">
+      <div class="container">
+        <div class="concerns-head">
+          <span class="concerns-head eyebrow">Targeted Healing</span>
+          <h2>Shop by <em>Concern</em></h2>
+          <p>Filter our wild-harvested remedies to target your specific skin or hair goals.</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="concern-filters">
+          <button class="filter-btn active" data-filter="all">All Blends</button>
+          <button class="filter-btn" data-filter="dull-skin">Dull Skin</button>
+          <button class="filter-btn" data-filter="hair-growth">Hair Growth</button>
+          <button class="filter-btn" data-filter="frizzy-hair">Frizzy Hair</button>
+          <button class="filter-btn" data-filter="damaged-hair">Damaged Hair</button>
+          <button class="filter-btn" data-filter="dandruff">Dandruff</button>
+          <button class="filter-btn" data-filter="acne">Acne & Pigment</button>
+        </div>
+
+        <div class="concern-results" id="productGrid">
+          <!-- Herbs Hair Oil -->
+          <div class="product-card" data-concerns="hair-growth frizzy-hair damaged-hair">
+            <span class="product-badge">Jungle Classic</span>
+            <div class="product-image-container">
+              <img src="assets/product_oil.png" alt="Jeevi Herbs Hair Oil on Tree Root" class="product-img">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Hair Care</span>
+              <h3 class="product-name">Herbs Hair Oil</h3>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span> (4.9)
+              </div>
+              <div class="product-concern-tags">
+                <span class="concern-tag">Hair Growth</span>
+                <span class="concern-tag">Anti-Frizz</span>
+              </div>
+            </div>
+            <div class="product-footer">
+              <span class="product-price">₹299</span>
+              <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem; border-radius: 4px;">Select Blend</a>
+            </div>
+          </div>
+
+          <!-- Dandruff Hair Oil -->
+          <div class="product-card" data-concerns="dandruff damaged-hair">
+            <div class="product-image-container">
+              <img src="assets/product_oil.png" alt="Jeevi Dandruff Hair Oil on Tree Root" class="product-img" style="filter: hue-rotate(50deg) saturate(1.2);">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Hair Care</span>
+              <h3 class="product-name">Dandruff Hair Oil</h3>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span> (4.8)
+              </div>
+              <div class="product-concern-tags">
+                <span class="concern-tag">Dandruff</span>
+                <span class="concern-tag">Scalp Care</span>
+              </div>
+            </div>
+            <div class="product-footer">
+              <span class="product-price">₹280</span>
+              <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem; border-radius: 4px;">Select Blend</a>
+            </div>
+          </div>
+
+          <!-- Vetiver Soap -->
+          <div class="product-card" data-concerns="dull-skin acne">
+            <span class="product-badge">Wild Vetiver</span>
+            <div class="product-image-container">
+              <img src="assets/product_soap.png" alt="Jeevi Vetiver Soap on Slate Rock" class="product-img">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Bath & Body</span>
+              <h3 class="product-name">Vetiver Soap</h3>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span> (4.9)
+              </div>
+              <div class="product-concern-tags">
+                <span class="concern-tag">Dull Skin</span>
+                <span class="concern-tag">Acne Control</span>
+              </div>
+            </div>
+            <div class="product-footer">
+              <span class="product-price">₹149</span>
+              <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem; border-radius: 4px;">Select Blend</a>
+            </div>
+          </div>
+
+          <!-- Face Pack Powder -->
+          <div class="product-card" data-concerns="acne dull-skin pigmentation">
+            <span class="product-badge">Forest Clay</span>
+            <div class="product-image-container">
+              <img src="assets/product_facepack.png" alt="Jeevi Face Pack Powder in Hollow Trunk" class="product-img">
+            </div>
+            <div class="product-info">
+              <span class="product-category">Skin Care</span>
+              <h3 class="product-name">Face Pack Powder</h3>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span> (4.9)
+              </div>
+              <div class="product-concern-tags">
+                <span class="concern-tag">Brightening</span>
+                <span class="concern-tag">Pore Purify</span>
+              </div>
+            </div>
+            <div class="product-footer">
+              <span class="product-price">₹199</span>
+              <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.8rem; border-radius: 4px;">Select Blend</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Godavari Sourcing Section (Visual Reference 3) -->
+    <section class="sourcing scroll-fade-in" id="sourcing">
+      <div class="container sourcing-grid">
+        <div class="sourcing-content">
+          <span class="section-subtitle">Deep Forest Foraging</span>
+          <h2 class="section-title">Secrets of the Godavari Wilderness</h2>
+          <p class="sourcing-text">
+            Our active botanicals are harvested from the unpolluted forest canopies of the Godavari Belt. In union with native **Girijan tribal collectables**, we gather raw roots and leaves at their seasonal peak when natural elements are most potent.
+          </p>
+          <div class="sourcing-highlights">
+            <div class="highlight-box">
+              <h4 class="highlight-title">Wild Foraged</h4>
+              <p class="highlight-desc">Foraged in wild ecosystems, guaranteeing high organic bio-nutrients.</p>
+            </div>
+            <div class="highlight-box">
+              <h4 class="highlight-title">Fair Trade</h4>
+              <p class="highlight-desc">Sourced hand-in-hand with forest tribes for sustainable livelihood.</p>
+            </div>
+          </div>
+        </div>
+        <div class="sourcing-visual">
+          <img src="assets/sourcing_map.png" alt="Watercolor waterfall in deep jungle, Jungle Book theme" width="550" height="550">
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Carousel Section -->
+    <section class="testimonials scroll-fade-in" id="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Tribal Wisdom, Tested Results</span>
+          <h2 class="section-title">Tested & Loved</h2>
+          <p style="color: var(--text-light)">Read how our wild-harvested routines are transforming hair and skin.</p>
+        </div>
+
+        <div class="testimonials-container">
+          <div class="testimonial-track">
+            <!-- Slide 1 -->
+            <div class="testimonial-slide active">
+              <p class="testimonial-quote">"I used your face pack... really loved it! I can see a clear difference after using it. Best product purchase till date. Gonna recommend to my friends too!"</p>
+              <div class="testimonial-author">
+                <span class="author-name">Rithika</span>
+                <span class="author-verified">✓ Verified Explorer</span>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="testimonial-slide">
+              <p class="testimonial-quote">"This hair oil has made my hair so much smoother and healthier. I have noticed a significant reduction in frizz. Your vetiver soap is also really nice for my skin."</p>
+              <div class="testimonial-author">
+                <span class="author-name">Lakshimidevi</span>
+                <span class="author-verified">✓ Verified Explorer</span>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="testimonial-slide">
+              <p class="testimonial-quote">"Unga product use pannathunala yen hair growth romba nalla growth aguthu... forehead la babyhair um nalla valanthirukku! Thank you mam."</p>
+              <div class="testimonial-author">
+                <span class="author-name">Divya</span>
+                <span class="author-verified">✓ Verified Explorer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-nav">
+            <button class="test-nav-btn" id="prevTestimonial" aria-label="Previous Review">←</button>
+            <button class="test-nav-btn" id="nextTestimonial" aria-label="Next Review">→</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <h3 class="footer-logo">🌿 Jeevi <span>Herbals</span></h3>
+          <p class="footer-desc">
+            Sustainably forged alongside tribal gatherers of the Godavari Belt to bring the untamed wisdom of Ayurveda to your daily ritual.
+          </p>
+          <div class="footer-socials">
+            <a href="https://www.instagram.com/jeeviherbals" target="_blank" class="social-icon" aria-label="Instagram">📸</a>
+            <a href="#" class="social-icon" aria-label="Facebook">👤</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-title">Jungle Path</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">Jungle Home</a></li>
+            <li><a href="#concern">Shop Concerns</a></li>
+            <li><a href="#sourcing">Forest Secrets</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Wisdom & Policy</h4>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Shipping & Returns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="footer-title">Contact Us</h4>
+          <div class="footer-contact">
+            <div class="contact-item">
+              <span class="contact-icon">📧</span>
+              <div class="contact-details">Jeeviherbalproducts@gmail.com</div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📞</span>
+              <div class="contact-details">+91 7358561166</div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📍</span>
+              <div class="contact-details">
+                No. 33 Jagadambigai Street,<br>
+                Thirumangalam, Anna Nagar,<br>
+                Chennai 600040
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <div>© 2026 Jeevi Herbals. All Rights Reserved.</div>
+        <div>Designed with Untamed Care.</div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

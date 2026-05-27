@@ -1,4 +1,4 @@
-// Grisha — synthesized SFX (grand & chic, no creaks)
+// Grisa — synthesized SFX (grand & chic, no creaks)
 
 (function () {
   let ctx = null;

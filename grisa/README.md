@@ -1,6 +1,6 @@
-# Grisha
+# Grisa
 
-A photoreal, first-person POV landing experience for **Grisha** — a high-end fashion boutique in Ballygunge, Kolkata. The user walks through the storefront, past the boutique tree, up to the reception counter, opens the catalogue, and is handed off to the shop funnel.
+A photoreal, first-person POV landing experience for **Grisa** — a high-end fashion boutique in Ballygunge, Kolkata. The user walks through the storefront, past the boutique tree, up to the reception counter, opens the catalogue, and is handed off to the shop funnel.
 
 ## Run locally
 

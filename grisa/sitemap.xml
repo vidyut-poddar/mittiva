@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Landing experience — the photoreal POV walk-through -->
+  <url>
+    <loc>https://vidyut-poddar.github.io/mittiva/grisa/</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-03-tree.png</image:loc>
+      <image:title>The Grisa tree — handbags hanging like fruit from a ficus inside the boutique.</image:title>
+      <image:caption>Eye-level photograph of the signature ficus tree at Grisa, with hand-made designer handbags hanging from its branches.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-04-reception.png</image:loc>
+      <image:title>Grisa reception counter, with the S/S 2026 catalogue set on dark walnut.</image:title>
+      <image:caption>A warm-wood reception counter inside Grisa, a cream-bound catalogue waiting under a pool of light.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://vidyut-poddar.github.io/mittiva/grisa/photos/scene-05-book.png</image:loc>
+      <image:title>The Grisa Catalogue — S/S 2026 cover.</image:title>
+      <image:caption>Cream linen-bound hardcover catalogue, embossed in brass: Grisa, S/S 2026, Kolkata.</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

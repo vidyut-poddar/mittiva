@@ -1,4 +1,4 @@
-// Grisha — Photoreal POV (image-slot driven storyboard)
+// Grisa — Photoreal POV (image-slot driven storyboard)
 // 6 scenes, each a full-bleed <image-slot>. Drop your AI-generated photos in.
 // Smooth cross-dissolves + Ken Burns motion + a door-opening overlay on scene 0.
 
@@ -16,7 +16,7 @@ const SCENES = [
     promptName: 'Storefront — exterior at night',
     prompt:
       'A high-end fashion boutique storefront in Ballygunge, Kolkata at dusk. ' +
-      'Dark teal (forest green) metal-framed glass double doors, brass handles, soft etched "GRISHA" wordmark. ' +
+      'Dark teal (forest green) metal-framed glass double doors, brass handles, soft etched "GRISA" wordmark. ' +
       'Polished concrete approach, warm interior glow visible faintly through tinted glass. ' +
       'Industrial-meets-luxury, minimal signage, cinematic 35mm photograph, warm tungsten + cool dusk mix, ' +
       'shallow depth of field, eye-level, hyper-realistic. Aspect 16:9.',
@@ -25,7 +25,7 @@ const SCENES = [
     id: 'threshold',
     label: '01 / Threshold',
     kb: 'dolly-fwd',
-    title: { quote: '"Aaiye, Grisha mein swagat hai."', by: '— SOFTLY, AS YOU STEP IN' },
+    title: { quote: '"Aaiye, Grisa mein swagat hai."', by: '— SOFTLY, AS YOU STEP IN' },
     promptName: 'Threshold — just inside the open doors',
     prompt:
       'First-person POV stepping through dark teal metal-framed glass doors into a high-end Indian boutique. ' +
@@ -53,7 +53,7 @@ const SCENES = [
     label: '03 / The Tree',
     kb: 'zoom-in',
     defaultImg: 'photos/scene-03-tree.png',
-    title: { quote: '"A boutique grows like a garden —\neach piece, a fruit of someone\'s hand."', by: '— THE GRISHA TREE' },
+    title: { quote: '"A boutique grows like a garden —\neach piece, a fruit of someone\'s hand."', by: '— THE GRISA TREE' },
     promptName: 'The signature tree with handbags',
     prompt:
       'Eye-level photograph of a large indoor faux ficus tree, full lush green canopy, ' +
@@ -85,7 +85,7 @@ const SCENES = [
     promptName: 'Catalogue cover (close-up)',
     prompt:
       'Close-up overhead shot of a cream linen-bound hardcover book on a dark walnut counter. ' +
-      'Front cover embossed in brass: "GRISHA — The Catalogue, S/S 2026, Kolkata". ' +
+      'Front cover embossed in brass: "GRISA — The Catalogue, S/S 2026, Kolkata". ' +
       'Soft warm light from one side, deep shadow on the other, polished concrete floor faintly visible. ' +
       'Editorial, quiet luxury, hyper-realistic, 35mm, 16:9.',
   },
@@ -95,7 +95,7 @@ const SCENES = [
 const SPREADS = [
   {
     eyebrow: 'Cover',
-    title: 'Grisha\nThe Catalogue',
+    title: 'Grisa\nThe Catalogue',
     body: 'A boutique grows like a garden. This is its season.',
     meta: 'S/S · 2026 · KOLKATA',
     slotId: 'spread-cover',
@@ -137,8 +137,8 @@ const SPREADS = [
   {
     eyebrow: 'Enter The Shop',
     title: 'Come,\nshop the shelf.',
-    body: 'Everything you\'ve seen — and more — live on the shop floor at shop.grisha.in.',
-    meta: 'SHOP.GRISHA.IN',
+    body: 'Everything you\'ve seen — and more — live on the shop floor at shop.grisa.in.',
+    meta: 'SHOP.GRISA.IN',
     slotId: 'spread-shop',
     placeholder: 'Wardrobe / closet still life',
     isShop: true,
@@ -179,7 +179,7 @@ const DoorOverlay = ({ open, pushed }) => (
     <div className="door-backdrop" />
     <div className={`door-frame ${open ? 'opened' : ''}`}>
       <div className="brand-above">
-        <div className="name">GRISHA</div>
+        <div className="name">GRISA</div>
         <div className="sub">Ballygunge · Kolkata</div>
       </div>
       <div className={`door-pane left ${open ? 'open' : ''}`}>
@@ -308,7 +308,7 @@ const App = () => {
   useEffect(() => {
     let raf1 = requestAnimationFrame(() => {
       let raf2 = requestAnimationFrame(() => {
-        try { window.dispatchEvent(new Event('grisha:ready')); } catch (e) {}
+        try { window.dispatchEvent(new Event('grisa:ready')); } catch (e) {}
       });
       // eslint-disable-next-line no-unused-vars
       raf1 = raf2;
@@ -502,7 +502,7 @@ const App = () => {
     <div className="stage" onClick={onStageClick}>
       <Cursor x={mouse.x} y={mouse.y} overAction={hoverAction} />
 
-      <div className="hud-top">{scene.label} &nbsp;·&nbsp; grisha</div>
+      <div className="hud-top">{scene.label} &nbsp;·&nbsp; grisa</div>
 
       {/* All scenes mounted simultaneously; .active controls visibility for smooth cross-fades */}
       {SCENES.map((s, i) => {
@@ -587,7 +587,7 @@ const App = () => {
       {/* Handoff */}
       <div className={`handoff ${handoff ? 'visible' : ''}`}>
         <div className="handoff-card">
-          <div className="url">shop.grisha.in</div>
+          <div className="url">shop.grisa.in</div>
           <div className="head">Stepping into the shop</div>
           <div className="sub">Routing to the funnel</div>
           <div className="handoff-dots"><span /><span /><span /></div>

@@ -1,8 +1,0 @@
-# Grisha — Ballygunge, Kolkata
-# A quiet-luxury boutique. Crawlers welcome.
-
-User-agent: *
-Allow: /
-
-# Sitemap
-Sitemap: https://vidyut-poddar.github.io/mittiva/grisha/sitemap.xml

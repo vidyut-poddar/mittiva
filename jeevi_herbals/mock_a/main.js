@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initStickyHeader();
   initMobileMenu();
   initHeroAnimations();
-  initConcernFilter();
+  initConsultationWizard();
   initTestimonialSlider();
   initScrollAnimationsFallback();
   initLeafFall();
@@ -64,54 +64,234 @@ function initHeroAnimations() {
 }
 
 /**
- * 4. Concern Filter Interaction
+ * 4. Ayurvedic Consultation Wizard
  */
-function initConcernFilter() {
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const productCards = document.querySelectorAll('.product-card');
-  
-  if (filterButtons.length === 0 || productCards.length === 0) return;
+function initConsultationWizard() {
+  const wizard = document.getElementById('consultationWizard');
+  if (!wizard) return;
 
-  productCards.forEach(card => {
-    card.style.transition = 'opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)';
-    card.style.transform = 'translateY(0) scale(1)';
-    card.style.opacity = '1';
+  let currentStep = 1;
+  let selectedPath = null; // 'skin' or 'hair'
+
+  const steps = wizard.querySelectorAll('.wizard-step');
+  const pathButtons = wizard.querySelectorAll('.path-card-btn');
+  const skinSelector = document.getElementById('skinSymptomSelector');
+  const hairSelector = document.getElementById('hairSymptomSelector');
+  const skinCheckboxes = wizard.querySelectorAll('input[name="skin-symptom"]');
+  const hairCheckboxes = wizard.querySelectorAll('input[name="hair-symptom"]');
+  const btnStep2Next = document.getElementById('btnStep2Next');
+  const concernDescription = document.getElementById('concernDescription');
+  const charCount = document.getElementById('charCount');
+  const btnWizardSubmit = document.getElementById('btnWizardSubmit');
+  const btnRestartWizard = document.getElementById('btnRestartWizard');
+  
+  // Results Elements
+  const diagnosedDosha = document.getElementById('diagnosedDosha');
+  const diagnosisSummaryText = document.getElementById('diagnosisSummaryText');
+  const userTypedSummary = document.getElementById('userTypedSummary');
+  const recommendedIngredients = document.getElementById('recommendedIngredients');
+
+  // Mapping rules for Ayurvedic analysis
+  const SYMPTOM_RULES = {
+    // Skin concerns
+    acne: { dosha: 'Pitta', weight: 2, secondaryDosha: 'Kapha', botanicals: ['Kuppaimeni', 'Kasthuri Manjal'] },
+    dullness: { dosha: 'Kapha', weight: 2, secondaryDosha: 'Kapha', botanicals: ['Multani Mitti', 'Kasthuri Manjal'] },
+    pigmentation: { dosha: 'Pitta', weight: 2, secondaryDosha: 'Vata', botanicals: ['Kasthuri Manjal', 'Vetiver Root'] },
+    'dark-circles': { dosha: 'Vata', weight: 2, secondaryDosha: 'Pitta', botanicals: ['Vetiver Root'] },
+    dryness: { dosha: 'Vata', weight: 2, secondaryDosha: 'Vata', botanicals: ['Vetiver Root', 'Karuppu Kavuni'] },
+    
+    // Hair concerns
+    'hair-growth': { dosha: 'Pitta', weight: 2, secondaryDosha: 'Vata', botanicals: ['Karuppu Kavuni', 'Vetiver Root'] },
+    'frizzy-hair': { dosha: 'Vata', weight: 2, secondaryDosha: 'Vata', botanicals: ['Vetiver Root', 'Karuppu Kavuni'] },
+    'damaged-hair': { dosha: 'Vata', weight: 2, secondaryDosha: 'Pitta', botanicals: ['Vetiver Root'] },
+    dandruff: { dosha: 'Kapha', weight: 2, secondaryDosha: 'Kapha', botanicals: ['Kuppaimeni', 'Vetiver Root'] }
+  };
+
+  const BOTANICAL_DETAILS = {
+    'Vetiver Root': { icon: '🌾', role: 'Hydrating & Cooling' },
+    'Multani Mitti': { icon: '🧱', role: 'Purifying & Oil-control' },
+    'Kasthuri Manjal': { icon: '🍠', role: 'Blemish-clearing & Glowing' },
+    'Karuppu Kavuni': { icon: '🌾', role: 'Nourishing & Follicle-strengthening' },
+    'Kuppaimeni': { icon: '🌱', role: 'Soothing & Antibacterial' }
+  };
+
+  function showStep(stepNum) {
+    currentStep = stepNum;
+    steps.forEach(step => {
+      const stepVal = parseInt(step.getAttribute('data-step'), 10);
+      if (stepVal === stepNum) {
+        step.style.display = 'flex';
+        // Force Reflow
+        void step.offsetWidth;
+        step.classList.add('active');
+      } else {
+        step.classList.remove('active');
+        step.style.display = 'none';
+      }
+    });
+
+    // Scroll wizard into view if user navigates steps
+    const wizardTop = wizard.getBoundingClientRect().top + window.scrollY;
+    if (Math.abs(window.scrollY - (wizardTop - 120)) > 300) {
+      window.scrollTo({
+        top: wizardTop - 120,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // Step 1: Pathway selection
+  pathButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedPath = btn.getAttribute('data-path');
+      
+      // Reset checkboxes
+      skinCheckboxes.forEach(cb => cb.checked = false);
+      hairCheckboxes.forEach(cb => cb.checked = false);
+      btnStep2Next.disabled = true;
+
+      if (selectedPath === 'skin') {
+        skinSelector.style.display = 'flex';
+        hairSelector.style.display = 'none';
+      } else {
+        skinSelector.style.display = 'none';
+        hairSelector.style.display = 'flex';
+      }
+
+      showStep(2);
+    });
   });
 
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
+  // Step 2: Checkbox verification
+  const validateStep2 = () => {
+    const activeCheckboxes = selectedPath === 'skin' ? skinCheckboxes : hairCheckboxes;
+    const checkedCount = Array.from(activeCheckboxes).filter(cb => cb.checked).length;
+    btnStep2Next.disabled = checkedCount === 0;
+  };
 
-      const filter = button.getAttribute('data-filter');
+  skinCheckboxes.forEach(cb => cb.addEventListener('change', validateStep2));
+  hairCheckboxes.forEach(cb => cb.addEventListener('change', validateStep2));
 
-      productCards.forEach(card => {
-        const concerns = card.getAttribute('data-concerns').split(' ');
+  btnStep2Next.addEventListener('click', () => {
+    showStep(3);
+  });
 
-        if (filter === 'all' || concerns.includes(filter)) {
-          card.style.display = 'flex';
-          void card.offsetWidth; // Force Reflow
-          
-          requestAnimationFrame(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0) scale(1)';
-            card.style.pointerEvents = 'auto';
-          });
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(15px) scale(0.96)';
-          card.style.pointerEvents = 'none';
+  // Step 3: Textarea handler
+  concernDescription.addEventListener('input', () => {
+    const len = concernDescription.value.length;
+    charCount.textContent = len;
+  });
 
-          const onTransitionEnd = (event) => {
-            if (event.propertyName === 'opacity' && card.style.opacity === '0') {
-              card.style.display = 'none';
-              card.removeEventListener('transitionend', onTransitionEnd);
-            }
-          };
-          card.addEventListener('transitionend', onTransitionEnd);
-        }
-      });
+  // Wizard Back Buttons
+  const backButtons = wizard.querySelectorAll('.btn-wizard-back');
+  backButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      showStep(currentStep - 1);
     });
+  });
+
+  // Submit diagnosis logic
+  btnWizardSubmit.addEventListener('click', () => {
+    const activeCheckboxes = selectedPath === 'skin' ? skinCheckboxes : hairCheckboxes;
+    const selectedSymptoms = Array.from(activeCheckboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+
+    if (selectedSymptoms.length === 0) {
+      alert('Please select at least one concern.');
+      showStep(2);
+      return;
+    }
+
+    // Matchmaking Algorithm
+    let doshaScores = { Vata: 0, Pitta: 0, Kapha: 0 };
+    let recBotanicalsSet = new Set();
+
+    selectedSymptoms.forEach(sym => {
+      const rule = SYMPTOM_RULES[sym];
+      if (rule) {
+        doshaScores[rule.dosha] += rule.weight;
+        if (rule.secondaryDosha && rule.secondaryDosha !== rule.dosha) {
+          doshaScores[rule.secondaryDosha] += 1;
+        }
+        rule.botanicals.forEach(bot => recBotanicalsSet.add(bot));
+      }
+    });
+
+    // Sort doshas to find top two
+    const sortedDoshas = Object.keys(doshaScores).sort((a, b) => doshaScores[b] - doshaScores[a]);
+    const primaryDosha = sortedDoshas[0];
+    const secondaryDosha = sortedDoshas[1];
+
+    let finalProfileName = '';
+    let explanation = '';
+
+    if (doshaScores[primaryDosha] > 0 && doshaScores[secondaryDosha] > 0 && primaryDosha !== secondaryDosha) {
+      finalProfileName = `${primaryDosha}-${secondaryDosha} Profile`;
+      
+      // Dynamic combined descriptions
+      if ((primaryDosha === 'Vata' && secondaryDosha === 'Pitta') || (primaryDosha === 'Pitta' && secondaryDosha === 'Vata')) {
+        explanation = `Your diagnostic assessment points to a Vata-Pitta dual profile. Governed by air, ether, and fire, this dual state represents dry or dehydrated tissues accompanied by sensitivity or localized heat (like dryness with occasional breakouts or scalp irritation). We recommend a cooling, calming, and deeply hydrating ritual to pacify both elements simultaneously.`;
+      } else if ((primaryDosha === 'Pitta' && secondaryDosha === 'Kapha') || (primaryDosha === 'Kapha' && secondaryDosha === 'Pitta')) {
+        explanation = `Your diagnostic assessment points to a Pitta-Kapha dual profile. Governed by fire, water, and earth, this state shows a blend of tissue congestion, excess sebum, and active inflammation or redness. To restore balance, it is vital to use lightweight, soothing, and clarifying wild botanicals that clear blockages without aggravating sensitivity.`;
+      } else {
+        // Vata-Kapha
+        explanation = `Your diagnostic assessment points to a Vata-Kapha dual profile. Governed by air, ether, earth, and water, this state represents cool, sluggish circulation paired with fluctuating hydration (dryness alongside congestion or dandruff). We recommend stimulating, warming, and nutrient-rich forest herbs to wake up the tissues and balance moisture.`;
+      }
+    } else {
+      finalProfileName = `${primaryDosha} Dominant Profile`;
+      if (primaryDosha === 'Vata') {
+        explanation = `Your diagnostic assessment indicates a Vata-dominant state. Governing air and ether, Vata brings dryness, coldness, and lightness. In your skin or hair, this manifests as dehydration, fine flaking, frizz, or brittle strands. To restore grounding harmony, we recommend deep moisturizing and warming botanicals that seal in hydration.`;
+      } else if (primaryDosha === 'Pitta') {
+        explanation = `Your diagnostic assessment indicates a Pitta-dominant state. Governing fire and water, Pitta manifests as heat, intensity, and active inflammation. In your skin or hair, this translates to acne, redness, heat-induced sensitivity, or hair thinning. To restore soothing coolness, we suggest anti-inflammatory and heat-pacifying forest herbs.`;
+      } else {
+        explanation = `Your diagnostic assessment indicates a Kapha-dominant state. Governing earth and water, Kapha brings stability, coolness, and moisture. An excess leads to stagnation, congestion, and oily build-up. In your skin or hair, this manifests as clogged pores, dullness, or a heavy, dandruff-prone scalp. We recommend clarifying and stimulating herbs to restore flow.`;
+      }
+    }
+
+    // Set text contents
+    diagnosedDosha.textContent = finalProfileName;
+    diagnosisSummaryText.textContent = explanation;
+    
+    // User notes escaping & display
+    const rawUserNotes = concernDescription.value.trim();
+    if (rawUserNotes) {
+      const div = document.createElement('div');
+      div.textContent = `"${rawUserNotes}"`;
+      userTypedSummary.innerHTML = div.innerHTML;
+      userTypedSummary.parentElement.style.display = 'block';
+    } else {
+      userTypedSummary.parentElement.style.display = 'none';
+    }
+
+    // Render recommended botanicals
+    recommendedIngredients.innerHTML = '';
+    recBotanicalsSet.forEach(bot => {
+      const details = BOTANICAL_DETAILS[bot] || { icon: '🍃', role: 'Balancing Herb' };
+      const itemHtml = `
+        <div class="rec-ing-item">
+          <div class="rec-ing-icon">${details.icon}</div>
+          <div class="rec-ing-details">
+            <span class="rec-ing-name">${bot}</span>
+            <span class="rec-ing-role">${details.role}</span>
+          </div>
+        </div>
+      `;
+      recommendedIngredients.insertAdjacentHTML('beforeend', itemHtml);
+    });
+
+    showStep(4);
+  });
+
+  // Restart / Reset functionality
+  btnRestartWizard.addEventListener('click', () => {
+    selectedPath = null;
+    skinCheckboxes.forEach(cb => cb.checked = false);
+    hairCheckboxes.forEach(cb => cb.checked = false);
+    btnStep2Next.disabled = true;
+    concernDescription.value = '';
+    charCount.textContent = '0';
+    showStep(1);
   });
 }
 

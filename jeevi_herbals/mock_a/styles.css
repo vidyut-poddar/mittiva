@@ -275,25 +275,19 @@ header {
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
 }
 
-.logo-icon {
-  font-size: 2rem;
-  animation: logo-drift 4s ease-in-out infinite alternate;
+.logo-img {
+  height: 56px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 2px 10px rgba(243, 166, 40, 0.2));
+  transition: var(--transition-smooth);
 }
 
-.logo-text {
-  font-family: var(--font-serif);
-  font-size: 1.8rem;
-  font-weight: 600;
-  font-style: italic;
-  color: var(--text);
-  letter-spacing: 0.5px;
-}
-
-.logo-text span {
-  color: var(--accent);
+.logo:hover .logo-img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 2px 14px rgba(243, 166, 40, 0.35));
 }
 
 .nav-links {
@@ -549,143 +543,376 @@ header {
   transform: translateY(-2px);
 }
 
-.concern-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 3rem;
-}
-
-/* Premium Card Grid Layout - Glass Drops */
-.product-card {
+/* Consultation Wizard Container */
+.consultation-wizard {
+  max-width: 800px;
+  margin: 0 auto;
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  padding: 1.8rem;
+  padding: 3.5rem;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  min-height: 440px;
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
-  box-shadow: var(--glass-shadow);
+}
+
+.wizard-step {
+  display: none;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.wizard-step.active {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step-title {
+  font-size: 2.2rem;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  font-style: italic;
+}
+
+.step-desc {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 2.5rem;
+}
+
+/* Step 1: Pathway selection button cards */
+.path-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.path-card-btn {
+  background: rgba(14, 38, 25, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 1.8rem;
+  cursor: pointer;
   transition: var(--transition-smooth);
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.8rem;
 }
 
-.product-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(243, 166, 40, 0.05) 0%, transparent 60%);
-  pointer-events: none;
+.path-card-btn:hover {
+  border-color: var(--accent);
+  background: rgba(243, 166, 40, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(4, 13, 8, 0.5);
 }
 
-.product-card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(243, 166, 40, 0.4);
-  box-shadow: 0 20px 45px rgba(4, 13, 8, 0.8),
-              0 0 15px rgba(243, 166, 40, 0.05);
+.path-icon {
+  font-size: 3rem;
+  display: block;
 }
 
-.product-image-container {
-  position: relative;
-  background-color: rgba(4, 13, 8, 0.4);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  height: 270px;
-  border: 1px solid rgba(243, 166, 40, 0.05);
+.path-name {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-style: italic;
+  color: var(--text);
 }
 
-.product-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: var(--transition-smooth);
+.path-details {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.4;
 }
 
-.product-card:hover .product-img {
-  transform: scale(1.06);
-}
-
-.product-badge {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background-color: var(--accent);
-  color: var(--primary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.35rem 0.9rem;
-  border-radius: var(--radius-pill);
-  z-index: 5;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.product-concern-tags {
+/* Step 2: Symptom Checkbox Buttons */
+.symptom-selector-wrap {
   display: flex;
   flex-wrap: wrap;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.symptom-tag-label {
+  cursor: pointer;
+}
+
+.symptom-tag-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-span {
+  display: inline-block;
+  background: rgba(14, 38, 25, 0.35);
+  border: 1px solid rgba(243, 166, 40, 0.15);
+  color: var(--text-light);
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.symptom-tag-label:hover .checkbox-span {
+  border-color: rgba(243, 166, 40, 0.4);
+  color: var(--text);
+}
+
+.symptom-tag-label input[type="checkbox"]:checked + .checkbox-span {
+  background-color: var(--accent);
+  color: var(--primary);
+  border-color: var(--accent);
+  box-shadow: 0 5px 15px rgba(243, 166, 40, 0.2);
+}
+
+/* Step 3: Textarea details description styling */
+.textarea-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+#concernDescription {
+  width: 100%;
+  height: 150px;
+  background: rgba(6, 18, 12, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+#concernDescription:focus {
+  border-color: var(--accent);
+  background: rgba(6, 18, 12, 0.85);
+  box-shadow: 0 0 10px rgba(243, 166, 40, 0.1);
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 12px;
+  right: 15px;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+/* Navigation Buttons block */
+.step-navigation-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid rgba(244, 239, 235, 0.08);
+  padding-top: 2rem;
+}
+
+.btn-wizard-back {
+  padding: 0.8rem 2rem;
+  font-size: 0.85rem;
+}
+
+.btn-wizard-next, .btn-wizard-submit {
+  padding: 0.8rem 2.2rem;
+  font-size: 0.85rem;
+}
+
+/* Step 4: Diagnostic report layout styles */
+.results-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  text-align: left;
+}
+
+.diagnosis-header {
+  border-bottom: 1px solid rgba(243, 166, 40, 0.15);
+  padding-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
-.concern-tag {
-  font-size: 0.75rem;
-  background-color: rgba(243, 166, 40, 0.08);
-  color: var(--accent);
-  border: 1px solid rgba(243, 166, 40, 0.15);
-  padding: 0.25rem 0.7rem;
-  border-radius: var(--radius-pill);
-}
-
-.product-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.product-category {
+.diagnose-badge {
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  color: var(--accent);
+  letter-spacing: 2px;
 }
 
-.product-name {
+#diagnosedDosha {
+  font-size: 2.5rem;
+  font-style: italic;
+  color: var(--text);
+}
+
+.diagnosis-card-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+}
+
+.diagnosis-details-card {
+  background: rgba(6, 18, 12, 0.45);
+  border: 1px solid rgba(243, 166, 40, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.diagnosis-details-card h4 {
+  font-family: var(--font-serif);
   font-size: 1.5rem;
+  color: var(--text);
+  font-style: italic;
+  border-bottom: 1px solid rgba(244, 239, 235, 0.05);
+  padding-bottom: 0.6rem;
+}
+
+.diagnosis-details-card p {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.user-typed-notes {
+  background: rgba(4, 13, 8, 0.3);
+  border-left: 2px solid var(--accent);
+  padding: 1rem 1.2rem;
+  margin-top: 0.5rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.user-typed-notes strong {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+}
+
+.user-typed-notes p {
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-light);
+}
+
+/* Recommended ingredients block in result */
+.recommended-ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rec-ing-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(14, 38, 25, 0.25);
+  border: 1px solid rgba(243, 166, 40, 0.05);
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-smooth);
+}
+
+.rec-ing-item:hover {
+  background: rgba(14, 38, 25, 0.4);
+  border-color: rgba(243, 166, 40, 0.15);
+}
+
+.rec-ing-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(243, 166, 40, 0.08);
+  border: 1px solid rgba(243, 166, 40, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.rec-ing-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.rec-ing-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rec-ing-role {
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+
+/* Results bottom action blocks */
+.results-cta-block {
+  text-align: center;
+  border-top: 1px solid rgba(244, 239, 235, 0.08);
+  padding-top: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.results-cta-block p {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
   color: var(--text);
   font-style: italic;
 }
 
-.product-rating {
+.results-cta-buttons {
   display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--text-light);
+  gap: 1.5rem;
 }
 
-.stars {
-  color: var(--accent);
-}
-
-.product-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-  border-top: 1px solid rgba(244, 239, 235, 0.08);
-  padding-top: 1.2rem;
-}
-
-.product-price {
-  font-size: 1.4rem;
-  font-family: var(--font-serif);
-  font-weight: 600;
-  color: var(--text);
+@media (max-width: 768px) {
+  .path-selection-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .diagnosis-card-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .consultation-wizard {
+    padding: 2rem 1.5rem;
+    min-height: auto;
+  }
+  .results-cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  .results-cta-buttons .btn {
+    width: 100%;
+  }
 }
 
 /* Sourcing Story Section - Waterfall Parallax */
@@ -995,15 +1222,21 @@ footer {
 }
 
 .footer-logo {
-  font-family: var(--font-serif);
-  font-size: 2.4rem;
-  font-weight: 600;
-  font-style: italic;
-  color: var(--text);
+  display: inline-block;
+  margin-bottom: 0.5rem;
 }
 
-.footer-logo span {
-  color: var(--accent);
+.footer-logo-img {
+  height: 84px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 2px 12px rgba(243, 166, 40, 0.2));
+  transition: var(--transition-smooth);
+}
+
+.footer-logo-img:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 2px 16px rgba(243, 166, 40, 0.35));
 }
 
 .footer-desc {

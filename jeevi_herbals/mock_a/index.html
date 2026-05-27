@@ -22,18 +22,17 @@
   <header id="header">
     <div class="nav-container">
       <a href="#" class="logo">
-        <span class="logo-icon">🍃</span>
-        <span class="logo-text">Jeevi <span>Herbals</span></span>
+        <img src="assets/logo.png" alt="Jeevi Herbals Logo" class="logo-img">
       </a>
       <ul class="nav-links" id="navLinks">
         <li><a href="#hero">Home</a></li>
-        <li><a href="#concern">Shop by Concern</a></li>
+        <li><a href="#concern">Consultation Guide</a></li>
         <li><a href="#sourcing">Forest Secrets</a></li>
         <li><a href="#ingredients">Active Botanicals</a></li>
         <li><a href="#testimonials">Reviews</a></li>
       </ul>
       <div class="nav-actions">
-        <a href="#concern" class="btn btn-primary" style="padding: 0.65rem 1.6rem; font-size: 0.85rem;">Shop the Wild</a>
+        <a href="https://shop.jeeviherbals.com" target="_blank" class="btn btn-primary" style="padding: 0.65rem 1.6rem; font-size: 0.85rem;">Shop the Wild</a>
         <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">☰</button>
       </div>
     </div>
@@ -80,167 +79,143 @@
     </div>
   </div>
 
-  <!-- Concern-Based Shopping Explorer -->
+  <!-- Interactive Ayurvedic Consultation Guide -->
   <section class="concern scroll-fade-in" id="concern">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">Find Your Routine</span>
-        <h2 class="section-title">Shop by Concern</h2>
-        <p style="color: var(--text-light)">Filter our wild-harvested Ayurvedic blends to target your skin or hair needs directly.</p>
+        <span class="section-subtitle">Ayurvedic Healing Groves</span>
+        <h2 class="section-title">Personal Consultation</h2>
+        <p style="color: var(--text-light)">Describe your symptoms below. Our botanical guide will diagnose your profile and recommend foraged forest blends.</p>
       </div>
 
-      <!-- Filters -->
-      <div class="concern-filters">
-        <button class="filter-btn active" data-filter="all">All Blends</button>
-        <button class="filter-btn" data-filter="dull-skin">Dull Skin</button>
-        <button class="filter-btn" data-filter="hair-growth">Hair Growth</button>
-        <button class="filter-btn" data-filter="frizzy-hair">Frizzy Hair</button>
-        <button class="filter-btn" data-filter="damaged-hair">Damaged Hair</button>
-        <button class="filter-btn" data-filter="dandruff">Dandruff</button>
-        <button class="filter-btn" data-filter="dark-circles">Dark Circles</button>
-        <button class="filter-btn" data-filter="acne">Acne & Spots</button>
-      </div>
-
-      <!-- Recommendation Product Cards -->
-      <div class="concern-results" id="productGrid">
-        <!-- Herbs Hair Oil -->
-        <div class="product-card" data-concerns="hair-growth frizzy-hair damaged-hair">
-          <span class="product-badge">Jungle Classic</span>
-          <div class="product-image-container">
-            <img src="assets/product_oil.png" alt="Jeevi Herbs Hair Oil on Tree Root" class="product-img">
-          </div>
-          <div class="product-info">
-            <span class="product-category">Hair Care</span>
-            <h3 class="product-name">Herbs Hair Oil</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.9)
-            </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Hair Growth</span>
-              <span class="concern-tag">Anti-Frizz</span>
-              <span class="concern-tag">Deep Nourishing</span>
-            </div>
-          </div>
-          <div class="product-footer">
-            <span class="product-price">₹299</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
+      <!-- Consultation Wizard Container -->
+      <div class="consultation-wizard" id="consultationWizard">
+        
+        <!-- Step 1: Choose Pathway -->
+        <div class="wizard-step active" data-step="1">
+          <h3 class="step-title">Step 1: Choose Your Healing Path</h3>
+          <p class="step-desc">Select the area you wish to balance today.</p>
+          <div class="path-selection-grid">
+            <button class="path-card-btn" data-path="skin" type="button">
+              <span class="path-icon">✨</span>
+              <span class="path-name">Skin Ritual</span>
+              <span class="path-details">Blemishes, dullness, dark spots, or dry skin balances.</span>
+            </button>
+            <button class="path-card-btn" data-path="hair" type="button">
+              <span class="path-icon">🌿</span>
+              <span class="path-name">Hair Ritual</span>
+              <span class="path-details">Scalp health, frizz control, dandruff, or growth stimulation.</span>
+            </button>
           </div>
         </div>
 
-        <!-- Dandruff Hair Oil -->
-        <div class="product-card" data-concerns="dandruff damaged-hair">
-          <div class="product-image-container">
-            <img src="assets/product_oil.png" alt="Jeevi Dandruff Hair Oil on Tree Root" class="product-img" style="filter: hue-rotate(50deg) saturate(1.2);">
+        <!-- Step 2: Select Specific Concerns (Dynamic) -->
+        <div class="wizard-step" data-step="2">
+          <h3 class="step-title">Step 2: What are you experiencing?</h3>
+          <p class="step-desc">Select all symptoms that apply to your current skin/hair state.</p>
+          
+          <!-- Skin concerns checkboxes -->
+          <div class="symptom-selector-wrap" id="skinSymptomSelector" style="display: none;">
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="skin-symptom" value="acne">
+              <span class="checkbox-span">Acne & Breakouts</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="skin-symptom" value="dullness">
+              <span class="checkbox-span">Dull or Uneven Skin</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="skin-symptom" value="pigmentation">
+              <span class="checkbox-span">Dark Spots & Pigmentation</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="skin-symptom" value="dark-circles">
+              <span class="checkbox-span">Dark Under-Eye Circles</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="skin-symptom" value="dryness">
+              <span class="checkbox-span">Dryness & Flaking</span>
+            </label>
           </div>
-          <div class="product-info">
-            <span class="product-category">Hair Care</span>
-            <h3 class="product-name">Dandruff Hair Oil</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.8)
-            </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Dandruff Control</span>
-              <span class="concern-tag">Soothing Scalp</span>
-            </div>
+
+          <!-- Hair concerns checkboxes -->
+          <div class="symptom-selector-wrap" id="hairSymptomSelector" style="display: none;">
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="hair-symptom" value="hair-growth">
+              <span class="checkbox-span">Slow Growth / Thinning</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="hair-symptom" value="frizzy-hair">
+              <span class="checkbox-span">Frizz & Coarse Strands</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="hair-symptom" value="damaged-hair">
+              <span class="checkbox-span">Dry / Damaged Ends</span>
+            </label>
+            <label class="symptom-tag-label">
+              <input type="checkbox" name="hair-symptom" value="dandruff">
+              <span class="checkbox-span">Dandruff & Itchy Scalp</span>
+            </label>
           </div>
-          <div class="product-footer">
-            <span class="product-price">₹280</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
+
+          <div class="step-navigation-actions">
+            <button class="btn btn-secondary btn-wizard-back" type="button">← Back</button>
+            <button class="btn btn-primary btn-wizard-next" id="btnStep2Next" type="button" disabled>Continue →</button>
           </div>
         </div>
 
-        <!-- Vetiver Soap -->
-        <div class="product-card" data-concerns="dull-skin acne">
-          <span class="product-badge">Wild Vetiver</span>
-          <div class="product-image-container">
-            <img src="assets/product_soap.png" alt="Jeevi Vetiver Soap on Slate Rock" class="product-img">
+        <!-- Step 3: Describe in your own words -->
+        <div class="wizard-step" data-step="3">
+          <h3 class="step-title">Step 3: Tell us more about your concerns</h3>
+          <p class="step-desc">Describe your daily routine, skin/hair feelings, or specific environments in your own words.</p>
+          
+          <div class="textarea-wrapper">
+            <textarea id="concernDescription" placeholder="e.g., My skin feels very dry in the morning after waking up, but starts getting oily and blemish-prone around the forehead by afternoon. I also spend a lot of time in dry AC rooms..." maxlength="500"></textarea>
+            <div class="char-counter"><span id="charCount">0</span> / 500</div>
           </div>
-          <div class="product-info">
-            <span class="product-category">Bath & Body</span>
-            <h3 class="product-name">Vetiver Soap</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.9)
-            </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Dull Skin</span>
-              <span class="concern-tag">Acne Control</span>
-              <span class="concern-tag">Forest Aromatics</span>
-            </div>
-          </div>
-          <div class="product-footer">
-            <span class="product-price">₹149</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
+
+          <div class="step-navigation-actions">
+            <button class="btn btn-secondary btn-wizard-back" type="button">← Back</button>
+            <button class="btn btn-accent btn-wizard-submit" id="btnWizardSubmit" type="button">Submit for Diagnosis ✨</button>
           </div>
         </div>
 
-        <!-- Face Pack Powder -->
-        <div class="product-card" data-concerns="acne dull-skin pigmentation dark-circles">
-          <span class="product-badge">Forest Clay</span>
-          <div class="product-image-container">
-            <img src="assets/product_facepack.png" alt="Jeevi Face Pack Powder in Hollow Trunk" class="product-img">
-          </div>
-          <div class="product-info">
-            <span class="product-category">Skin Care</span>
-            <h3 class="product-name">Face Pack Powder</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.9)
+        <!-- Step 4: Results (Dynamic Diagnosis) -->
+        <div class="wizard-step" data-step="4">
+          <div class="results-layout">
+            <div class="diagnosis-header">
+              <span class="diagnose-badge">Ayurvedic Assessment</span>
+              <h3 id="diagnosedDosha">Vata-Pitta Profile</h3>
             </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Brightening Clay</span>
-              <span class="concern-tag">Pore Purifying</span>
-              <span class="concern-tag">Pigmentation</span>
+            
+            <div class="diagnosis-card-grid">
+              <div class="diagnosis-details-card">
+                <h4>Your Symptom Analysis</h4>
+                <p id="diagnosisSummaryText">Based on your selections, your profile shows an imbalance. We recommend calming and grounding forest herbs to restore balance.</p>
+                <div class="user-typed-notes">
+                  <strong>Consultation Notes:</strong>
+                  <p id="userTypedSummary">"My skin feels dry but breaks out..."</p>
+                </div>
+              </div>
+              
+              <div class="diagnosis-details-card">
+                <h4>Recommended Active Botanicals</h4>
+                <div class="recommended-ingredients-list" id="recommendedIngredients">
+                  <!-- Dynamic ingredients will be inserted here -->
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="product-footer">
-            <span class="product-price">₹199</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
+
+            <div class="results-cta-block">
+              <p>Based on your profile, we have prepared a custom set of wild forest blends for you.</p>
+              <div class="results-cta-buttons">
+                <button class="btn btn-secondary" id="btnRestartWizard" type="button">↺ Reset Diagnostic</button>
+                <a href="https://shop.jeeviherbals.com" target="_blank" class="btn btn-accent" id="externalShopLinkBtn">Shop Curated Blends →</a>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Kasthuri Manjal Powder -->
-        <div class="product-card" data-concerns="dull-skin pigmentation dark-circles">
-          <div class="product-image-container">
-            <img src="assets/product_facepack.png" alt="Kasthuri Manjal Powder in Hollow Trunk" class="product-img" style="filter: sepia(0.6) saturate(1.8) contrast(1.1);">
-          </div>
-          <div class="product-info">
-            <span class="product-category">Skin Care</span>
-            <h3 class="product-name">Kasthuri Manjal Powder</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.7)
-            </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Dull Skin</span>
-              <span class="concern-tag">Dark Circles</span>
-              <span class="concern-tag">Turmeric Glow</span>
-            </div>
-          </div>
-          <div class="product-footer">
-            <span class="product-price">₹120</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
-          </div>
-        </div>
-
-        <!-- Goat Milk Soap -->
-        <div class="product-card" data-concerns="dull-skin frizzy-hair">
-          <div class="product-image-container">
-            <img src="assets/product_soap.png" alt="Goat Milk Soap on Slate Rock" class="product-img" style="filter: brightness(1.2) sepia(0.1) saturate(0.8);">
-          </div>
-          <div class="product-info">
-            <span class="product-category">Bath & Body</span>
-            <h3 class="product-name">Goat Milk Soap</h3>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span> (4.8)
-            </div>
-            <div class="product-concern-tags">
-              <span class="concern-tag">Dryness Relief</span>
-              <span class="concern-tag">Ultra Gentle</span>
-            </div>
-          </div>
-          <div class="product-footer">
-            <span class="product-price">₹160</span>
-            <a href="#" class="btn btn-primary" style="padding: 0.5rem 1.3rem; font-size: 0.8rem;">Select Blend</a>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -413,7 +388,7 @@
     <div class="cta-container">
       <h2 class="cta-title">Hear the Call of the Wild</h2>
       <p class="cta-desc">Sign up for our botanical digests to receive wild harvesting guides, Ayurvedic tips, and 5% OFF your first purchase.</p>
-      <a href="#concern" class="btn btn-accent">Explore Wild Blends</a>
+      <a href="https://shop.jeeviherbals.com" target="_blank" class="btn btn-accent">Shop Wild Blends</a>
     </div>
   </section>
 
@@ -421,7 +396,9 @@
   <footer>
     <div class="container footer-grid">
       <div class="footer-brand">
-        <h3 class="footer-logo">🍃 Jeevi <span>Herbals</span></h3>
+        <div class="footer-logo">
+          <img src="assets/logo.png" alt="Jeevi Herbals Logo" class="footer-logo-img">
+        </div>
         <p class="footer-desc">
           Uncompromising organic purity. sustainably forged in unison with native forest gatherers of the Godavari Belt to bring the untamed wisdom of Ayurveda to your daily ritual.
         </p>
@@ -434,7 +411,8 @@
         <h4 class="footer-title">Jungle Path</h4>
         <ul class="footer-links">
           <li><a href="#hero">Jungle Home</a></li>
-          <li><a href="#concern">Shop Concerns</a></li>
+          <li><a href="#concern">Consultation Guide</a></li>
+          <li><a href="https://shop.jeeviherbals.com" target="_blank">Shop Online</a></li>
           <li><a href="#sourcing">Forest Secrets</a></li>
           <li><a href="#ingredients">Active Botanicals</a></li>
         </ul>

@@ -396,6 +396,7 @@ function initLeafFall() {
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
+  // 1. Morning - Falling Green/Moss Leaves
   const leafCount = 18;
   const leaves = [];
   const leafColors = [
@@ -442,7 +443,6 @@ function initLeafFall() {
       ctx.rotate((this.angle * Math.PI) / 180);
       ctx.fillStyle = this.color;
       
-      // Draw double-arc leaf
       ctx.beginPath();
       ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
       ctx.fill();
@@ -459,7 +459,122 @@ function initLeafFall() {
     }
   }
 
-  // Floating Fireflies (Glowing Amber Dots)
+  // 2. Afternoon - Golden Sunbeam Pollen Motes
+  const maxDustMotes = 50;
+  const dustMotes = [];
+  
+  class DustMote {
+    constructor() {
+      this.reset();
+      this.y = Math.random() * canvas.height;
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = canvas.height + 10;
+      this.size = Math.random() * 1.5 + 0.4; // 0.4px to 1.9px radius
+      this.speedY = -(Math.random() * 0.4 + 0.15); // Drifts upwards
+      this.speedX = Math.random() * 0.2 - 0.1; // Gentle sway
+      this.alpha = Math.random() * 0.5 + 0.1;
+      this.fadeSpeed = 0.003 + Math.random() * 0.005;
+      this.sway = Math.random() * 5;
+      this.swaySpeed = Math.random() * 0.01 + 0.005;
+    }
+
+    update() {
+      this.y += this.speedY;
+      this.sway += this.swaySpeed;
+      this.x += this.speedX + Math.sin(this.sway) * 0.15;
+      this.alpha += this.fadeSpeed;
+
+      if (this.alpha > 0.85) {
+        this.alpha = 0.85;
+        this.fadeSpeed = -this.fadeSpeed;
+      } else if (this.alpha < 0.1) {
+        this.alpha = 0.1;
+        this.fadeSpeed = -this.fadeSpeed;
+      }
+
+      if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 235, 170, ${this.alpha})`;
+      ctx.shadowBlur = this.size * 2;
+      ctx.shadowColor = 'rgba(255, 235, 170, 0.4)';
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // 3. Evening - Falling Blossom Petals
+  const maxPetals = 22;
+  const petals = [];
+  const petalColors = [
+    'rgba(240, 128, 128, 0.45)',  // Light Coral Pink
+    'rgba(255, 182, 193, 0.4)',   // Light Pink
+    'rgba(235, 90, 120, 0.25)',   // Deep Rose Pink
+    'rgba(255, 140, 160, 0.35)'   // Sunset Peach Petal
+  ];
+
+  class Petal {
+    constructor() {
+      this.reset();
+      this.y = Math.random() * canvas.height;
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = -20;
+      this.size = Math.random() * 6 + 5; // 5px to 11px
+      this.speedY = Math.random() * 0.7 + 0.5; // Falls slightly slower than leaves
+      this.speedX = Math.random() * 0.4 - 0.2; // Side drift
+      this.color = petalColors[Math.floor(Math.random() * petalColors.length)];
+      this.angle = Math.random() * 360;
+      this.spin = Math.random() * 0.5 - 0.25;
+      this.sway = Math.random() * 10;
+      this.swaySpeed = Math.random() * 0.025 + 0.015;
+    }
+
+    update() {
+      this.y += this.speedY;
+      this.sway += this.swaySpeed;
+      this.x += this.speedX + Math.sin(this.sway) * 0.5;
+      this.angle += this.spin;
+
+      if (this.y > canvas.height + 20 || this.x < -20 || this.x > canvas.width + 20) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate((this.angle * Math.PI) / 180);
+      ctx.fillStyle = this.color;
+
+      ctx.beginPath();
+      ctx.ellipse(0, 0, this.size, this.size * 0.6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Delicate line down center of petal
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(-this.size, 0);
+      ctx.lineTo(this.size * 0.5, 0);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  }
+
+  // 4. Night - Floating Fireflies (Glowing Amber Dots)
   const maxFireflies = 45;
   const fireflies = [];
   const fireflyColors = [
@@ -519,10 +634,16 @@ function initLeafFall() {
     }
   }
 
+  // Pre-initialize all particle pools once on load
   for (let i = 0; i < leafCount; i++) {
     leaves.push(new Leaf());
   }
-
+  for (let i = 0; i < maxDustMotes; i++) {
+    dustMotes.push(new DustMote());
+  }
+  for (let i = 0; i < maxPetals; i++) {
+    petals.push(new Petal());
+  }
   for (let i = 0; i < maxFireflies; i++) {
     fireflies.push(new Firefly());
   }
@@ -530,32 +651,42 @@ function initLeafFall() {
   const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw leaves
-    leaves.forEach(leaf => {
-      leaf.update();
-      leaf.draw();
-    });
+    const bodyClass = document.body.className;
 
-    // Dynamic firefly behavior based on ambient phase class on body
-    const getAmbientParams = () => {
-      const bodyClass = document.body.className;
-      if (bodyClass.includes('ambient-night-late')) {
-        return { count: 38, maxAlpha: 0.95, sizeMultiplier: 1.25 };
-      } else if (bodyClass.includes('ambient-night-early')) {
-        return { count: 32, maxAlpha: 0.85, sizeMultiplier: 1.15 };
-      } else if (bodyClass.includes('ambient-evening')) {
-        return { count: 24, maxAlpha: 0.70, sizeMultiplier: 1.0 };
-      } else if (bodyClass.includes('ambient-morning')) {
-        return { count: 12, maxAlpha: 0.40, sizeMultiplier: 0.8 };
-      } else { // Afternoon
-        return { count: 4, maxAlpha: 0.15, sizeMultiplier: 0.65 };
+    if (bodyClass.includes('ambient-morning')) {
+      // Draw falling leaves
+      leaves.forEach(leaf => {
+        leaf.update();
+        leaf.draw();
+      });
+    } else if (bodyClass.includes('ambient-afternoon')) {
+      // Draw golden dust motes
+      dustMotes.forEach(mote => {
+        mote.update();
+        mote.draw();
+      });
+    } else if (bodyClass.includes('ambient-evening')) {
+      // Draw falling petals
+      petals.forEach(petal => {
+        petal.update();
+        petal.draw();
+      });
+    } else if (bodyClass.includes('ambient-night-early') || bodyClass.includes('ambient-night-late')) {
+      // Draw fireflies
+      const maxAlpha = bodyClass.includes('ambient-night-late') ? 0.95 : 0.85;
+      const sizeMultiplier = bodyClass.includes('ambient-night-late') ? 1.25 : 1.15;
+      const activeCount = bodyClass.includes('ambient-night-late') ? 38 : 32;
+
+      for (let i = 0; i < activeCount; i++) {
+        fireflies[i].update();
+        fireflies[i].draw(maxAlpha, sizeMultiplier);
       }
-    };
-
-    const params = getAmbientParams();
-    for (let i = 0; i < params.count; i++) {
-      fireflies[i].update();
-      fireflies[i].draw(params.maxAlpha, params.sizeMultiplier);
+    } else {
+      // Fallback: draw morning leaves
+      leaves.forEach(leaf => {
+        leaf.update();
+        leaf.draw();
+      });
     }
 
     animationFrameId = requestAnimationFrame(animate);

@@ -5,7 +5,52 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-/* Register CSS custom properties for smooth HSL and color gradient transitions */
+/* Register CSS custom properties for smooth HSL and color transitions */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #FAF9F5;
+}
+@property --primary {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: hsl(145, 30%, 10%);
+}
+@property --primary-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: hsl(145, 30%, 18%);
+}
+@property --bg-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #EAE6DF;
+}
+@property --bg-card {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.7);
+}
+@property --text {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0F2C1C;
+}
+@property --text-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #506357;
+}
+@property --glass-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.8);
+}
+@property --glass-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(10, 30, 19, 0.12);
+}
 @property --accent {
   syntax: '<color>';
   inherits: true;
@@ -51,38 +96,51 @@
   inherits: true;
   initial-value: rgba(6, 18, 12, 0.2);
 }
+@property --header-bg-scrolled {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(250, 249, 246, 0.96);
+}
+@property --input-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.8);
+}
+@property --btn-secondary-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(15, 44, 28, 0.15);
+}
+@property --btn-secondary-hover-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(14, 38, 25, 0.05);
+}
 
 :root {
-  /* Color Palette - Deep Jungle HSL Tokens */
-  --primary-h: 145;
-  --primary-s: 48%;
-  --primary-l: 5%;
-  --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l)); /* Dark Forest Obsidian */
-  --primary-light: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) + 8%)); /* Deep Moss */
-  --primary-dark: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 2%));
-  
-  /* Accent Colors (Default: Morning Gold) */
-  --accent: hsl(38, 85%, 55%); /* Sunbeam Amber / Jungle Gold */
-  --accent-light: hsl(38, 85%, 65%);
-  --accent-dark: hsl(38, 85%, 45%);
-  
-  --bg-h: 145;
-  --bg-s: 40%;
-  --bg-l: 6%;
-  --bg: hsl(var(--bg-h), var(--bg-s), var(--bg-l)); /* Dark Forest Floor */
-  --bg-card: rgba(14, 38, 25, 0.6); /* Translucent Green Glass */
-  --bg-dark: hsl(var(--bg-h), 50%, 3%);
-  
-  --text-h: 38;
-  --text-s: 25%;
-  --text-l: 90%;
-  --text: hsl(var(--text-h), var(--text-s), var(--text-l)); /* Warm Linen Cream */
-  --text-light: hsl(var(--text-h), 15%, 70%); /* Soft Vine Grey */
+  /* Color Palette - Default Light Theme (Morning) */
+  --bg: #FAF9F5;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --primary-dark: hsl(145, 30%, 5%);
+  --bg-dark: #EAE6DF;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text: #0F2C1C;
+  --text-light: #506357;
   --text-white: #ffffff;
   
-  --glass-bg: rgba(6, 18, 12, 0.75);
-  --glass-border: rgba(243, 166, 40, 0.15); /* Delicate gold wire border */
-  --glass-shadow: 0 10px 40px 0 rgba(4, 13, 8, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(10, 30, 19, 0.12);
+  --glass-shadow: 0 10px 30px 0 rgba(10, 30, 19, 0.05);
+  
+  --accent: hsl(38, 85%, 55%);
+  --accent-light: hsl(38, 85%, 65%);
+  --accent-dark: hsl(38, 85%, 45%);
+
+  --header-bg-scrolled: rgba(250, 249, 246, 0.96);
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --btn-secondary-border: rgba(15, 44, 28, 0.15);
+  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
   
   /* Layout & Sizing */
   --max-width: 1280px;
@@ -244,7 +302,7 @@ section {
 
 .btn-primary {
   background-color: var(--primary-light);
-  color: var(--text);
+  color: var(--text-white);
   border: 1px solid rgba(243, 166, 40, 0.3);
 }
 
@@ -259,13 +317,13 @@ section {
 .btn-secondary {
   background-color: transparent;
   color: var(--text);
-  border: 1px solid rgba(244, 239, 235, 0.2);
+  border: 1px solid var(--btn-secondary-border, rgba(15, 44, 28, 0.15));
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(244, 239, 235, 0.08);
+  background-color: var(--btn-secondary-hover-bg, rgba(14, 38, 25, 0.05));
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-3px);
@@ -320,8 +378,8 @@ header {
   border-radius: 0;
   border-left: 0;
   border-right: 0;
-  background-color: rgba(4, 13, 8, 0.95);
-  border-bottom: 1px solid rgba(243, 166, 40, 0.08);
+  background-color: var(--header-bg-scrolled, rgba(250, 249, 246, 0.96));
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .logo {
@@ -651,7 +709,7 @@ header {
 }
 
 .path-card-btn {
-  background: rgba(14, 38, 25, 0.4);
+  background: var(--bg-card);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: 2.5rem 1.8rem;
@@ -708,8 +766,8 @@ header {
 
 .checkbox-span {
   display: inline-block;
-  background: rgba(14, 38, 25, 0.35);
-  border: 1px solid rgba(243, 166, 40, 0.15);
+  background: var(--btn-secondary-hover-bg, rgba(14, 38, 25, 0.05));
+  border: 1px solid var(--btn-secondary-border, rgba(15, 44, 28, 0.15));
   color: var(--text-light);
   padding: 0.8rem 1.8rem;
   border-radius: var(--radius-pill);
@@ -740,7 +798,7 @@ header {
 #concernDescription {
   width: 100%;
   height: 150px;
-  background: rgba(6, 18, 12, 0.7);
+  background: var(--input-bg, rgba(255, 255, 255, 0.8));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   padding: 1.2rem;
@@ -755,7 +813,7 @@ header {
 
 #concernDescription:focus {
   border-color: var(--accent);
-  background: rgba(6, 18, 12, 0.85);
+  background: var(--input-bg, rgba(255, 255, 255, 0.8));
   box-shadow: 0 0 10px rgba(243, 166, 40, 0.1);
 }
 
@@ -823,8 +881,8 @@ header {
 }
 
 .diagnosis-details-card {
-  background: rgba(6, 18, 12, 0.45);
-  border: 1px solid rgba(243, 166, 40, 0.08);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   padding: 2rem;
   display: flex;
@@ -848,7 +906,7 @@ header {
 }
 
 .user-typed-notes {
-  background: rgba(4, 13, 8, 0.3);
+  background: var(--btn-secondary-hover-bg, rgba(4, 13, 8, 0.05));
   border-left: 2px solid var(--accent);
   padding: 1rem 1.2rem;
   margin-top: 0.5rem;
@@ -882,8 +940,8 @@ header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(14, 38, 25, 0.25);
-  border: 1px solid rgba(243, 166, 40, 0.05);
+  background: var(--btn-secondary-hover-bg, rgba(14, 38, 25, 0.05));
+  border: 1px solid var(--glass-border);
   padding: 0.8rem 1rem;
   border-radius: var(--radius-sm);
   transition: var(--transition-smooth);
@@ -1608,7 +1666,22 @@ footer {
 
 /* Transitions for registered CSS properties to enable smooth visual fades */
 body {
-  transition: --accent 2.5s ease, --accent-light 2.5s ease, --accent-dark 2.5s ease;
+  transition: --bg 2.5s ease,
+              --primary 2.5s ease,
+              --primary-light 2.5s ease,
+              --bg-dark 2.5s ease,
+              --bg-card 2.5s ease,
+              --text 2.5s ease,
+              --text-light 2.5s ease,
+              --glass-bg 2.5s ease,
+              --glass-border 2.5s ease,
+              --accent 2.5s ease,
+              --accent-light 2.5s ease,
+              --accent-dark 2.5s ease,
+              --header-bg-scrolled 2.5s ease,
+              --input-bg 2.5s ease,
+              --btn-secondary-border 2.5s ease,
+              --btn-secondary-hover-bg 2.5s ease;
 }
 .god-rays {
   transition: opacity 2.5s ease, --ambient-ray-color-mid 2.5s ease, --ambient-ray-color-high 2.5s ease, --ambient-ray-color-start 2.5s ease;
@@ -1622,6 +1695,20 @@ body {
 
 /* 1. Morning - Subah (5:30 AM to 12:00 PM) */
 body.ambient-morning {
+  --bg: #FAF9F5;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --bg-dark: #EAE6DF;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text: #0F2C1C;
+  --text-light: #506357;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(10, 30, 19, 0.12);
+  --header-bg-scrolled: rgba(250, 249, 246, 0.96);
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --btn-secondary-border: rgba(15, 44, 28, 0.15);
+  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
+
   --accent: hsl(42, 90%, 58%);
   --accent-light: hsl(42, 90%, 68%);
   --accent-dark: hsl(42, 90%, 48%);
@@ -1637,6 +1724,20 @@ body.ambient-morning {
 
 /* 2. Afternoon - Dopahar (12:00 PM to 4:00 PM) */
 body.ambient-afternoon {
+  --bg: #FCFAF2;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --bg-dark: #ECE7DF;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text: #142B1F;
+  --text-light: #57685D;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(10, 30, 19, 0.1);
+  --header-bg-scrolled: rgba(252, 250, 242, 0.96);
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --btn-secondary-border: rgba(15, 44, 28, 0.15);
+  --btn-secondary-hover-bg: rgba(14, 38, 25, 0.05);
+
   --accent: hsl(38, 95%, 52%);
   --accent-light: hsl(38, 95%, 62%);
   --accent-dark: hsl(38, 95%, 42%);
@@ -1652,6 +1753,20 @@ body.ambient-afternoon {
 
 /* 3. Evening - Shaam (4:00 PM to 7:30 PM) */
 body.ambient-evening {
+  --bg: #FFF5EC;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --bg-dark: #ECE0D5;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text: #2E1E12;
+  --text-light: #7D6858;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(45, 15, 30, 0.1);
+  --header-bg-scrolled: rgba(255, 245, 236, 0.96);
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --btn-secondary-border: rgba(45, 15, 30, 0.15);
+  --btn-secondary-hover-bg: rgba(45, 15, 30, 0.05);
+
   --accent: hsl(22, 85%, 52%);
   --accent-light: hsl(22, 85%, 62%);
   --accent-dark: hsl(22, 85%, 42%);
@@ -1667,6 +1782,20 @@ body.ambient-evening {
 
 /* 4. Early Night - Raat (7:30 PM to 11:00 PM) */
 body.ambient-night-early {
+  --bg: #06120C;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --bg-dark: #040D08;
+  --bg-card: rgba(14, 38, 25, 0.6);
+  --text: hsl(38, 25%, 90%);
+  --text-light: hsl(38, 15%, 70%);
+  --glass-bg: rgba(6, 18, 12, 0.75);
+  --glass-border: rgba(243, 166, 40, 0.15);
+  --header-bg-scrolled: rgba(4, 13, 8, 0.95);
+  --input-bg: rgba(6, 18, 12, 0.7);
+  --btn-secondary-border: rgba(243, 166, 40, 0.2);
+  --btn-secondary-hover-bg: rgba(243, 166, 40, 0.06);
+
   --accent: hsl(38, 70%, 45%);
   --accent-light: hsl(38, 70%, 55%);
   --accent-dark: hsl(38, 70%, 35%);
@@ -1682,6 +1811,20 @@ body.ambient-night-early {
 
 /* 5. Late Night / Brahma Muhurta - Ratri (11:00 PM to 5:30 AM) */
 body.ambient-night-late {
+  --bg: #040E0A;
+  --primary: hsl(145, 30%, 10%);
+  --primary-light: hsl(145, 30%, 18%);
+  --bg-dark: #020805;
+  --bg-card: rgba(14, 38, 25, 0.5);
+  --text: hsl(38, 20%, 88%);
+  --text-light: hsl(38, 10%, 65%);
+  --glass-bg: rgba(4, 13, 8, 0.7);
+  --glass-border: rgba(243, 166, 40, 0.12);
+  --header-bg-scrolled: rgba(2, 8, 5, 0.95);
+  --input-bg: rgba(4, 13, 8, 0.7);
+  --btn-secondary-border: rgba(243, 166, 40, 0.15);
+  --btn-secondary-hover-bg: rgba(243, 166, 40, 0.05);
+
   --accent: hsl(170, 30%, 45%);
   --accent-light: hsl(170, 30%, 55%);
   --accent-dark: hsl(170, 30%, 35%);

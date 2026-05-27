@@ -459,6 +459,29 @@
     </div>
   </footer>
 
+  <!-- Ambient Controls (Jungle Time Machine Testing Widget) -->
+  <div class="ambient-control-panel" id="ambientControlPanel">
+    <button class="panel-toggle-btn" id="panelToggleBtn" aria-label="Toggle Ambiance Panel" title="Jungle Time Machine Settings">⚙️</button>
+    <div class="panel-content">
+      <h4>Jungle Time Machine</h4>
+      <div class="panel-option">
+        <label class="switch">
+          <input type="checkbox" id="syncTimeCheckbox" checked>
+          <span class="slider round"></span>
+          <span class="switch-label">Sync with local clock</span>
+        </label>
+      </div>
+      <div class="phase-selector-grid" id="phaseSelectorGrid">
+        <button class="phase-select-btn" data-phase="ambient-morning">🌅 Subah (Morning)</button>
+        <button class="phase-select-btn" data-phase="ambient-afternoon">☀️ Dopahar (Afternoon)</button>
+        <button class="phase-select-btn" data-phase="ambient-evening">🌇 Shaam (Evening)</button>
+        <button class="phase-select-btn" data-phase="ambient-night-early">🌙 Raat (Early Night)</button>
+        <button class="phase-select-btn" data-phase="ambient-night-late">🌑 Ratri (Late Night)</button>
+      </div>
+      <button class="btn-demo-cycle" id="btnDemoCycle">✨ Play Transition Cycle</button>
+    </div>
+  </div>
+
   <script src="main.js"></script>
 </body>
 </html>

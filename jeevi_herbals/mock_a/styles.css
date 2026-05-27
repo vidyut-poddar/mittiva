@@ -1702,3 +1702,204 @@ body.ambient-night-late {
     font-size: 0.75rem;
   }
 }
+
+/* ==========================================================================
+   Ambient Control Panel (Testing Widget)
+   ========================================================================== */
+.ambient-control-panel {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.panel-toggle-btn {
+  background: rgba(14, 38, 25, 0.75);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  transition: var(--transition-smooth);
+}
+
+.panel-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: rotate(45deg);
+}
+
+.ambient-control-panel.active .panel-toggle-btn {
+  transform: rotate(90deg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.panel-content {
+  background: rgba(6, 18, 12, 0.92);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  width: 260px;
+  margin-top: 10px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: auto;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.ambient-control-panel.active .panel-content {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel-content h4 {
+  font-size: 1.1rem;
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-style: italic;
+  border-bottom: 1px solid rgba(244, 239, 235, 0.08);
+  padding-bottom: 0.4rem;
+}
+
+.panel-option {
+  display: flex;
+  align-items: center;
+}
+
+/* Switch styling */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: .4s;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.switch-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Phase selector buttons grid */
+.phase-selector-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.phase-select-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-light);
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  text-align: left;
+  transition: var(--transition-smooth);
+}
+
+.phase-select-btn:hover {
+  background: rgba(243, 166, 40, 0.05);
+  color: var(--text);
+  border-color: rgba(243, 166, 40, 0.2);
+}
+
+.phase-select-btn.active {
+  background: rgba(243, 166, 40, 0.12);
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-demo-cycle {
+  background: var(--accent);
+  color: var(--primary);
+  border: none;
+  padding: 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+  width: 100%;
+  text-align: center;
+}
+
+.btn-demo-cycle:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(243, 166, 40, 0.2);
+}
+
+.btn-demo-cycle.cycling {
+  background: rgba(217, 83, 79, 0.85);
+  color: white;
+  border: 1px solid rgba(217, 83, 79, 0.3);
+}
+
+.btn-demo-cycle.cycling:hover {
+  background: rgba(217, 83, 79, 1);
+  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
+}

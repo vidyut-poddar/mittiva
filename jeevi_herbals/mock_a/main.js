@@ -607,12 +607,22 @@ function initJungleParallax() {
 }
 
 /**
- * 9. Time-Based Ambience Engine
+ * 9. Time-Based Ambience Engine & Testing Control Panel
  */
 function initTimeBasedAmbiance() {
   const badge = document.getElementById('ambientBadge');
   const badgeIcon = badge ? badge.querySelector('.ambient-icon') : null;
   const badgeText = badge ? badge.querySelector('.ambient-text') : null;
+
+  // Control Panel Elements
+  const panel = document.getElementById('ambientControlPanel');
+  const toggleBtn = document.getElementById('panelToggleBtn');
+  const syncCheckbox = document.getElementById('syncTimeCheckbox');
+  const phaseBtns = document.querySelectorAll('.phase-select-btn');
+  const demoBtn = document.getElementById('btnDemoCycle');
+
+  let cycleInterval = null;
+  let isManualMode = false;
 
   const PHASES = {
     NIGHT_LATE: {
@@ -670,56 +680,153 @@ function initTimeBasedAmbiance() {
     const now = new Date();
     const currentMins = getMinutesSinceMidnight(now.getHours(), now.getMinutes());
 
-    // Evaluate each phase
     for (const key in PHASES) {
       const phase = PHASES[key];
       const startMins = getMinutesSinceMidnight(phase.startHour, phase.startMin);
       const endMins = getMinutesSinceMidnight(phase.endHour, phase.endMin);
 
       if (startMins < endMins) {
-        // Standard range (e.g. 5:30 to 12:00)
         if (currentMins >= startMins && currentMins < endMins) {
           return phase;
         }
       } else {
-        // Over-midnight range (e.g. 23:00 to 5:30)
         if (currentMins >= startMins || currentMins < endMins) {
           return phase;
         }
       }
     }
-    return PHASES.MORNING; // Fallback
+    return PHASES.MORNING;
+  };
+
+  // Set visual phase
+  const setPhase = (phaseConfig) => {
+    // Remove other phase classes
+    for (const key in PHASES) {
+      document.body.classList.remove(PHASES[key].className);
+    }
+    
+    // Add active phase class
+    document.body.classList.add(phaseConfig.className);
+
+    // Update Header Badge
+    if (badgeIcon && badgeText) {
+      badge.style.opacity = '0';
+      badge.style.transform = 'translateY(4px)';
+      
+      setTimeout(() => {
+        badgeIcon.textContent = phaseConfig.emoji;
+        badgeText.textContent = phaseConfig.text;
+        badge.style.opacity = '1';
+        badge.style.transform = 'translateY(0)';
+      }, 400);
+    }
+
+    // Update Control Panel buttons highlight
+    phaseBtns.forEach(btn => {
+      if (btn.getAttribute('data-phase') === phaseConfig.className) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
   };
 
   const updateAmbience = () => {
-    const activePhase = getCurrentPhase();
-    
-    // Check if class is already applied to avoid redundant DOM writes
-    if (!document.body.classList.contains(activePhase.className)) {
-      // Remove other phases
-      for (const key in PHASES) {
-        document.body.classList.remove(PHASES[key].className);
-      }
-      // Add current phase
-      document.body.classList.add(activePhase.className);
+    if (isManualMode) return;
 
-      // Update badge UI
-      if (badgeIcon && badgeText) {
-        // Add a subtle text change fade effect
-        badge.style.opacity = '0';
-        badge.style.transform = 'translateY(4px)';
-        
-        setTimeout(() => {
-          badgeIcon.textContent = activePhase.emoji;
-          badgeText.textContent = activePhase.text;
-          badge.style.opacity = '1';
-          badge.style.transform = 'translateY(0)';
-        }, 400);
-      }
+    const activePhase = getCurrentPhase();
+    if (!document.body.classList.contains(activePhase.className)) {
+      setPhase(activePhase);
     }
   };
 
-  // Run immediately and check every 5 seconds for seamless real-time phase transition
+  // 1. Toggle Control Panel Collapse
+  if (toggleBtn && panel) {
+    toggleBtn.addEventListener('click', () => {
+      panel.classList.toggle('active');
+    });
+  }
+
+  // 2. Sync switch logic
+  if (syncCheckbox) {
+    syncCheckbox.addEventListener('change', () => {
+      isManualMode = !syncCheckbox.checked;
+      
+      // Stop cycling demo if checked
+      if (!isManualMode) {
+        stopCyclingDemo();
+        updateAmbience();
+      }
+    });
+  }
+
+  // 3. Manual Button Clicks
+  phaseBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Disable sync & stop demo
+      if (syncCheckbox) syncCheckbox.checked = false;
+      isManualMode = true;
+      stopCyclingDemo();
+
+      const targetClassName = btn.getAttribute('data-phase');
+      // Find matching config
+      let match = null;
+      for (const key in PHASES) {
+        if (PHASES[key].className === targetClassName) {
+          match = PHASES[key];
+          break;
+        }
+      }
+      if (match) setPhase(match);
+    });
+  });
+
+  // 4. Demo Cycle Play / Stop
+  const startCyclingDemo = () => {
+    if (syncCheckbox) syncCheckbox.checked = false;
+    isManualMode = true;
+
+    const phaseList = Object.values(PHASES);
+    let index = 0;
+
+    // Set first phase
+    setPhase(phaseList[index]);
+    index = (index + 1) % phaseList.length;
+
+    demoBtn.textContent = '🛑 Stop Transition Cycle';
+    demoBtn.classList.add('cycling');
+
+    cycleInterval = setInterval(() => {
+      setPhase(phaseList[index]);
+      index = (index + 1) % phaseList.length;
+    }, 4500); // 4.5 seconds gives the 2.5s CSS transition time to play out
+  };
+
+  const stopCyclingDemo = () => {
+    if (cycleInterval) {
+      clearInterval(cycleInterval);
+      cycleInterval = null;
+    }
+    if (demoBtn) {
+      demoBtn.textContent = '✨ Play Transition Cycle';
+      demoBtn.classList.remove('cycling');
+    }
+  };
+
+  if (demoBtn) {
+    demoBtn.addEventListener('click', () => {
+      if (cycleInterval) {
+        stopCyclingDemo();
+        if (syncCheckbox) syncCheckbox.checked = true;
+        isManualMode = false;
+        updateAmbience();
+      } else {
+        startCyclingDemo();
+      }
+    });
+  }
+
+  // Initialize
   updateAmbience();
   setInterval(updateAmbience, 5000);
 }

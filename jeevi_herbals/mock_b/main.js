@@ -206,14 +206,10 @@ function initBirdSpawner() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) return;
 
-  // Single SVG template with flap wing anchors
+  // Single illustrated bird image
   const birdInner = `
     <div class="bird-svg-wrap">
-      <svg viewBox="0 0 24 24" style="width: 100%; height: 100%;" fill="currentColor">
-        <path d="M 6 13 Q 12 8 16 12 Q 18 10 20 10 Q 18 13 16 14 Q 12 15 6 13 Z"></path>
-        <path class="wing-left" d="M 12 12 Q 10 2 6 6 Q 10 8 12 12 Z"></path>
-        <path class="wing-right" d="M 12 12 Q 16 2 20 6 Q 16 8 12 12 Z"></path>
-      </svg>
+      <img src="assets/cartoon_bird.png" alt="Flying Cartoon Bird" class="bird-img" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen;">
     </div>
   `;
 

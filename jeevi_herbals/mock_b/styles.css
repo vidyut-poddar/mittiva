@@ -225,47 +225,56 @@ section {
 /* Swinging Monkey (Visual Ref 4) */
 .swinging-monkey-container {
   position: fixed;
-  top: 8vh;
-  left: 10vw;
-  width: 75px;
-  height: 150px;
+  top: 2vh;
+  left: 8vw;
+  width: 180px;
+  height: 180px;
   z-index: 98;
   pointer-events: none;
   transform-origin: top center;
   animation: monkeySwing 3.2s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
 }
 
+.monkey-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+
 @keyframes monkeySwing {
-  0% { transform: rotate(-7deg); }
-  100% { transform: rotate(7deg); }
+  0% { transform: rotate(-10deg); }
+  100% { transform: rotate(10deg); }
 }
 
 /* Hopping Deer (Visual Ref 4) */
 .hopping-deer {
   position: fixed;
-  bottom: 3vh;
-  left: -150px;
-  width: 110px;
-  height: 88px;
+  bottom: 0.5vh;
+  left: -200px;
+  width: 140px;
+  height: 140px;
   z-index: 90;
   pointer-events: none;
   animation: deerRun 15s linear infinite;
 }
 
-.deer-svg {
+.deer-img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
   animation: deerHop 0.45s ease-in-out infinite alternate;
 }
 
 @keyframes deerRun {
-  0% { left: -150px; }
+  0% { left: -200px; }
   100% { left: 100vw; }
 }
 
 @keyframes deerHop {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+  100% { transform: translateY(-12px); }
 }
 
 /* Flying Birds Overlay */
@@ -279,10 +288,16 @@ section {
 
 .flying-bird {
   position: absolute;
-  width: 32px;
-  height: 32px;
-  color: var(--bark);
-  opacity: 0.85;
+  width: 65px;
+  height: 65px;
+  opacity: 0.95;
+}
+
+.bird-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
 }
 
 .bird-glide-ltr {
@@ -294,42 +309,24 @@ section {
 }
 
 @keyframes birdGlideLtr {
-  0% { left: -50px; transform: scale(var(--s, 1)); }
+  0% { left: -80px; transform: scale(var(--s, 1)); }
   100% { left: 100vw; transform: scale(var(--s, 1)); }
 }
 
 @keyframes birdGlideRtl {
-  0% { right: -50px; transform: scaleX(-1) scale(var(--s, 1)); }
+  0% { right: -80px; transform: scaleX(-1) scale(var(--s, 1)); }
   100% { right: 100vw; transform: scaleX(-1) scale(var(--s, 1)); }
 }
 
 .bird-svg-wrap {
+  width: 100%;
+  height: 100%;
   animation: birdBob 1.8s ease-in-out infinite alternate;
 }
 
 @keyframes birdBob {
   0% { transform: translateY(-6px); }
   100% { transform: translateY(6px); }
-}
-
-.wing-left {
-  transform-origin: 12px 12px;
-  animation: flapL 0.28s ease-in-out infinite alternate;
-}
-
-.wing-right {
-  transform-origin: 12px 12px;
-  animation: flapR 0.28s ease-in-out infinite alternate;
-}
-
-@keyframes flapL {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(-55deg); }
-}
-
-@keyframes flapR {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(55deg); }
 }
 
 /* Top Navigation */

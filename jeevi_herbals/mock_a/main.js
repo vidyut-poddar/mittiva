@@ -65,7 +65,7 @@ function initHeroAnimations() {
 }
 
 /**
- * 4. Ayurvedic Consultation Wizard
+ * 4. Natural Consultation Wizard
  */
 function initConsultationWizard() {
   const wizard = document.getElementById('consultationWizard');
@@ -92,7 +92,7 @@ function initConsultationWizard() {
   const userTypedSummary = document.getElementById('userTypedSummary');
   const recommendedIngredients = document.getElementById('recommendedIngredients');
 
-  // Mapping rules for Ayurvedic analysis
+  // Mapping rules for Natural analysis
   const SYMPTOM_RULES = {
     // Skin concerns
     acne: { dosha: 'Pitta', weight: 2, secondaryDosha: 'Kapha', botanicals: ['Kuppaimeni', 'Kasthuri Manjal'] },

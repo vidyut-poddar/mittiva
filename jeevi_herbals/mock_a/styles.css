@@ -9,156 +9,156 @@
 @property --bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: #FAF6EE;
+  initial-value: #EDE1D2;
 }
 @property --primary {
   syntax: '<color>';
   inherits: true;
-  initial-value: #32251D;
+  initial-value: #271E1A;
 }
 @property --primary-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: #5E4839;
+  initial-value: #412F26;
 }
 @property --primary-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: #1D140F;
+  initial-value: #1B1512;
 }
 @property --bg-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: #DECDBF;
+  initial-value: #E1D7C6;
 }
 @property --bg-card {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 254, 250, 0.75);
+  initial-value: rgba(253, 248, 242, 0.75);
 }
 @property --text {
   syntax: '<color>';
   inherits: true;
-  initial-value: #32251D;
+  initial-value: #271E1A;
 }
 @property --text-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: #8B7062;
+  initial-value: #8F7E76;
 }
 @property --accent-sage {
   syntax: '<color>';
   inherits: true;
-  initial-value: #849283;
+  initial-value: #6A6F4C;
 }
 @property --stone-gray {
   syntax: '<color>';
   inherits: true;
-  initial-value: #B1B5B1;
+  initial-value: #CCBBA6;
 }
 @property --glass-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 254, 250, 0.82);
+  initial-value: rgba(253, 248, 242, 0.82);
 }
 @property --glass-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0.22);
+  initial-value: rgba(200, 155, 108, 0.22);
 }
 @property --accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(40, 62%, 52%);
+  initial-value: #C89B6C;
 }
 @property --accent-light {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(40, 72%, 62%);
+  initial-value: #D4A97A;
 }
 @property --accent-dark {
   syntax: '<color>';
   inherits: true;
-  initial-value: hsl(40, 62%, 42%);
+  initial-value: #B68759;
 }
 @property --ambient-glow-color {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0.12);
+  initial-value: rgba(200, 155, 108, 0.12);
 }
 @property --ambient-ray-color-start {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0);
+  initial-value: rgba(200, 155, 108, 0);
 }
 @property --ambient-ray-color-mid {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0.02);
+  initial-value: rgba(200, 155, 108, 0.02);
 }
 @property --ambient-ray-color-high {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0.04);
+  initial-value: rgba(200, 155, 108, 0.04);
 }
 @property --ambient-mist-color-1 {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(139, 112, 98, 0.15);
+  initial-value: rgba(143, 126, 118, 0.15);
 }
 @property --ambient-mist-color-2 {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(212, 163, 67, 0.05);
+  initial-value: rgba(200, 155, 108, 0.05);
 }
 @property --header-bg-scrolled {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(250, 246, 238, 0.96);
+  initial-value: rgba(237, 225, 210, 0.96);
 }
 @property --input-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(255, 254, 250, 0.85);
+  initial-value: rgba(253, 248, 242, 0.85);
 }
 @property --btn-secondary-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(139, 112, 98, 0.25);
+  initial-value: rgba(128, 96, 68, 0.25);
 }
 @property --btn-secondary-hover-bg {
   syntax: '<color>';
   inherits: true;
-  initial-value: rgba(139, 112, 98, 0.05);
+  initial-value: rgba(128, 96, 68, 0.05);
 }
 
 :root {
   /* Color Palette - Default Cream/Ivory Theme (Morning) */
-  --bg: #FAF6EE;
-  --primary: #32251D;
-  --primary-light: #5E4839;
-  --primary-dark: #1D140F;
-  --bg-dark: #DECDBF;
-  --bg-card: rgba(255, 254, 250, 0.75);
-  --text: #32251D;
-  --text-light: #8B7062;
+  --bg: #EDE1D2;
+  --primary: #271E1A;
+  --primary-light: #412F26;
+  --primary-dark: #1B1512;
+  --bg-dark: #E1D7C6;
+  --bg-card: rgba(253, 248, 242, 0.75);
+  --text: #271E1A;
+  --text-light: #8F7E76;
   --text-white: #ffffff;
   
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
+  --accent-sage: #6A6F4C;
+  --stone-gray: #CCBBA6;
   
-  --glass-bg: rgba(255, 254, 250, 0.82);
-  --glass-border: rgba(212, 163, 67, 0.22);
-  --glass-shadow: 0 10px 30px 0 rgba(139, 112, 98, 0.05);
+  --glass-bg: rgba(253, 248, 242, 0.82);
+  --glass-border: rgba(200, 155, 108, 0.22);
+  --glass-shadow: 0 10px 30px 0 rgba(65, 47, 38, 0.05);
   
-  --accent: hsl(40, 62%, 52%);
-  --accent-light: hsl(40, 72%, 62%);
-  --accent-dark: hsl(40, 62%, 42%);
+  --accent: #C89B6C;
+  --accent-light: #D4A97A;
+  --accent-dark: #B68759;
 
-  --header-bg-scrolled: rgba(250, 246, 238, 0.96);
-  --input-bg: rgba(255, 254, 250, 0.85);
-  --btn-secondary-border: rgba(139, 112, 98, 0.25);
-  --btn-secondary-hover-bg: rgba(139, 112, 98, 0.05);
+  --header-bg-scrolled: rgba(237, 225, 210, 0.96);
+  --input-bg: rgba(253, 248, 242, 0.85);
+  --btn-secondary-border: rgba(128, 96, 68, 0.25);
+  --btn-secondary-hover-bg: rgba(128, 96, 68, 0.05);
   
   /* Layout & Sizing */
   --max-width: 1280px;
@@ -1721,161 +1721,161 @@ body {
 
 /* 1. Morning - Subah (5:30 AM to 12:00 PM) */
 body.ambient-morning {
-  --bg: #FAF7F0;
-  --primary: #32251D;
-  --primary-light: #5E4839;
-  --primary-dark: #1D140F;
-  --bg-dark: #FAF2E5;
-  --bg-card: rgba(255, 254, 250, 0.75);
-  --text: #32251D;
-  --text-light: #8B7062;
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
-  --glass-bg: rgba(255, 254, 250, 0.82);
-  --glass-border: rgba(212, 163, 67, 0.22);
-  --header-bg-scrolled: rgba(250, 246, 238, 0.96);
-  --input-bg: rgba(255, 254, 250, 0.85);
-  --btn-secondary-border: rgba(139, 112, 98, 0.25);
-  --btn-secondary-hover-bg: rgba(139, 112, 98, 0.05);
+  --bg: #EDE1D2;
+  --primary: #271E1A;
+  --primary-light: #412F26;
+  --primary-dark: #1B1512;
+  --bg-dark: #E1D7C6;
+  --bg-card: rgba(253, 248, 242, 0.75);
+  --text: #271E1A;
+  --text-light: #8F7E76;
+  --accent-sage: #6A6F4C;
+  --stone-gray: #CCBBA6;
+  --glass-bg: rgba(253, 248, 242, 0.82);
+  --glass-border: rgba(200, 155, 108, 0.22);
+  --header-bg-scrolled: rgba(237, 225, 210, 0.96);
+  --input-bg: rgba(253, 248, 242, 0.85);
+  --btn-secondary-border: rgba(128, 96, 68, 0.25);
+  --btn-secondary-hover-bg: rgba(128, 96, 68, 0.05);
 
-  --accent: hsl(38, 60%, 48%);
-  --accent-light: hsl(38, 70%, 58%);
-  --accent-dark: hsl(38, 60%, 38%);
-  --ambient-glow-color: rgba(212, 163, 67, 0.12);
-  --ambient-ray-color-start: rgba(212, 163, 67, 0);
-  --ambient-ray-color-mid: rgba(212, 163, 67, 0.02);
-  --ambient-ray-color-high: rgba(212, 163, 67, 0.04);
+  --accent: #C89B6C;
+  --accent-light: #D4A97A;
+  --accent-dark: #B68759;
+  --ambient-glow-color: rgba(200, 155, 108, 0.12);
+  --ambient-ray-color-start: rgba(200, 155, 108, 0);
+  --ambient-ray-color-mid: rgba(200, 155, 108, 0.02);
+  --ambient-ray-color-high: rgba(200, 155, 108, 0.04);
   --ambient-ray-opacity: 0.75;
-  --ambient-mist-color-1: rgba(139, 112, 98, 0.15);
-  --ambient-mist-color-2: rgba(212, 163, 67, 0.05);
+  --ambient-mist-color-1: rgba(143, 126, 118, 0.15);
+  --ambient-mist-color-2: rgba(200, 155, 108, 0.05);
   --ambient-mist-opacity: 0.6;
 }
 
 /* 2. Afternoon - Dopahar (12:00 PM to 4:00 PM) */
 body.ambient-afternoon {
-  --bg: #FDFBF7;
-  --primary: #2C211A;
-  --primary-light: #554133;
-  --primary-dark: #1A120E;
-  --bg-dark: #F4EFE6;
+  --bg: #FAF7F2;
+  --primary: #231B17;
+  --primary-light: #3F2D25;
+  --primary-dark: #17120F;
+  --bg-dark: #E9DFC9;
   --bg-card: rgba(255, 255, 255, 0.7);
-  --text: #231B16;
-  --text-light: #80675B;
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
+  --text: #231B17;
+  --text-light: #806044;
+  --accent-sage: #646139;
+  --stone-gray: #CCBBA6;
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(212, 163, 67, 0.18);
-  --header-bg-scrolled: rgba(253, 251, 247, 0.96);
+  --glass-border: rgba(200, 155, 108, 0.18);
+  --header-bg-scrolled: rgba(250, 247, 242, 0.96);
   --input-bg: rgba(255, 255, 255, 0.8);
-  --btn-secondary-border: rgba(128, 103, 91, 0.2);
-  --btn-secondary-hover-bg: rgba(128, 103, 91, 0.05);
+  --btn-secondary-border: rgba(128, 96, 68, 0.2);
+  --btn-secondary-hover-bg: rgba(128, 96, 68, 0.05);
 
-  --accent: hsl(40, 68%, 46%);
-  --accent-light: hsl(40, 78%, 56%);
-  --accent-dark: hsl(40, 68%, 36%);
-  --ambient-glow-color: rgba(255, 220, 140, 0.15);
-  --ambient-ray-color-start: rgba(255, 240, 180, 0);
-  --ambient-ray-color-mid: rgba(255, 240, 180, 0.03);
-  --ambient-ray-color-high: rgba(255, 240, 180, 0.05);
+  --accent: #CBB89D;
+  --accent-light: #DACBB6;
+  --accent-dark: #B7A387;
+  --ambient-glow-color: rgba(203, 184, 157, 0.15);
+  --ambient-ray-color-start: rgba(253, 248, 242, 0);
+  --ambient-ray-color-mid: rgba(253, 248, 242, 0.03);
+  --ambient-ray-color-high: rgba(253, 248, 242, 0.05);
   --ambient-ray-opacity: 0.85;
-  --ambient-mist-color-1: rgba(128, 103, 91, 0.08);
-  --ambient-mist-color-2: rgba(212, 163, 67, 0.03);
+  --ambient-mist-color-1: rgba(143, 126, 118, 0.08);
+  --ambient-mist-color-2: rgba(200, 155, 108, 0.03);
   --ambient-mist-opacity: 0.4;
 }
 
 /* 3. Evening - Shaam (4:00 PM to 7:30 PM) */
 body.ambient-evening {
-  --bg: #FFF9F2;
-  --primary: #2D221A;
-  --primary-light: #584438;
-  --primary-dark: #1E140F;
-  --bg-dark: #EFE0D0;
-  --bg-card: rgba(255, 253, 248, 0.7);
-  --text: #2D221A;
-  --text-light: #8E705C;
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
-  --glass-bg: rgba(255, 253, 248, 0.8);
-  --glass-border: rgba(224, 130, 68, 0.2);
-  --header-bg-scrolled: rgba(255, 249, 242, 0.96);
-  --input-bg: rgba(255, 253, 248, 0.8);
-  --btn-secondary-border: rgba(142, 112, 92, 0.2);
-  --btn-secondary-hover-bg: rgba(142, 112, 92, 0.05);
+  --bg: #FAF0E6;
+  --primary: #362015;
+  --primary-light: #5D2510;
+  --primary-dark: #211009;
+  --bg-dark: #E8D1C4;
+  --bg-card: rgba(254, 250, 245, 0.7);
+  --text: #362015;
+  --text-light: #946956;
+  --accent-sage: #6A6F4C;
+  --stone-gray: #CCBBA6;
+  --glass-bg: rgba(254, 250, 245, 0.8);
+  --glass-border: rgba(148, 105, 86, 0.2);
+  --header-bg-scrolled: rgba(250, 240, 230, 0.96);
+  --input-bg: rgba(254, 250, 245, 0.8);
+  --btn-secondary-border: rgba(148, 105, 86, 0.2);
+  --btn-secondary-hover-bg: rgba(148, 105, 86, 0.05);
 
-  --accent: hsl(28, 75%, 48%);
-  --accent-light: hsl(28, 85%, 58%);
-  --accent-dark: hsl(28, 75%, 38%);
-  --ambient-glow-color: rgba(224, 130, 68, 0.12);
-  --ambient-ray-color-start: rgba(255, 140, 70, 0);
-  --ambient-ray-color-mid: rgba(255, 140, 70, 0.025);
-  --ambient-ray-color-high: rgba(255, 140, 70, 0.05);
+  --accent: #C6957A;
+  --accent-light: #D9AD95;
+  --accent-dark: #B07C61;
+  --ambient-glow-color: rgba(93, 37, 16, 0.12);
+  --ambient-ray-color-start: rgba(93, 37, 16, 0);
+  --ambient-ray-color-mid: rgba(93, 37, 16, 0.025);
+  --ambient-ray-color-high: rgba(93, 37, 16, 0.05);
   --ambient-ray-opacity: 0.70;
-  --ambient-mist-color-1: rgba(142, 112, 92, 0.3);
-  --ambient-mist-color-2: rgba(224, 130, 68, 0.1);
+  --ambient-mist-color-1: rgba(93, 37, 16, 0.3);
+  --ambient-mist-color-2: rgba(148, 105, 86, 0.1);
   --ambient-mist-opacity: 0.75;
 }
 
 /* 4. Early Night - Raat (7:30 PM to 11:00 PM) */
 body.ambient-night-early {
-  --bg: #120E0B;
-  --primary: #1C1612;
-  --primary-light: #2D241E;
-  --primary-dark: #080605;
-  --bg-dark: #0B0806;
-  --bg-card: rgba(30, 24, 20, 0.6);
-  --text: hsl(38, 25%, 90%);
-  --text-light: hsl(38, 15%, 72%);
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
-  --glass-bg: rgba(18, 14, 11, 0.75);
-  --glass-border: rgba(212, 163, 67, 0.18);
-  --header-bg-scrolled: rgba(18, 14, 11, 0.95);
-  --input-bg: rgba(18, 14, 11, 0.7);
-  --btn-secondary-border: rgba(212, 163, 67, 0.2);
-  --btn-secondary-hover-bg: rgba(212, 163, 67, 0.06);
+  --bg: #271E1A;
+  --primary: #1D1613;
+  --primary-light: #412F26;
+  --primary-dark: #0F0A08;
+  --bg-dark: #1D1613;
+  --bg-card: rgba(65, 47, 38, 0.6);
+  --text: #EDE1D2;
+  --text-light: #CCBBA6;
+  --accent-sage: #6A6F4C;
+  --stone-gray: #CCBBA6;
+  --glass-bg: rgba(39, 30, 26, 0.75);
+  --glass-border: rgba(200, 155, 108, 0.18);
+  --header-bg-scrolled: rgba(39, 30, 26, 0.95);
+  --input-bg: rgba(39, 30, 26, 0.7);
+  --btn-secondary-border: rgba(200, 155, 108, 0.2);
+  --btn-secondary-hover-bg: rgba(200, 155, 108, 0.06);
 
-  --accent: hsl(38, 65%, 48%);
-  --accent-light: hsl(38, 75%, 58%);
-  --accent-dark: hsl(38, 65%, 38%);
-  --ambient-glow-color: rgba(212, 163, 67, 0.08);
-  --ambient-ray-color-start: rgba(212, 163, 67, 0);
-  --ambient-ray-color-mid: rgba(212, 163, 67, 0.015);
-  --ambient-ray-color-high: rgba(212, 163, 67, 0.03);
+  --accent: #C89B6C;
+  --accent-light: #D4A97A;
+  --accent-dark: #B68759;
+  --ambient-glow-color: rgba(200, 155, 108, 0.08);
+  --ambient-ray-color-start: rgba(200, 155, 108, 0);
+  --ambient-ray-color-mid: rgba(200, 155, 108, 0.015);
+  --ambient-ray-color-high: rgba(200, 155, 108, 0.03);
   --ambient-ray-opacity: 0.40;
-  --ambient-mist-color-1: rgba(30, 24, 20, 0.5);
-  --ambient-mist-color-2: rgba(11, 8, 6, 0.25);
+  --ambient-mist-color-1: rgba(65, 47, 38, 0.5);
+  --ambient-mist-color-2: #1D1613;
   --ambient-mist-opacity: 0.8;
 }
 
 /* 5. Late Night / Brahma Muhurta - Ratri (11:00 PM to 5:30 AM) */
 body.ambient-night-late {
-  --bg: #0A0908;
-  --primary: #141312;
-  --primary-light: #242321;
-  --primary-dark: #040404;
-  --bg-dark: #050504;
-  --bg-card: rgba(20, 19, 18, 0.55);
-  --text: hsl(43, 20%, 88%);
-  --text-light: hsl(43, 10%, 65%);
-  --accent-sage: #849283;
-  --stone-gray: #B1B5B1;
-  --glass-bg: rgba(10, 9, 8, 0.7);
-  --glass-border: rgba(212, 163, 67, 0.15);
-  --header-bg-scrolled: rgba(10, 9, 8, 0.95);
-  --input-bg: rgba(10, 9, 8, 0.7);
-  --btn-secondary-border: rgba(212, 163, 67, 0.15);
-  --btn-secondary-hover-bg: rgba(212, 163, 67, 0.05);
+  --bg: #1B1512;
+  --primary: #0F0A08;
+  --primary-light: #271E1A;
+  --primary-dark: #070403;
+  --bg-dark: #0F0A08;
+  --bg-card: rgba(39, 30, 26, 0.55);
+  --text: #EDE1D2;
+  --text-light: #CCBBA6;
+  --accent-sage: #6A6F4C;
+  --stone-gray: #CCBBA6;
+  --glass-bg: rgba(27, 21, 18, 0.7);
+  --glass-border: rgba(200, 155, 108, 0.15);
+  --header-bg-scrolled: rgba(27, 21, 18, 0.95);
+  --input-bg: rgba(27, 21, 18, 0.7);
+  --btn-secondary-border: rgba(200, 155, 108, 0.15);
+  --btn-secondary-hover-bg: rgba(200, 155, 108, 0.05);
 
-  --accent: hsl(43, 60%, 46%);
-  --accent-light: hsl(43, 70%, 56%);
-  --accent-dark: hsl(43, 60%, 36%);
-  --ambient-glow-color: rgba(212, 163, 67, 0.06);
-  --ambient-ray-color-start: rgba(212, 163, 67, 0);
-  --ambient-ray-color-mid: rgba(212, 163, 67, 0.01);
-  --ambient-ray-color-high: rgba(212, 163, 67, 0.02);
+  --accent: #C89B6C;
+  --accent-light: #D4A97A;
+  --accent-dark: #B68759;
+  --ambient-glow-color: rgba(200, 155, 108, 0.06);
+  --ambient-ray-color-start: rgba(200, 155, 108, 0);
+  --ambient-ray-color-mid: rgba(200, 155, 108, 0.01);
+  --ambient-ray-color-high: rgba(200, 155, 108, 0.02);
   --ambient-ray-opacity: 0.30;
-  --ambient-mist-color-1: rgba(20, 19, 18, 0.6);
-  --ambient-mist-color-2: rgba(5, 5, 4, 0.3);
+  --ambient-mist-color-1: rgba(39, 30, 26, 0.6);
+  --ambient-mist-color-2: #0F0A08;
   --ambient-mist-opacity: 0.85;
 }
 

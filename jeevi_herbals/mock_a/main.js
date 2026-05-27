@@ -400,10 +400,10 @@ function initLeafFall() {
   const leafCount = 18;
   const leaves = [];
   const leafColors = [
-    'rgba(132, 146, 131, 0.4)',  // Muted Sage Green
-    'rgba(139, 112, 98, 0.35)', // Dusty Terracotta Rose Clay
-    'rgba(222, 205, 191, 0.3)',  // Warm Cream/Sand
-    'rgba(212, 163, 67, 0.25)'   // Translucent Theme Gold
+    'rgba(106, 111, 76, 0.4)',   // Muted Organic Olive
+    'rgba(148, 105, 86, 0.35)',  // Warm Leather Terracotta
+    'rgba(237, 225, 210, 0.3)',  // Coconut Ivory/Sand
+    'rgba(200, 155, 108, 0.25)'  // Translucent Bronze Gold
   ];
 
   class Leaf {

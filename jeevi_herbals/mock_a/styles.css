@@ -5,6 +5,53 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
+/* Register CSS custom properties for smooth HSL and color gradient transitions */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: hsl(38, 85%, 55%);
+}
+@property --accent-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: hsl(38, 85%, 65%);
+}
+@property --accent-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: hsl(38, 85%, 45%);
+}
+@property --ambient-glow-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(243, 166, 40, 0.12);
+}
+@property --ambient-ray-color-start {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(243, 166, 40, 0);
+}
+@property --ambient-ray-color-mid {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(243, 166, 40, 0.02);
+}
+@property --ambient-ray-color-high {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(243, 166, 40, 0.04);
+}
+@property --ambient-mist-color-1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(14, 38, 25, 0.4);
+}
+@property --ambient-mist-color-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(6, 18, 12, 0.2);
+}
+
 :root {
   /* Color Palette - Deep Jungle HSL Tokens */
   --primary-h: 145;
@@ -14,12 +61,10 @@
   --primary-light: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) + 8%)); /* Deep Moss */
   --primary-dark: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 2%));
   
-  --accent-h: 38;
-  --accent-s: 85%;
-  --accent-l: 55%;
-  --accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l)); /* Sunbeam Amber / Jungle Gold */
-  --accent-light: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 10%));
-  --accent-dark: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 10%));
+  /* Accent Colors (Default: Morning Gold) */
+  --accent: hsl(38, 85%, 55%); /* Sunbeam Amber / Jungle Gold */
+  --accent-light: hsl(38, 85%, 65%);
+  --accent-dark: hsl(38, 85%, 45%);
   
   --bg-h: 145;
   --bg-s: 40%;
@@ -126,21 +171,22 @@ img {
   pointer-events: none;
   background: repeating-linear-gradient(
     120deg,
-    rgba(243, 166, 40, 0) 0%,
-    rgba(243, 166, 40, 0.02) 8%,
-    rgba(243, 166, 40, 0) 15%,
-    rgba(243, 166, 40, 0.04) 22%,
-    rgba(243, 166, 40, 0) 30%
+    var(--ambient-ray-color-start, rgba(243, 166, 40, 0)) 0%,
+    var(--ambient-ray-color-mid, rgba(243, 166, 40, 0.02)) 8%,
+    var(--ambient-ray-color-start, rgba(243, 166, 40, 0)) 15%,
+    var(--ambient-ray-color-high, rgba(243, 166, 40, 0.04)) 22%,
+    var(--ambient-ray-color-start, rgba(243, 166, 40, 0)) 30%
   );
   background-size: 200% 200%;
   animation: raysShimmer 22s ease-in-out infinite;
   mix-blend-mode: screen;
-  opacity: 0.65;
+  opacity: var(--ambient-ray-opacity, 0.65);
+  transition: opacity 2.5s ease;
 }
 
 @keyframes raysShimmer {
-  0%, 100% { background-position: 0% 0%; opacity: 0.4; }
-  50% { background-position: 100% 100%; opacity: 0.85; }
+  0%, 100% { background-position: 0% 0%; opacity: calc(var(--ambient-ray-opacity, 0.65) * 0.6); }
+  50% { background-position: 100% 100%; opacity: var(--ambient-ray-opacity, 0.65); }
 }
 
 /* Drifting Forest Mist / Fog Overlay */
@@ -150,12 +196,18 @@ img {
   bottom: 0;
   width: 140vw;
   height: 40vh;
-  background: radial-gradient(circle at 50% 100%, rgba(14, 38, 25, 0.4) 0%, rgba(6, 18, 12, 0.2) 50%, transparent 100%);
+  background: radial-gradient(
+    circle at 50% 100%,
+    var(--ambient-mist-color-1, rgba(14, 38, 25, 0.4)) 0%,
+    var(--ambient-mist-color-2, rgba(6, 18, 12, 0.2)) 50%,
+    transparent 100%
+  );
   filter: blur(40px);
   pointer-events: none;
   z-index: 2; /* Sits on forest floor, behind text content */
   animation: mistDrift 28s ease-in-out infinite alternate;
-  opacity: 0.75;
+  opacity: var(--ambient-mist-opacity, 0.75);
+  transition: opacity 2.5s ease;
 }
 
 @keyframes mistDrift {
@@ -353,8 +405,9 @@ header {
   align-items: center;
   padding: 10rem 0 6rem;
   background: linear-gradient(180deg, rgba(4, 13, 8, 0) 0%, var(--bg) 95%),
-              radial-gradient(circle at 75% 30%, rgba(243, 166, 40, 0.12) 0%, transparent 60%);
+              radial-gradient(circle at 75% 30%, var(--ambient-glow-color, rgba(243, 166, 40, 0.12)) 0%, transparent 60%);
   z-index: 2;
+  transition: background 2.5s ease;
 }
 
 .hero-grid {
@@ -1513,5 +1566,139 @@ footer {
   
   .section-title {
     font-size: 2.4rem;
+  }
+}
+
+/* ==========================================================================
+   Ambient Time-of-Day Engine Styles
+   ========================================================================== */
+
+.ambient-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(14, 38, 25, 0.45);
+  border: 1px solid var(--glass-border);
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease, var(--transition-smooth);
+  margin-right: 0.5rem;
+}
+
+.ambient-badge:hover {
+  background: rgba(14, 38, 25, 0.65);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(4, 13, 8, 0.3);
+}
+
+.ambient-badge .ambient-icon {
+  font-size: 1.05rem;
+}
+
+.ambient-badge .ambient-text {
+  font-family: var(--font-sans);
+}
+
+/* Transitions for registered CSS properties to enable smooth visual fades */
+body {
+  transition: --accent 2.5s ease, --accent-light 2.5s ease, --accent-dark 2.5s ease;
+}
+.god-rays {
+  transition: opacity 2.5s ease, --ambient-ray-color-mid 2.5s ease, --ambient-ray-color-high 2.5s ease, --ambient-ray-color-start 2.5s ease;
+}
+.forest-mist {
+  transition: opacity 2.5s ease, --ambient-mist-color-1 2.5s ease, --ambient-mist-color-2 2.5s ease;
+}
+.hero {
+  transition: --ambient-glow-color 2.5s ease, background 2.5s ease;
+}
+
+/* 1. Morning - Subah (5:30 AM to 12:00 PM) */
+body.ambient-morning {
+  --accent: hsl(42, 90%, 58%);
+  --accent-light: hsl(42, 90%, 68%);
+  --accent-dark: hsl(42, 90%, 48%);
+  --ambient-glow-color: rgba(255, 200, 120, 0.15);
+  --ambient-ray-color-start: rgba(255, 230, 160, 0);
+  --ambient-ray-color-mid: rgba(255, 230, 160, 0.03);
+  --ambient-ray-color-high: rgba(255, 230, 160, 0.05);
+  --ambient-ray-opacity: 0.75;
+  --ambient-mist-color-1: rgba(20, 50, 35, 0.3);
+  --ambient-mist-color-2: rgba(10, 30, 20, 0.15);
+  --ambient-mist-opacity: 0.6;
+}
+
+/* 2. Afternoon - Dopahar (12:00 PM to 4:00 PM) */
+body.ambient-afternoon {
+  --accent: hsl(38, 95%, 52%);
+  --accent-light: hsl(38, 95%, 62%);
+  --accent-dark: hsl(38, 95%, 42%);
+  --ambient-glow-color: rgba(255, 220, 140, 0.2);
+  --ambient-ray-color-start: rgba(255, 255, 255, 0);
+  --ambient-ray-color-mid: rgba(255, 255, 255, 0.04);
+  --ambient-ray-color-high: rgba(255, 255, 255, 0.06);
+  --ambient-ray-opacity: 0.85;
+  --ambient-mist-color-1: rgba(14, 38, 25, 0.15);
+  --ambient-mist-color-2: rgba(6, 18, 12, 0.05);
+  --ambient-mist-opacity: 0.4;
+}
+
+/* 3. Evening - Shaam (4:00 PM to 7:30 PM) */
+body.ambient-evening {
+  --accent: hsl(22, 85%, 52%);
+  --accent-light: hsl(22, 85%, 62%);
+  --accent-dark: hsl(22, 85%, 42%);
+  --ambient-glow-color: rgba(220, 60, 120, 0.15);
+  --ambient-ray-color-start: rgba(255, 120, 40, 0);
+  --ambient-ray-color-mid: rgba(255, 120, 40, 0.03);
+  --ambient-ray-color-high: rgba(255, 120, 40, 0.06);
+  --ambient-ray-opacity: 0.70;
+  --ambient-mist-color-1: rgba(45, 15, 30, 0.5);
+  --ambient-mist-color-2: rgba(25, 8, 20, 0.25);
+  --ambient-mist-opacity: 0.75;
+}
+
+/* 4. Early Night - Raat (7:30 PM to 11:00 PM) */
+body.ambient-night-early {
+  --accent: hsl(38, 70%, 45%);
+  --accent-light: hsl(38, 70%, 55%);
+  --accent-dark: hsl(38, 70%, 35%);
+  --ambient-glow-color: rgba(14, 38, 25, 0.1);
+  --ambient-ray-color-start: rgba(243, 166, 40, 0);
+  --ambient-ray-color-mid: rgba(243, 166, 40, 0.01);
+  --ambient-ray-color-high: rgba(243, 166, 40, 0.02);
+  --ambient-ray-opacity: 0.40;
+  --ambient-mist-color-1: rgba(8, 22, 14, 0.55);
+  --ambient-mist-color-2: rgba(4, 12, 8, 0.3);
+  --ambient-mist-opacity: 0.8;
+}
+
+/* 5. Late Night / Brahma Muhurta - Ratri (11:00 PM to 5:30 AM) */
+body.ambient-night-late {
+  --accent: hsl(170, 30%, 45%);
+  --accent-light: hsl(170, 30%, 55%);
+  --accent-dark: hsl(170, 30%, 35%);
+  --ambient-glow-color: rgba(14, 45, 60, 0.2);
+  --ambient-ray-color-start: rgba(130, 200, 220, 0);
+  --ambient-ray-color-mid: rgba(130, 200, 220, 0.015);
+  --ambient-ray-color-high: rgba(130, 200, 220, 0.025);
+  --ambient-ray-opacity: 0.30;
+  --ambient-mist-color-1: rgba(6, 22, 28, 0.65);
+  --ambient-mist-color-2: rgba(3, 11, 14, 0.35);
+  --ambient-mist-opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .ambient-badge {
+    margin-right: 0;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
   }
 }

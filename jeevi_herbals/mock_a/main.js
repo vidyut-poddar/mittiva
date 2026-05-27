@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimationsFallback();
   initLeafFall();
   initJungleParallax();
+  initTimeBasedAmbiance();
 });
 
 /**
@@ -459,7 +460,7 @@ function initLeafFall() {
   }
 
   // Floating Fireflies (Glowing Amber Dots)
-  const fireflyCount = 25;
+  const maxFireflies = 45;
   const fireflies = [];
   const fireflyColors = [
     'rgba(243, 166, 40, ', // Gold
@@ -505,12 +506,13 @@ function initLeafFall() {
       if (this.y > canvas.height + 10) this.y = -10;
     }
 
-    draw() {
+    draw(maxAlpha = 1.0, sizeMultiplier = 1.0) {
       ctx.save();
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = this.colorBase + this.alpha + ')';
-      ctx.shadowBlur = this.size * 3;
+      const currentAlpha = Math.min(this.alpha, maxAlpha);
+      ctx.arc(this.x, this.y, this.size * sizeMultiplier, 0, Math.PI * 2);
+      ctx.fillStyle = this.colorBase + currentAlpha + ')';
+      ctx.shadowBlur = this.size * sizeMultiplier * 3;
       ctx.shadowColor = this.colorBase.replace(', ', '') + ')';
       ctx.fill();
       ctx.restore();
@@ -521,7 +523,7 @@ function initLeafFall() {
     leaves.push(new Leaf());
   }
 
-  for (let i = 0; i < fireflyCount; i++) {
+  for (let i = 0; i < maxFireflies; i++) {
     fireflies.push(new Firefly());
   }
 
@@ -534,11 +536,27 @@ function initLeafFall() {
       leaf.draw();
     });
 
-    // Draw fireflies
-    fireflies.forEach(firefly => {
-      firefly.update();
-      firefly.draw();
-    });
+    // Dynamic firefly behavior based on ambient phase class on body
+    const getAmbientParams = () => {
+      const bodyClass = document.body.className;
+      if (bodyClass.includes('ambient-night-late')) {
+        return { count: 38, maxAlpha: 0.95, sizeMultiplier: 1.25 };
+      } else if (bodyClass.includes('ambient-night-early')) {
+        return { count: 32, maxAlpha: 0.85, sizeMultiplier: 1.15 };
+      } else if (bodyClass.includes('ambient-evening')) {
+        return { count: 24, maxAlpha: 0.70, sizeMultiplier: 1.0 };
+      } else if (bodyClass.includes('ambient-morning')) {
+        return { count: 12, maxAlpha: 0.40, sizeMultiplier: 0.8 };
+      } else { // Afternoon
+        return { count: 4, maxAlpha: 0.15, sizeMultiplier: 0.65 };
+      }
+    };
+
+    const params = getAmbientParams();
+    for (let i = 0; i < params.count; i++) {
+      fireflies[i].update();
+      fireflies[i].draw(params.maxAlpha, params.sizeMultiplier);
+    }
 
     animationFrameId = requestAnimationFrame(animate);
   };
@@ -586,4 +604,122 @@ function initJungleParallax() {
   hero.addEventListener('mouseenter', () => {
     imgWrapper.style.transition = 'none'; // Instant response when mouse enters
   });
+}
+
+/**
+ * 9. Time-Based Ambience Engine
+ */
+function initTimeBasedAmbiance() {
+  const badge = document.getElementById('ambientBadge');
+  const badgeIcon = badge ? badge.querySelector('.ambient-icon') : null;
+  const badgeText = badge ? badge.querySelector('.ambient-text') : null;
+
+  const PHASES = {
+    NIGHT_LATE: {
+      className: 'ambient-night-late',
+      emoji: '🌑',
+      text: 'Ratri (रात्रि)',
+      startHour: 23,
+      startMin: 0,
+      endHour: 5,
+      endMin: 30
+    },
+    MORNING: {
+      className: 'ambient-morning',
+      emoji: '🌅',
+      text: 'Subah (सुबह)',
+      startHour: 5,
+      startMin: 30,
+      endHour: 12,
+      endMin: 0
+    },
+    AFTERNOON: {
+      className: 'ambient-afternoon',
+      emoji: '☀️',
+      text: 'Dopahar (दोपहर)',
+      startHour: 12,
+      startMin: 0,
+      endHour: 16,
+      endMin: 0
+    },
+    EVENING: {
+      className: 'ambient-evening',
+      emoji: '🌇',
+      text: 'Shaam (शाम)',
+      startHour: 16,
+      startMin: 0,
+      endHour: 19,
+      endMin: 30
+    },
+    NIGHT_EARLY: {
+      className: 'ambient-night-early',
+      emoji: '🌙',
+      text: 'Raat (रात)',
+      startHour: 19,
+      startMin: 30,
+      endHour: 23,
+      endMin: 0
+    }
+  };
+
+  const getMinutesSinceMidnight = (hours, minutes) => {
+    return hours * 60 + minutes;
+  };
+
+  const getCurrentPhase = () => {
+    const now = new Date();
+    const currentMins = getMinutesSinceMidnight(now.getHours(), now.getMinutes());
+
+    // Evaluate each phase
+    for (const key in PHASES) {
+      const phase = PHASES[key];
+      const startMins = getMinutesSinceMidnight(phase.startHour, phase.startMin);
+      const endMins = getMinutesSinceMidnight(phase.endHour, phase.endMin);
+
+      if (startMins < endMins) {
+        // Standard range (e.g. 5:30 to 12:00)
+        if (currentMins >= startMins && currentMins < endMins) {
+          return phase;
+        }
+      } else {
+        // Over-midnight range (e.g. 23:00 to 5:30)
+        if (currentMins >= startMins || currentMins < endMins) {
+          return phase;
+        }
+      }
+    }
+    return PHASES.MORNING; // Fallback
+  };
+
+  const updateAmbience = () => {
+    const activePhase = getCurrentPhase();
+    
+    // Check if class is already applied to avoid redundant DOM writes
+    if (!document.body.classList.contains(activePhase.className)) {
+      // Remove other phases
+      for (const key in PHASES) {
+        document.body.classList.remove(PHASES[key].className);
+      }
+      // Add current phase
+      document.body.classList.add(activePhase.className);
+
+      // Update badge UI
+      if (badgeIcon && badgeText) {
+        // Add a subtle text change fade effect
+        badge.style.opacity = '0';
+        badge.style.transform = 'translateY(4px)';
+        
+        setTimeout(() => {
+          badgeIcon.textContent = activePhase.emoji;
+          badgeText.textContent = activePhase.text;
+          badge.style.opacity = '1';
+          badge.style.transform = 'translateY(0)';
+        }, 400);
+      }
+    }
+  };
+
+  // Run immediately and check every 5 seconds for seamless real-time phase transition
+  updateAmbience();
+  setInterval(updateAmbience, 5000);
 }

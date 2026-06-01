@@ -1,0 +1,6 @@
+{
+  "name": "mittiva-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mittiva Studio — AI song generator powered by Google Lyria 3 Pro"
+}

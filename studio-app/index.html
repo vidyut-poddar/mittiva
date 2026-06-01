@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0B0F17" />
+<title>Mittiva Studio — AI Song Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0B0F17; --rack:#0E131C; --panel:#131925; --panel-2:#171F2C; --panel-3:#1B2533;
+    --well:#0B0F17; --line:#243043; --line-2:#2D3B51;
+    --ink:#E8ECF3; --muted:#8A95A8; --dim:#6B768A; --txt2:#BBC5D6; --invert:#0C0F14;
+    --brand:#8372d0; --brand-2:#FF4DD1; --brand-lt:#B3A6EC;
+    --amber:#8372d0; --amber-dim:#574A8F;
+    --accent:#FF4DD1;
+    --green:#39D98A; --yel:#FFB545; --red:#FF5A7A;
+    --screw:#1B2533;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --cond:'Barlow Condensed','Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--ink);
+    min-height:100vh;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(140% 90% at 50% -10%, #131925 0%, var(--bg) 60%);}
+  .demo-flag{text-align:center;font:600 11px/1 var(--mono);letter-spacing:.16em;color:#fff;
+    background:linear-gradient(90deg,var(--brand),var(--brand-2));padding:7px;text-transform:uppercase}
+  .demo-flag.err{background:var(--red);color:#fff}
+  .demo-flag.ok{background:var(--green);color:var(--invert)}
+  .demo-flag.busy{background:linear-gradient(90deg,var(--brand-2),var(--brand));}
+  .wrap{max-width:1240px;margin:0 auto;padding:18px 20px 60px}
+
+  .silk{font-family:var(--cond);font-weight:600;letter-spacing:.18em;text-transform:uppercase;font-size:12px;color:var(--muted)}
+  .tag{font:500 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .read{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+  .unit{position:relative;background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line-2);border-radius:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 12px 36px rgba(0,0,0,.5)}
+  .ears{position:absolute;top:0;bottom:0;width:26px;background:var(--rack);
+    border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:9px 0}
+  .ears.r{right:0;left:auto;border-right:none;border-left:1px solid var(--line)}
+  .ears.l{left:0}
+  .screw{width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#2D3B51,var(--screw));
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.5);position:relative}
+  .screw::after{content:"";position:absolute;inset:3px;border-top:1.5px solid rgba(0,0,0,.55);transform:rotate(35deg)}
+  .unit > .body{margin:0 26px;padding:0}
+  .uhead{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;
+    border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+  .uhead .name{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:14px;color:var(--ink)}
+  .pwr{display:flex;gap:5px}
+  .pwr i{width:7px;height:7px;border-radius:50%;background:#1B2533;box-shadow:inset 0 0 2px #000}
+  .pwr i.on{background:var(--green);box-shadow:0 0 7px var(--green)}
+  .pwr i.amb{background:var(--amber);box-shadow:0 0 7px var(--amber)}
+
+  .master{margin-bottom:16px}
+  .brandplate{display:flex;align-items:center;gap:12px;padding-right:20px;border-right:1px solid var(--line)}
+  .logo{width:34px;height:34px;border-radius:7px;background:var(--well);border:1px solid var(--line-2);display:grid;place-items:center}
+  .logo span{width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#EDE2FF,var(--brand) 65%,#5A2C8F)}
+  .brandplate b{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+  .brandplate small{display:block;margin-top:3px;color:var(--dim);font:500 9.5px var(--mono);letter-spacing:.18em}
+
+  .transport{display:flex;gap:8px}
+  .tbtn{width:42px;height:38px;border-radius:6px;border:1px solid var(--line-2);background:var(--well);
+    color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:.12s}
+  .tbtn:hover{color:var(--ink);background:#0E131C}
+  .tbtn svg{width:16px;height:16px}
+  .tbtn.play{width:50px;color:var(--amber);border-color:var(--amber-dim)}
+  .tbtn.play.on{background:var(--brand);color:#fff}
+  .tbtn.rec{color:var(--dim);cursor:not-allowed}
+  .tbtn.loop.on{color:var(--amber);border-color:var(--amber-dim)}
+
+  .lcd{background:var(--well);border:1px solid var(--line-2);border-radius:7px;padding:7px 16px;
+    display:flex;align-items:center;gap:18px;box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
+  .lcd .big{font:700 26px var(--mono);letter-spacing:.04em;color:var(--brand-lt);text-shadow:0 0 12px rgba(131,114,208,.5)}
+  .lcd .stack{display:flex;flex-direction:column;gap:3px}
+  .lcd .stack .tag{color:var(--dim)}
+  .lcd .stack .v{font:500 13px var(--mono);color:var(--ink)}
+
+  .params{display:flex;gap:10px;margin-left:2px}
+  .param{background:var(--well);border:1px solid var(--line-2);border-radius:6px;padding:6px 12px;text-align:center;min-width:62px}
+  .param .tag{display:block;margin-bottom:3px}
+  .param .v{font:700 15px var(--mono);color:var(--ink)}
+
+  .meterbox{margin-left:auto;display:flex;gap:10px;align-items:flex-end}
+  .meter{display:flex;flex-direction:column-reverse;gap:2px;width:9px;height:46px}
+  .meter .seg{flex:1;border-radius:1px;background:#1B2533}
+  .mlabel{font:500 9px var(--mono);color:var(--dim);text-align:center;margin-top:4px}
+
+  .console{display:flex;flex-direction:column;gap:16px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:2px 4px}
+  .topbar .brandplate{border:none;padding-right:0}
+  .topbar .engine{font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .topbar .engine .grn{color:var(--green)}
+  .body-pad{padding:18px}
+
+  .silk-row{display:flex;align-items:center;gap:10px;margin:18px 0 9px}
+  .silk-row:first-child{margin-top:0}
+  .silk-row .ln{flex:1;height:1px;background:var(--line)}
+
+  textarea{width:100%;min-height:104px;resize:vertical;background:var(--well);
+    border:1px solid var(--line-2);border-radius:7px;color:var(--ink);padding:13px 14px;
+    font-family:'Inter';font-size:14.5px;line-height:1.55;box-shadow:inset 0 2px 8px rgba(0,0,0,.5)}
+  textarea:focus{outline:none;border-color:var(--brand);box-shadow:inset 0 2px 8px rgba(0,0,0,.5),0 0 0 2px rgba(131,114,208,.3)}
+  textarea::placeholder{color:var(--dim)}
+
+  .bank{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{border:1px solid var(--line-2);background:var(--panel);color:var(--muted);border-radius:6px;
+    padding:7px 12px;font:500 12.5px 'Inter';cursor:pointer;transition:.12s;display:inline-flex;align-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .chip:hover{color:var(--ink);background:var(--panel-2)}
+  .chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .chip svg{width:13px;height:13px;vertical-align:-2px;margin-right:6px}
+
+  select.lang{width:100%;background:var(--well);border:1px solid var(--line-2);border-radius:7px;color:var(--ink);
+    padding:11px 14px;font-family:'Inter';font-size:13.5px;cursor:pointer;appearance:none;box-shadow:inset 0 2px 8px rgba(0,0,0,.5);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23878d96' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 13px center}
+  select.lang:focus{outline:none;border-color:var(--amber-dim)}
+
+  .exp{font:500 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--brand);border-radius:3px;padding:2px 6px;margin-left:8px}
+
+  .deck{display:flex;align-items:center;gap:18px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+  .knobwrap{text-align:center;flex:none}
+  .knob{width:62px;height:62px;border-radius:50%;position:relative;margin:0 auto 6px;
+    background:radial-gradient(circle at 38% 32%,#252F40,#0E131C 70%);border:1px solid var(--line-2);
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.05)}
+  .knob .ind{position:absolute;left:50%;top:6px;width:2.5px;height:16px;background:var(--amber);border-radius:2px;
+    transform-origin:50% 25px;transform:translateX(-50%) rotate(0deg);box-shadow:0 0 6px rgba(131,114,208,.65)}
+  .knob .ticks{position:absolute;inset:-7px}
+  .knob .ticks i{position:absolute;left:50%;top:0;width:1px;height:4px;background:var(--dim);transform-origin:50% 38px}
+  .knobwrap .v{font:700 14px var(--mono);color:var(--amber)}
+  .knobwrap .tag{display:block;margin-top:2px}
+
+  .switch{flex:none}
+  .switch .tag{display:block;margin-bottom:7px;text-align:center}
+  .seg2{display:flex;border:1px solid var(--line-2);border-radius:6px;overflow:hidden;background:var(--well)}
+  .seg2 button{padding:9px 13px;background:transparent;border:none;color:var(--muted);cursor:pointer;
+    font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;transition:.12s;line-height:1.2;text-align:center}
+  .seg2 button .s{display:block;font:400 9px var(--mono);color:var(--dim);letter-spacing:.06em;margin-top:3px;text-transform:none}
+  .seg2 button:first-child{border-right:1px solid var(--line-2)}
+  .seg2 button.active{background:var(--panel-2);color:var(--amber)}
+  .seg2 button.active .s{color:var(--brand-lt)}
+
+  .generate{margin-left:auto;flex:1;min-width:170px;border:1px solid var(--amber-dim);border-radius:8px;cursor:pointer;
+    padding:15px;font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.1em;text-transform:uppercase;
+    color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.28);background:linear-gradient(120deg,var(--brand),var(--brand-2));display:flex;align-items:center;
+    justify-content:center;gap:9px;transition:.12s;box-shadow:0 0 20px rgba(255,77,209,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+  .generate:hover{filter:brightness(1.05)}
+  .generate svg{width:17px;height:17px}
+  .generate.blocked{background:var(--well);color:var(--dim);border-color:var(--line-2);box-shadow:none;cursor:not-allowed}
+  .generate.busy{cursor:progress}
+  .generate.busy svg{display:none}
+  .generate.busy::before{content:"";width:15px;height:15px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  .promptcheck{margin-top:11px;display:flex;flex-direction:column;gap:7px}
+  .flag{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line-2);border-radius:7px;padding:9px 11px;font-size:12.5px;line-height:1.5;background:var(--well)}
+  .flag svg{width:15px;height:15px;flex:none;margin-top:2px}
+  .flag .term{font-family:var(--mono);font-size:11.5px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.07);color:#fff}
+  .flag .fix{color:var(--muted);margin-top:4px;display:block;font-size:12px}
+  .flag.err{border-color:rgba(224,88,74,.55);color:#f0a99f} .flag.err svg{color:var(--red)}
+  .flag.warn{border-color:rgba(227,179,65,.5);color:#e6cf94} .flag.warn svg{color:var(--yel)}
+  .flag.ok{border-color:rgba(94,194,122,.45);color:#a6dab6} .flag.ok svg{color:var(--green)}
+
+  .takes{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .takes .tag{margin-right:3px}
+  .take{border:1px solid var(--line-2);background:var(--well);color:var(--muted);border-radius:6px;padding:7px 11px;font:500 11.5px var(--mono);cursor:pointer;transition:.12s}
+  .take:hover{color:var(--ink)} .take.active{background:var(--panel-2);color:var(--amber);border-color:var(--amber-dim)}
+  .takes .empty{font:500 11px var(--mono);color:var(--dim);letter-spacing:.04em}
+
+  .nptitle{font-family:var(--cond);font-weight:700;font-size:22px;letter-spacing:.04em;text-transform:uppercase}
+  .npmeta{margin-top:3px;color:var(--dim);font:500 11px var(--mono);letter-spacing:.04em}
+
+  .ruler{display:flex;justify-content:space-between;margin:14px 0 4px;padding:0 2px}
+  .ruler span{font:500 9.5px var(--mono);color:var(--dim)}
+  .wavewrap{position:relative;background:var(--well);border:1px solid var(--line-2);border-radius:7px;
+    padding:14px 12px;height:122px;box-shadow:inset 0 2px 10px rgba(0,0,0,.55);overflow:hidden}
+  .wavewrap.busy::after{content:"Generating — up to a minute…";position:absolute;inset:0;display:grid;place-items:center;
+    font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--brand-lt);background:rgba(11,15,23,.72)}
+  canvas#wave{width:100%;height:94px;display:block}
+  .playhead{position:absolute;top:8px;bottom:8px;left:0;width:1.5px;background:var(--brand-2);box-shadow:0 0 7px rgba(255,77,209,.7);display:none}
+  .playhead.on{display:block}
+
+  .scrub{margin-top:12px}
+  .scrub .track{height:5px;border-radius:5px;background:#1B2533;position:relative;overflow:hidden;cursor:pointer}
+  .scrub .fill{position:absolute;inset:0 100% 0 0;background:var(--amber)}
+  .times{display:flex;justify-content:space-between;font:500 10.5px var(--mono);color:var(--dim);margin-top:6px}
+
+  .strip{display:flex;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);align-items:stretch}
+  .fader{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px}
+  .fader .rail{width:30px;height:118px;background:var(--well);border:1px solid var(--line-2);border-radius:6px;position:relative;box-shadow:inset 0 2px 8px rgba(0,0,0,.6);cursor:ns-resize}
+  .fader .cap{position:absolute;left:50%;transform:translateX(-50%);width:26px;height:13px;border-radius:3px;
+    background:linear-gradient(180deg,#2D3B51,#131925);border:1px solid var(--line-2);top:18%;box-shadow:0 1px 3px rgba(0,0,0,.6)}
+  .fader .cap::after{content:"";position:absolute;left:3px;right:3px;top:50%;height:1px;background:var(--amber)}
+  .vumeter{flex:none;display:flex;flex-direction:column-reverse;gap:2px;width:11px;height:118px;background:var(--well);border:1px solid var(--line-2);border-radius:5px;padding:3px;align-self:flex-start}
+  .vumeter .seg{flex:1;border-radius:1px;background:#1B2533}
+  .strip .controls{flex:1;display:flex;flex-direction:column;gap:9px}
+  .ctlrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .tool{border:1px solid var(--line-2);background:var(--panel);color:var(--muted);border-radius:6px;padding:8px 11px;font:500 11.5px 'Inter';cursor:pointer;display:flex;align-items:center;gap:7px;transition:.12s}
+  .tool:hover{color:var(--ink)} .tool.on{border-color:var(--amber-dim);color:var(--amber);background:var(--panel-2)}
+  .tool svg{width:13px;height:13px}
+  .ms{width:34px;height:34px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel);color:var(--muted);cursor:pointer;font:700 11px var(--cond);letter-spacing:.05em}
+  .ms.m.on{background:var(--red);color:#fff;border-color:var(--red)} .ms.s.on{background:var(--yel);color:#0b0c0e;border-color:var(--yel)}
+  .reroll{display:flex;gap:9px;margin-top:auto}
+  .btn-line{flex:1;border:1px solid var(--line-2);background:var(--well);color:var(--ink);border-radius:7px;padding:10px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.12s}
+  .btn-line:hover{border-color:var(--amber-dim);color:var(--amber)} .btn-line svg{width:14px;height:14px}
+  .btn-line:disabled,.tool:disabled,.tbtn:disabled{opacity:.4;cursor:not-allowed}
+
+  .tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--line)}
+  .tab{padding:9px 13px;font:600 11px var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab.active{color:var(--amber);border-color:var(--amber)}
+  .editbadge{font:500 10px var(--mono);letter-spacing:.04em;color:var(--dim);padding:12px 2px 8px;display:flex;align-items:center;gap:7px}
+  .editbadge svg{width:13px;height:13px}
+  .lyrics{font-size:14px;line-height:1.85;color:var(--ink);max-height:260px;overflow:auto;background:var(--well);border:1px solid var(--line-2);border-radius:7px;padding:14px 15px;box-shadow:inset 0 2px 8px rgba(0,0,0,.45)}
+  .lyrics[contenteditable]:focus{outline:none;border-color:var(--amber-dim)}
+  .lyrics .sec{font:600 10px var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:15px 0 6px;display:flex;align-items:center;gap:9px}
+  .lyrics .sec:first-child{margin-top:0} .lyrics .bar{flex:1;height:1px;background:var(--line)}
+  .lyrics .hint{color:var(--dim)}
+  .regen-lyrics{margin-top:11px;width:100%;border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink);border-radius:7px;padding:12px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.12s}
+  .regen-lyrics:hover{border-color:var(--amber-dim);color:var(--amber)} .regen-lyrics svg{width:14px;height:14px}
+
+  .statusbar{margin-top:16px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:11px 18px;background:var(--rack);border:1px solid var(--line);border-radius:7px;font:500 10.5px var(--mono);letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+  .statusbar .grn{color:var(--green)} .statusbar b{color:var(--muted);font-weight:500}
+  .statusbar .sp{margin-left:auto}
+  footer.note{margin-top:18px;color:var(--dim);font:400 12.5px 'Inter';line-height:1.7}
+  footer.note code{font-family:var(--mono);color:var(--muted);font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="demo-flag" id="flag">Mittiva Studio · powered by Lyria 3 Pro</div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brandplate">
+      <div class="logo"><span></span></div>
+      <div><b>Mittiva Studio</b><small>AI Song Generator · Lyria 3 Pro</small></div>
+    </div>
+    <span class="engine"><span class="grn">●</span> Engine ready</span>
+  </div>
+
+  <div class="console">
+
+    <!-- INPUT / COMPOSER -->
+    <div class="unit">
+      <div class="ears l"><span class="screw"></span><span class="screw"></span></div>
+      <div class="ears r"><span class="screw"></span><span class="screw"></span></div>
+      <div class="body">
+        <div class="uhead">
+          <div><div class="name">Input · Composer</div></div>
+          <div class="pwr"><i class="on"></i><i class="amb"></i><i></i></div>
+        </div>
+        <div class="body-pad">
+
+          <div class="silk-row"><span class="silk">Prompt</span><span class="ln"></span></div>
+          <textarea id="prompt" placeholder="Describe the song…">A dreamy synth-pop anthem about driving through a neon city at midnight — soaring female vocals, punchy drums, hopeful and cinematic.</textarea>
+          <div class="promptcheck" id="promptcheck"></div>
+
+          <div class="silk-row"><span class="silk">Genre</span><span class="ln"></span></div>
+          <div class="bank" data-bank id="genreBank">
+            <button class="chip active">Synth-pop</button><button class="chip">Rock</button>
+            <button class="chip">Rap</button><button class="chip">Hip-hop</button>
+            <button class="chip">Lo-fi</button><button class="chip">Epic cinematic</button>
+            <button class="chip">Acoustic</button><button class="chip">EDM</button>
+            <button class="chip">Jazz</button><button class="chip">R&amp;B</button>
+            <button class="chip">Country</button><button class="chip">Metal</button>
+          </div>
+
+          <div class="silk-row"><span class="silk">Vocals</span><span class="ln"></span></div>
+          <div class="bank" data-bank id="vocalBank">
+            <button class="chip active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 21c1-4 4.5-6 7-6s6 2 7 6"/></svg>Female lead</button>
+            <button class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 21c1-4 4.5-6 7-6s6 2 7 6"/></svg>Male lead</button>
+            <button class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2 20c.7-3 3-4.5 6-4.5M22 20c-.7-3-3-4.5-6-4.5"/></svg>Duet</button>
+            <button class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="9" r="2.4"/><circle cx="12" cy="8" r="2.4"/><circle cx="17" cy="9" r="2.4"/><path d="M3 19c0-2.5 2-4 4-4s4 1.5 4 4M13 19c0-2.5 2-4 4-4s4 1.5 4 4"/></svg>Group / choir</button>
+            <button class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Instrumental</button>
+          </div>
+
+          <div class="silk-row"><span class="silk">Language</span><span class="ln"></span></div>
+          <select class="lang" id="lang">
+            <option>English</option><option>Spanish</option><option>French</option><option>German</option>
+            <option>Hindi</option><option>Japanese</option><option>Korean</option><option>Portuguese</option>
+          </select>
+
+          <div class="silk-row"><span class="silk">Accent <span class="exp">Exp</span></span><span class="ln"></span></div>
+          <div class="bank" data-bank id="accentBank">
+            <button class="chip active">Neutral</button><button class="chip">British</button>
+            <button class="chip">American</button><button class="chip">Australian</button>
+            <button class="chip">Irish</button><button class="chip">Indian-English</button>
+            <button class="chip">Southern US</button>
+          </div>
+
+          <div class="deck">
+            <div class="knobwrap">
+              <div class="knob" id="knob"><div class="ticks" id="ticks"></div><div class="ind" id="ind"></div></div>
+              <span class="v read" id="bpmval">118</span>
+              <span class="tag">Tempo BPM</span>
+            </div>
+            <div class="switch">
+              <span class="tag">Length</span>
+              <div class="seg2" data-bank id="lenSeg">
+                <button>Clip<span class="s">0:30 · Clip</span></button>
+                <button class="active">Full<span class="s">~3:00 · Pro</span></button>
+              </div>
+            </div>
+            <button class="generate" id="genbtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 3l14 9-14 9V3z"/></svg>
+              <span id="genlabel">Generate</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MASTER TRANSPORT -->
+    <div class="unit master">
+      <div class="ears l"><span class="screw"></span><span class="screw"></span></div>
+      <div class="ears r"><span class="screw"></span><span class="screw"></span></div>
+      <div class="body">
+        <div style="display:flex;align-items:center;gap:22px;padding:14px 20px;flex-wrap:wrap">
+          <div class="transport">
+            <button class="tbtn" id="tostart" title="To start"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h2v16H6zM20 4 9 12l11 8z"/></svg></button>
+            <button class="tbtn play" id="playbtn" title="Play"><svg viewBox="0 0 24 24" fill="currentColor" id="playicon"><path d="M7 4l13 8-13 8V4z"/></svg></button>
+            <button class="tbtn" id="stopbtn" title="Stop"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button>
+            <button class="tbtn loop" id="loopbtn" title="Loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></button>
+            <button class="tbtn rec" title="Record (disabled)"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></button>
+          </div>
+          <div class="lcd">
+            <span class="big read" id="tc">00:00:00:00</span>
+            <div class="stack"><span class="tag">Bar / Beat</span><span class="v read" id="barbeat">— · 4/4</span></div>
+          </div>
+          <div class="params">
+            <div class="param"><span class="tag">Tempo</span><span class="v read" id="bpmtop">118</span></div>
+            <div class="param"><span class="tag">Key</span><span class="v read">—</span></div>
+          </div>
+          <div class="meterbox">
+            <div><div class="meter" id="mL"></div><div class="mlabel">L</div></div>
+            <div><div class="meter" id="mR"></div><div class="mlabel">R</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MASTER / OUTPUT -->
+    <div class="unit">
+      <div class="ears l"><span class="screw"></span><span class="screw"></span></div>
+      <div class="ears r"><span class="screw"></span><span class="screw"></span></div>
+      <div class="body">
+        <div class="uhead">
+          <div><div class="name">Master · Output</div></div>
+          <div class="pwr"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        </div>
+        <div class="body-pad">
+
+          <div class="takes" id="takes"><span class="tag">Takes</span><span class="empty">— no takes yet</span></div>
+
+          <div class="nptitle" id="nptitle">No song yet</div>
+          <div class="npmeta" id="npmeta">Describe a song above and press Generate</div>
+
+          <div class="ruler" id="ruler"><span>0:00</span><span></span><span></span><span></span><span></span><span>0:00</span></div>
+          <div class="wavewrap" id="wavewrap">
+            <div class="playhead" id="playhead"></div>
+            <canvas id="wave"></canvas>
+          </div>
+          <div class="scrub">
+            <div class="track" id="track"><div class="fill" id="fill"></div></div>
+            <div class="times"><span class="read" id="tcur">00:00</span><span class="read" id="tdur">00:00</span></div>
+          </div>
+
+          <div class="strip">
+            <div class="fader"><div class="rail" id="rail"><div class="cap" id="cap"></div></div><span class="tag">Vol</span></div>
+            <div class="vumeter" id="mStrip"></div>
+            <div class="controls">
+              <div class="ctlrow">
+                <button class="ms m" id="mutebtn" title="Mute">M</button>
+                <button class="ms s" title="Solo">S</button>
+                <button class="tool on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v14a2 2 0 0 0 2 2h14M18 22V8a2 2 0 0 0-2-2H2"/></svg>Trim</button>
+                <button class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20L21 4M3 20h18"/></svg>Fade in</button>
+                <button class="tool"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4l18 16M3 20h18"/></svg>Fade out</button>
+                <button class="tool" id="exportbtn" title="Download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export</button>
+              </div>
+              <div class="reroll">
+                <button class="btn-line" id="newtakebtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2M18 4v5h-5M6 20v-5h5"/></svg>New take</button>
+                <button class="btn-line" id="varbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3m13 5h3a2 2 0 0 0 2-2v-3"/></svg>Variation</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab active">Lyrics</div>
+            <div class="tab">Structure</div>
+          </div>
+          <div class="editbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Tap to edit lyrics, then regenerate with your words</div>
+          <div class="lyrics" id="lyrics" contenteditable="true" spellcheck="false"><span class="hint">Lyrics will appear here after you generate. You can rewrite them and hit “Regenerate with these lyrics”.</span></div>
+          <button class="regen-lyrics" id="regenbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 14-5l2 2M18 4v5h-5"/></svg>Regenerate with these lyrics</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span><span class="grn">●</span> ENGINE READY</span>
+    <span>44.1 kHz · STEREO</span>
+    <span>MODEL <b id="stModel">LYRIA 3 PRO</b></span>
+    <span class="sp">MITTIVA STUDIO</span>
+  </div>
+
+  <footer class="note">
+    Type a prompt, choose your options, and press <code>Generate</code> — the song is created by Google
+    <code>Lyria 3 Pro</code> through a private serverless function. Trim and fade are visual for now;
+    volume, mute, playback, download and takes are live.
+  </footer>
+</div>
+
+<audio id="player" preload="auto"></audio>
+
+<script>
+  /* ---- single-select banks ---- */
+  document.querySelectorAll('[data-bank]').forEach(b =>
+    b.querySelectorAll('button').forEach(btn =>
+      btn.addEventListener('click', () => {
+        b.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+      })));
+
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); t.classList.add('active'); }));
+  document.querySelectorAll('.tool:not(#exportbtn)').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
+  document.querySelector('.ms.s').addEventListener('click', e => e.currentTarget.classList.toggle('on'));
+
+  function active(id){ const a = document.getElementById(id).querySelector('.active'); return a ? a.textContent.trim() : ''; }
+
+  /* ---- tempo knob ---- */
+  const knob=document.getElementById('knob'), ind=document.getElementById('ind'),
+        bpmval=document.getElementById('bpmval'), bpmtop=document.getElementById('bpmtop'), ticks=document.getElementById('ticks');
+  for(let i=0;i<11;i++){const t=document.createElement('i');t.style.transform=`translateX(-50%) rotate(${-135+i*27}deg)`;ticks.appendChild(t);}
+  let bpm=118;
+  function setBpm(v){bpm=Math.max(60,Math.min(180,Math.round(v)));const deg=-135+((bpm-60)/120)*270;
+    ind.style.transform=`translateX(-50%) rotate(${deg}deg)`;bpmval.textContent=bpm;bpmtop.textContent=bpm;}
+  setBpm(118);
+  let kdrag=false;
+  knob.addEventListener('pointerdown',e=>{kdrag=true;knob.setPointerCapture(e.pointerId);});
+  knob.addEventListener('pointermove',e=>{if(!kdrag)return;const r=knob.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    let a=Math.atan2(e.clientY-cy,e.clientX-cx)*180/Math.PI+90;if(a>180)a-=360;a=Math.max(-135,Math.min(135,a));setBpm(60+((a+135)/270)*120);});
+  knob.addEventListener('pointerup',()=>kdrag=false);
+  knob.addEventListener('wheel',e=>{e.preventDefault();setBpm(bpm+(e.deltaY<0?1:-1));},{passive:false});
+
+  /* ---- meters ---- */
+  function buildMeter(el,n){for(let i=0;i<n;i++){const s=document.createElement('div');s.className='seg';el.appendChild(s);}}
+  const mL=document.getElementById('mL'),mR=document.getElementById('mR'),mStrip=document.getElementById('mStrip');
+  buildMeter(mL,11);buildMeter(mR,11);buildMeter(mStrip,16);
+  function paint(el,level){const segs=el.children,n=segs.length,lit=Math.round(level*n);
+    for(let i=0;i<n;i++){const frac=i/n;let c='#1B2533';
+      if(i<lit)c=frac>0.78?'var(--brand-2)':frac>0.45?'var(--brand-lt)':'var(--brand)';segs[i].style.background=c;}}
+
+  /* ---- audio engine ---- */
+  const player=document.getElementById('player');
+  const cv=document.getElementById('wave'),ctx=cv.getContext('2d');
+  const NB=110; let peaks=Array(NB).fill(0.12); let lv=0.04;
+  let actx=null, srcNode=null, analyser=null, tdata=null;
+  function ensureAudio(){ if(actx)return;
+    try{ actx=new (window.AudioContext||window.webkitAudioContext)();
+      srcNode=actx.createMediaElementSource(player); analyser=actx.createAnalyser(); analyser.fftSize=256;
+      tdata=new Uint8Array(analyser.fftSize); srcNode.connect(analyser); analyser.connect(actx.destination);
+    }catch(e){ analyser=null; } }
+  function level(){ if(!analyser||player.paused)return null; analyser.getByteTimeDomainData(tdata);
+    let s=0; for(let i=0;i<tdata.length;i++){const v=(tdata[i]-128)/128; s+=v*v;} return Math.min(1,Math.sqrt(s/tdata.length)*2.4); }
+
+  function resize(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+  addEventListener('resize',resize);resize();
+
+  const fill=document.getElementById('fill'),playhead=document.getElementById('playhead'),tcur=document.getElementById('tcur');
+  function fmt(s){s=Math.max(0,s||0);const m=Math.floor(s/60),x=Math.floor(s%60);return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;}
+  function fmtTC(s){s=Math.max(0,s||0);const m=Math.floor(s/60),x=Math.floor(s%60),f=Math.floor((s%1)*30);
+    return '00:'+(m<10?'0':'')+m+':'+(x<10?'0':'')+x+':'+(f<10?'0':'')+f;}
+  const tcEl=document.getElementById('tc');
+
+  function draw(){
+    const w=cv.getBoundingClientRect().width,h=cv.getBoundingClientRect().height,mid=h/2,gap=w/NB,bw=gap*0.5;
+    ctx.clearRect(0,0,w,h);
+    const dur=player.duration||0, prog=dur?Math.min(1,player.currentTime/dur):0;
+    for(let i=0;i<NB;i++){const bh=Math.max(2,peaks[i]*h*0.92),x=i*gap+gap*0.25,y=mid-bh/2;
+      ctx.fillStyle=(i/NB)<prog?'#8372d0':'rgba(138,149,168,.30)';
+      const r=Math.min(bw/2,2);ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,bw,bh,r):ctx.rect(x,y,bw,bh);ctx.fill();}
+    const cur=level(); lv = cur!=null ? cur : Math.max(0.04, lv*0.86);
+    paint(mL,lv);paint(mR,Math.min(1,lv*0.94+0.03));paint(mStrip,lv);
+    if(fill) fill.style.right=(100-prog*100)+'%';
+    if(playhead){ playhead.style.left=(prog*100)+'%'; }
+    if(tcur) tcur.textContent=fmt(player.currentTime);
+    if(tcEl) tcEl.textContent=fmtTC(player.currentTime);
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  async function computePeaks(blob){
+    try{
+      const ab=await blob.arrayBuffer();
+      const dctx=new (window.AudioContext||window.webkitAudioContext)();
+      const buf=await dctx.decodeAudioData(ab.slice(0));
+      if(dctx.close) dctx.close();
+      const ch=buf.getChannelData(0); const block=Math.max(1,Math.floor(ch.length/NB)); const out=[]; let max=0;
+      for(let i=0;i<NB;i++){let p=0;const start=i*block;for(let j=0;j<block;j+=8){const v=Math.abs(ch[start+j]||0);if(v>p)p=v;}out.push(p);if(p>max)max=p;}
+      const norm=max||1; peaks=out.map(v=>0.08+(v/norm)*0.92);
+    }catch(e){ peaks=Array(NB).fill(0.2); }
+  }
+
+  /* ---- transport ---- */
+  const pb=document.getElementById('playbtn'),pi=document.getElementById('playicon');
+  function setPlayIcon(p){pb.classList.toggle('on',p);pi.innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4l13 8-13 8V4z"/>';}
+  pb.addEventListener('click',async()=>{ if(!player.src)return;
+    ensureAudio(); if(actx&&actx.state==='suspended')await actx.resume();
+    if(player.paused){ try{await player.play();}catch(e){} } else { player.pause(); } });
+  document.getElementById('stopbtn').addEventListener('click',()=>{player.pause();player.currentTime=0;});
+  document.getElementById('tostart').addEventListener('click',()=>{player.currentTime=0;});
+  document.getElementById('loopbtn').addEventListener('click',e=>{player.loop=!player.loop;e.currentTarget.classList.toggle('on',player.loop);});
+  player.addEventListener('play',()=>{playhead.classList.add('on');setPlayIcon(true);});
+  player.addEventListener('pause',()=>setPlayIcon(false));
+  player.addEventListener('ended',()=>{setPlayIcon(false);});
+  const tdur=document.getElementById('tdur'), ruler=document.getElementById('ruler'), barbeat=document.getElementById('barbeat');
+  player.addEventListener('loadedmetadata',()=>{
+    const d=player.duration||0; tdur.textContent=fmt(d);
+    const sp=ruler.children; for(let i=0;i<sp.length;i++){ sp[i].textContent=fmt(d*(i/(sp.length-1))); }
+    barbeat.textContent=Math.max(1,Math.round(d*bpm/60/4))+' · 4/4';
+  });
+  /* seek by clicking the scrub track */
+  document.getElementById('track').addEventListener('click',e=>{ if(!player.duration)return;
+    const r=e.currentTarget.getBoundingClientRect(); player.currentTime=((e.clientX-r.left)/r.width)*player.duration; });
+
+  /* ---- volume fader + mute ---- */
+  const rail=document.getElementById('rail'),cap=document.getElementById('cap');
+  function placeCap(){const railH=rail.clientHeight,capH=cap.offsetHeight||13;cap.style.top=((1-player.volume)*(railH-capH))+'px';}
+  player.volume=0.85; placeCap();
+  let vdrag=false;
+  function setVolFromY(e){const r=rail.getBoundingClientRect();let f=1-(e.clientY-r.top)/r.height;f=Math.max(0,Math.min(1,f));player.volume=f;placeCap();}
+  rail.addEventListener('pointerdown',e=>{vdrag=true;rail.setPointerCapture(e.pointerId);setVolFromY(e);});
+  rail.addEventListener('pointermove',e=>{if(vdrag)setVolFromY(e);});
+  rail.addEventListener('pointerup',()=>vdrag=false);
+  const mutebtn=document.getElementById('mutebtn');
+  mutebtn.addEventListener('click',()=>{player.muted=!player.muted;mutebtn.classList.toggle('on',player.muted);});
+
+  /* ---- takes / lyrics ---- */
+  const takes=[]; let takeSeq=0; let current=null;
+  const takesEl=document.getElementById('takes'),nptitle=document.getElementById('nptitle'),npmeta=document.getElementById('npmeta'),
+        lyricsEl=document.getElementById('lyrics'),stModel=document.getElementById('stModel');
+
+  function renderTakes(){
+    takesEl.innerHTML='<span class="tag">Takes</span>';
+    if(!takes.length){const e=document.createElement('span');e.className='empty';e.textContent='— no takes yet';takesEl.appendChild(e);return;}
+    takes.forEach(tk=>{const b=document.createElement('button');b.className='take'+(tk===current?' active':'');b.textContent='Take '+tk.n;
+      b.addEventListener('click',()=>loadTake(tk));takesEl.appendChild(b);});
+  }
+  function renderLyrics(text){
+    if(!text||!text.trim()){lyricsEl.innerHTML='<span class="hint">No lyrics returned (instrumental). Add some here and regenerate to sing them.</span>';return;}
+    const lines=text.split(/\r?\n/); let html='';
+    lines.forEach(ln=>{const m=ln.trim().match(/^\[(.+)\]$/);
+      if(m){html+=`<div class="sec">[${esc(m[1])}] <span class="bar"></span></div>`;}
+      else if(ln.trim()===''){html+='<br>';}
+      else{html+=esc(ln)+'<br>';}});
+    lyricsEl.innerHTML=html;
+  }
+  function readLyrics(){return (lyricsEl.innerText||'').replace(/ /g,' ').trim();}
+
+  function loadTake(tk){
+    current=tk; player.src=tk.url; player.load();
+    nptitle.textContent=tk.title; npmeta.textContent=tk.meta;
+    renderLyrics(tk.lyrics); renderTakes(); computePeaks(tk.blob);
+    stModel.textContent=tk.modelLabel;
+  }
+
+  function titleFrom(p){const words=(p||'').replace(/[^a-zA-Z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2);
+    const pick=words.slice(0,3).join(' ');return pick?pick.replace(/\b\w/g,c=>c.toUpperCase()):'Untitled take';}
+
+  function lenModel(){const btns=document.getElementById('lenSeg').querySelectorAll('button');return btns[0].classList.contains('active')?'lyria-3-clip-preview':'lyria-3-pro-preview';}
+
+  function buildPrompt(opts){
+    opts=opts||{}; const base=document.getElementById('prompt').value.trim();
+    const genre=active('genreBank'),vocal=active('vocalBank'),accent=active('accentBank'),lang=document.getElementById('lang').value;
+    const isPro=lenModel()==='lyria-3-pro-preview'; const parts=[];
+    if(genre)parts.push(genre+' song.');
+    if(base)parts.push(base);
+    const vmap={'Female lead':'Female lead vocals.','Male lead':'Male lead vocals.','Duet':'A duet with male and female vocals trading lines.','Group / choir':'Group/choir vocals.','Instrumental':'Instrumental only, no vocals.'};
+    if(vmap[vocal])parts.push(vmap[vocal]);
+    if(accent&&accent!=='Neutral'&&vocal!=='Instrumental')parts.push('Vocals with a '+accent+' accent.');
+    if(lang&&lang!=='English')parts.push('Write the lyrics in '+lang+'.');
+    parts.push('Tempo around '+bpm+' BPM.');
+    if(isPro)parts.push('Make it about 3 minutes long with an intro, verses, a chorus, a bridge and an outro.');
+    if(opts.variation)parts.push('Give a fresh alternative take with a different melody and arrangement.');
+    if(opts.lyrics)parts.push('\n\nLyrics:\n'+opts.lyrics);
+    return parts.join(' ');
+  }
+
+  /* ---- generate ---- */
+  const flag=document.getElementById('flag'),IDLE='Mittiva Studio · powered by Lyria 3 Pro';
+  let flagTimer=null;
+  function flash(msg,type){flag.textContent=msg;flag.className='demo-flag'+(type?' '+type:'');
+    if(type!=='busy'){clearTimeout(flagTimer);flagTimer=setTimeout(()=>{flag.textContent=IDLE;flag.className='demo-flag';},5000);}}
+  const genbtn=document.getElementById('genbtn'),genlabel=document.getElementById('genlabel'),wavewrap=document.getElementById('wavewrap');
+  const actionBtns=[document.getElementById('newtakebtn'),document.getElementById('varbtn'),document.getElementById('regenbtn')];
+  let busy=false;
+  function setBusy(b){busy=b;genbtn.classList.toggle('busy',b);wavewrap.classList.toggle('busy',b);
+    genlabel.textContent=b?'Generating…':(genbtn.classList.contains('blocked')?'Resolve flags':'Generate');
+    actionBtns.forEach(x=>x.disabled=b); genbtn.disabled=b;
+    if(b)flash('Generating — full songs can take up to a minute','busy');}
+
+  async function generate(opts){
+    if(busy)return;
+    if(genbtn.classList.contains('blocked')){flash('Resolve the flagged prompt issues first','err');return;}
+    const prompt=buildPrompt(opts);
+    if(!prompt.trim()){flash('Write a prompt first','err');return;}
+    const model=lenModel(), modelLabel=model==='lyria-3-clip-preview'?'LYRIA 3 CLIP':'LYRIA 3 PRO';
+    setBusy(true);
+    try{
+      const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,model})});
+      if(!res.ok){let msg='Generation failed';try{const j=await res.json();if(j&&j.error)msg=j.error;}catch(e){}flash(msg,'err');setBusy(false);return;}
+      const blob=await res.blob();
+      const mime=res.headers.get('X-Song-Mime')||'audio/mpeg';
+      const lyB64=res.headers.get('X-Song-Lyrics')||'';
+      let lyrics=''; if(lyB64){try{lyrics=new TextDecoder().decode(Uint8Array.from(atob(lyB64),c=>c.charCodeAt(0)));}catch(e){lyrics='';}}
+      const ext=mime.indexOf('wav')>=0?'wav':'mp3';
+      const tk={n:++takeSeq,blob,url:URL.createObjectURL(blob),mime,ext,lyrics,modelLabel,
+        title:(opts&&opts.title)||titleFrom(document.getElementById('prompt').value),
+        meta:[active('genreBank'),active('vocalBank'),document.getElementById('lang').value,bpm+' BPM',modelLabel].filter(Boolean).join(' · ').toUpperCase()};
+      takes.unshift(tk); if(takes.length>8){const old=takes.pop();URL.revokeObjectURL(old.url);}
+      loadTake(tk); flash('Song ready — press play','ok');
+    }catch(e){flash('Network error — '+(e.message||e),'err');}
+    setBusy(false);
+  }
+
+  genbtn.addEventListener('click',()=>generate());
+  document.getElementById('newtakebtn').addEventListener('click',()=>generate());
+  document.getElementById('varbtn').addEventListener('click',()=>generate({variation:true}));
+  document.getElementById('regenbtn').addEventListener('click',()=>{const l=readLyrics();
+    generate({lyrics:l&&l.indexOf('Lyrics will appear')<0?l:'',title:current?current.title:undefined});});
+
+  /* ---- export ---- */
+  document.getElementById('exportbtn').addEventListener('click',()=>{ if(!current){flash('Nothing to export yet','err');return;}
+    const a=document.createElement('a');a.href=current.url;a.download=(current.title.replace(/\s+/g,'_')||'mittiva-song')+'.'+current.ext;
+    document.body.appendChild(a);a.click();a.remove();});
+
+  /* ---- prompt compliance pre-check (heuristic; Lyria's engine is final) ---- */
+  const ARTISTS=["taylor swift","drake","beyonce","beyoncé","rihanna","kanye","adele","ed sheeran","billie eilish",
+    "the weeknd","ariana grande","bruno mars","justin bieber","lady gaga","eminem","kendrick lamar","post malone",
+    "dua lipa","coldplay","metallica","nirvana","the beatles","beatles","michael jackson","elvis","bts","blackpink",
+    "olivia rodrigo","sabrina carpenter","sza","doja cat","travis scott","bad bunny","harry styles","frank ocean",
+    "radiohead","daft punk","pink floyd","led zeppelin","arijit singh","a.r. rahman","ar rahman","lata mangeshkar","kishore kumar"];
+  const SENSITIVE=["trump","biden","putin","obama","modi","xi jinping","president ","prime minister","the election","political party"];
+  const ICONS={err:'<path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+    warn:'<path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+    ok:'<path d="M20 6 9 17l-5-5"/>'};
+  function esc(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+  function check(text){
+    const tl=text.toLowerCase(),issues=[];
+    ARTISTS.forEach(a=>{const re=new RegExp('\\b'+a.replace(/[.]/g,'\\.')+'\\b','i');const m=text.match(re);
+      if(m)issues.push({level:'err',term:m[0],msg:'Naming a real artist will block generation.',
+        fix:'Describe the sound instead — e.g. "bright airy female pop vocals with a catchy hook".'});});
+    const s=text.match(/\b(in the style of|sounds? like|à la|inspired by|cover of|remix of|tribute to|imitat\w*|mimic\w*)\b/i);
+    if(s)issues.push({level:'warn',term:s[0],msg:'Imitation phrasing may be rejected.',
+      fix:'Swap it for the musical traits you want (tempo, instruments, mood, vocal texture).'});
+    const q=text.match(/["“”']([^"“”']{18,})["“”']/);
+    if(q)issues.push({level:'warn',term:'"'+q[1].slice(0,24)+'…"',msg:'Quoted lines may trip the copyright / recitation filter.',
+      fix:'Let Lyria write the lyrics, or use the editable lyrics panel with original words.'});
+    SENSITIVE.forEach(x=>{if(tl.includes(x))issues.push({level:'warn',term:x.trim(),
+      msg:'Political or sensitive topics are restricted.',fix:'Keep the subject creative and non-political.'});});
+    return issues;
+  }
+  const pc=document.getElementById('promptcheck'),promptEl=document.getElementById('prompt');
+  function renderCheck(){
+    const txt=promptEl.value.trim();let issues=txt?check(txt):[];
+    const seen=new Set();issues=issues.filter(i=>{const k=i.level+i.term.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+    const hasErr=issues.some(i=>i.level==='err');
+    if(txt&&!issues.length){
+      pc.innerHTML=`<div class="flag ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICONS.ok}</svg><div>Prompt looks clear — no compliance flags.</div></div>`;
+    }else{
+      pc.innerHTML=issues.map(i=>`<div class="flag ${i.level}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICONS[i.level]}</svg><div><span class="term">${esc(i.term)}</span> &nbsp;${i.msg}<span class="fix">${i.fix}</span></div></div>`).join('');
+    }
+    if(!busy){genbtn.classList.toggle('blocked',hasErr);genlabel.textContent=hasErr?'Resolve flags':'Generate';}
+  }
+  promptEl.addEventListener('input',renderCheck);renderCheck();
+</script>
+</body>
+</html>

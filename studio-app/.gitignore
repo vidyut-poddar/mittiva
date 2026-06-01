@@ -1,0 +1,9 @@
+# Never commit secrets or local env files
+.env
+.env.*
+!.env.example
+
+# Vercel / build / deps
+.vercel
+node_modules
+.DS_Store

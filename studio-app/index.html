@@ -225,9 +225,69 @@
   .statusbar .sp{margin-left:auto}
   footer.note{margin-top:18px;color:var(--dim);font:400 12.5px 'Inter';line-height:1.7}
   footer.note code{font-family:var(--mono);color:var(--muted);font-size:11.5px}
+
+  /* ===================== DEPTH & IMMERSION ===================== */
+  body{background-image:none;background:var(--bg)}
+  .bg-immersive{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
+    background:radial-gradient(130% 100% at 50% -15%, #161B2A 0%, #0B0F17 62%)}
+  .bg-immersive .blob{position:absolute;border-radius:50%;filter:blur(95px);opacity:.55;mix-blend-mode:screen}
+  .bg-immersive .b1{width:640px;height:640px;background:radial-gradient(circle,#8372d0,transparent 64%);top:-200px;left:-140px;animation:drift1 26s ease-in-out infinite alternate}
+  .bg-immersive .b2{width:600px;height:600px;background:radial-gradient(circle,#FF4DD1,transparent 64%);bottom:-240px;right:-140px;animation:drift2 32s ease-in-out infinite alternate}
+  .bg-immersive .b3{width:520px;height:520px;background:radial-gradient(circle,#5A4FA0,transparent 66%);top:38%;left:46%;opacity:.4;animation:drift3 38s ease-in-out infinite alternate}
+  .bg-immersive .grain{position:absolute;inset:-50%;opacity:.045;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  @keyframes drift1{to{transform:translate(130px,90px) scale(1.18)}}
+  @keyframes drift2{to{transform:translate(-110px,-70px) scale(1.12)}}
+  @keyframes drift3{to{transform:translate(-80px,60px) scale(1.2)}}
+  .wrap{position:relative;z-index:1}
+
+  /* raised rack panels — layered shadow + top glass highlight + edge bevel */
+  .console{perspective:1700px}
+  .unit{transform-style:preserve-3d;will-change:transform;transition:box-shadow .3s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 2px 3px rgba(0,0,0,.45),
+      0 22px 50px -18px rgba(0,0,0,.8), 0 0 0 1px rgba(0,0,0,.35),
+      0 0 60px -30px rgba(131,114,208,.5)}
+  .unit::before{content:"";position:absolute;left:0;right:0;top:0;height:42%;border-radius:8px 8px 0 0;
+    pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent)}
+  .unit::after{content:"";position:absolute;inset:0;border-radius:8px;pointer-events:none;
+    box-shadow:inset 0 -14px 26px -16px rgba(0,0,0,.85)}
+  .ears{box-shadow:inset -1px 0 2px rgba(0,0,0,.5)}
+  .ears.r{box-shadow:inset 1px 0 2px rgba(0,0,0,.5)}
+  .screw{box-shadow:inset 0 0 0 1px rgba(0,0,0,.6),0 1px 1px rgba(255,255,255,.06)}
+
+  /* sculpted knob */
+  .knob{box-shadow:inset 0 3px 7px rgba(0,0,0,.75),inset 0 -3px 6px rgba(255,255,255,.05),
+    0 7px 16px -5px rgba(0,0,0,.85),0 2px 0 rgba(255,255,255,.06)}
+  .knob::after{content:"";position:absolute;inset:7px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle at 38% 26%,rgba(255,255,255,.22),transparent 56%)}
+
+  /* physical buttons — raised, press down on click */
+  .tbtn{box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 5px rgba(0,0,0,.5)}
+  .tbtn:active{transform:translateY(1px);box-shadow:inset 0 2px 5px rgba(0,0,0,.6)}
+  .tbtn.play.on{box-shadow:0 0 18px rgba(131,114,208,.6),inset 0 1px 0 rgba(255,255,255,.3)}
+  .chip{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 1px 2px rgba(0,0,0,.35)}
+  .chip:active,.btn-line:active,.tool:active,.ms:active{transform:translateY(1px)}
+  .chip.active{box-shadow:0 0 14px -2px rgba(131,114,208,.7),inset 0 1px 0 rgba(255,255,255,.25)}
+  .generate{box-shadow:0 0 24px rgba(255,77,209,.4),0 8px 20px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.35)}
+  .generate:active{transform:translateY(1px)}
+
+  /* LCD screen glare + deeper recess */
+  .lcd{position:relative;overflow:hidden;box-shadow:inset 0 2px 10px rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.05)}
+  .lcd::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(118deg,rgba(255,255,255,.09),transparent 42%)}
+
+  /* recessed wells glow with their signal */
+  .wavewrap{box-shadow:inset 0 2px 12px rgba(0,0,0,.65),0 0 26px -10px rgba(131,114,208,.55)}
+  textarea{box-shadow:inset 0 2px 10px rgba(0,0,0,.6)}
+  .meter,.vumeter{filter:drop-shadow(0 0 5px rgba(131,114,208,.25))}
+
+  @media (prefers-reduced-motion: reduce){
+    .bg-immersive .blob{animation:none}
+  }
 </style>
 </head>
 <body>
+<div class="bg-immersive" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grain"></div></div>
 <div class="demo-flag" id="flag">Mittiva Studio · powered by Lyria 3 Pro</div>
 
 <div class="wrap">
@@ -679,6 +739,20 @@
     if(!busy){genbtn.classList.toggle('blocked',hasErr);genlabel.textContent=hasErr?'Resolve flags':'Generate';}
   }
   promptEl.addEventListener('input',renderCheck);renderCheck();
+
+  /* ---- immersive parallax tilt (subtle; respects reduced-motion) ---- */
+  (function(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const stage=document.querySelector('.console'); if(!stage) return;
+    let tx=0,ty=0,cx=0,cy=0,active=false;
+    addEventListener('pointermove',e=>{ if(e.pointerType==='touch')return;
+      tx=(e.clientX/innerWidth-0.5)*2; ty=(e.clientY/innerHeight-0.5)*2; active=true;},{passive:true});
+    addEventListener('pointerleave',()=>{tx=0;ty=0;});
+    function loop(){ cx+=(tx-cx)*0.06; cy+=(ty-cy)*0.06;
+      stage.style.transform = active ? `rotateX(${(-cy*1.6).toFixed(2)}deg) rotateY(${(cx*2).toFixed(2)}deg)` : 'none';
+      requestAnimationFrame(loop); }
+    loop();
+  })();
 </script>
 </body>
 </html>

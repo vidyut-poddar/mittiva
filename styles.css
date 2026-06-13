@@ -3277,21 +3277,18 @@ section:has(.service-deck-wrap) {
     to   { opacity: 1; }
   }
 
-  /* Open card sits as a centered modal — NOT fullscreen — and is
-     anchored to the DECK SECTION rather than the viewport. That way
-     it visually sits over the top of the grid cards (like a card
-     pulled forward from its slot) instead of dropping to the lower
-     half of the screen where viewport-50% would land on phones with
-     tall URL bars. scrollCardToCenter() in main.js still brings the
-     deck section to viewport center on open, so the card visually
-     lands at screen center for the user. */
+  /* Open card sits as a centered modal — NOT fullscreen — anchored
+     to the VIEWPORT (position:fixed). Every tapped card lands at
+     exactly the same spot on screen regardless of where it was in
+     the grid. Uses dvh (dynamic viewport height) so the centering
+     accounts for URL-bar collapse on iOS/Chromium correctly. */
   .service-deck__card.is-mobile-open {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
+    position: fixed !important;
+    top: 50dvh !important;
+    left: 50vw !important;
     inset: auto !important;
     width: min(86vw, 360px) !important;
-    height: min(78vh, 540px) !important;
+    height: min(78dvh, 540px) !important;
     aspect-ratio: auto !important;
     grid-column: auto !important;
     grid-row: auto !important;

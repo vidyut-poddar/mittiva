@@ -3256,14 +3256,16 @@ section:has(.service-deck-wrap) {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(4, 6, 14, 0.55);
-    -webkit-backdrop-filter: blur(8px) saturate(120%);
-            backdrop-filter: blur(8px) saturate(120%);
+    /* Plain dark wash — no backdrop-filter. The filter version
+       was bleeding through and rendering the card content blurred
+       on certain browsers (Chromium iOS Safari, both). A solid
+       semi-transparent overlay does the job cleanly. */
+    background: rgba(4, 6, 14, 0.68);
     z-index: 90;
     animation: deckMobileBackdropIn 240ms var(--ease);
   }
   [data-theme="light"] body.deck-mobile-open::before {
-    background: rgba(238, 244, 250, 0.62);
+    background: rgba(238, 244, 250, 0.72);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }
@@ -3326,7 +3328,9 @@ section:has(.service-deck-wrap) {
     line-height: 1.1;
   }
 
-  /* Close button injected by main.js as a child of the open card */
+  /* Close button injected by main.js as a child of the open card.
+     Solid background — no backdrop-filter (same browser bleed-
+     through issue as the body backdrop). */
   .service-deck__mobile-close {
     position: absolute;
     top: 14px;
@@ -3335,9 +3339,7 @@ section:has(.service-deck-wrap) {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: rgba(176, 192, 216, 0.18);
-    -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
+    background: rgba(20, 28, 48, 0.78);
     border: 1px solid var(--border);
     display: none;
     align-items: center;

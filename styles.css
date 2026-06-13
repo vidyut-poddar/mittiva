@@ -3166,53 +3166,57 @@ section:has(.service-deck-wrap) {
      The desktop back face has a playing-card aesthetic — upside-
      down BR corner, big centered logo, wide letter-spacing on
      the title. None of that reads at ~110px wide on mobile.
-     Reset to a clean, centered, compact label. */
+     Reset to a clean, centered, compact label that fits the
+     longest titles ("CONVERSATION AI", "AI CHANGING ROOM"). */
   .service-deck__back {
-    padding: 14px 10px;
+    padding: 10px 6px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+  }
+  /* Pull the inset frame closer to the edge so the text gets
+     more usable width (desktop value of inset:12px ate too much). */
+  .service-deck__back::before,
+  .service-deck__back::after {
+    inset: 6px;
   }
   .service-deck__back-corner {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    opacity: 0.6;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    opacity: 0.55;
   }
   .service-deck__back-corner--tl {
-    top: 10px;
-    left: 12px;
+    top: 8px;
+    left: 10px;
   }
-  /* Drop the BR corner entirely on mobile — the upside-down
-     numeral was a playing-card affectation that just confuses on
-     a small mobile card. The TL corner alone is enough to identify. */
+  /* Drop the upside-down BR numeral on mobile — TL is enough. */
   .service-deck__back-corner--br {
     display: none;
   }
   /* Smaller logo — leaves room for the title to read clearly. */
   .service-deck__back-logo {
-    width: 30%;
-    max-width: 36px;
-    opacity: 0.5;
+    width: 26%;
+    max-width: 30px;
+    opacity: 0.45;
   }
-  /* Center the title, allow it to wrap, drop the wide tracking so
-     long labels like "CONVERSATION AI" or "AI CHANGING ROOM" stay
-     inside the card. */
+  /* Center the title, allow it to wrap, drop letter-spacing to
+     zero so long words like "CONVERSATION" fit on one line on a
+     ~110px-wide card. Font shrinks via clamp on narrower phones. */
   .service-deck__back-mark {
     position: static;
     transform: none;
-    margin: 8px 0 0;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
+    margin: 6px 0 0;
+    font-size: clamp(8.5px, 2.5vw, 11px);
+    letter-spacing: 0;
+    line-height: 1.15;
     white-space: normal;
     text-align: center;
     max-width: 100%;
     opacity: 1;
-    padding: 0 4px;
-  }
-  /* Reorder so the title sits BELOW the logo (flex order works
-     because .back is column flex with logo + mark as children). */
-  .service-deck__back {
-    flex-direction: column;
-    justify-content: center;
-    gap: 0;
+    padding: 0 2px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    hyphens: none;
   }
 
   /* Kill the desktop ambient shuffle on mobile entirely */

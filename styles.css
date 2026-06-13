@@ -3277,25 +3277,37 @@ section:has(.service-deck-wrap) {
     to   { opacity: 1; }
   }
 
+  /* Open card sits as a centered modal — NOT fullscreen. Sized to
+     match roughly two grid-card widths and a comfortable portrait
+     aspect, anchored to the viewport center via top:50%/left:50%
+     translate. The page behind is fully visible and the card reads
+     as a focal object in the middle of the screen. */
   .service-deck__card.is-mobile-open {
     position: fixed !important;
-    inset: 20px 14px !important;
-    width: auto !important;
-    height: auto !important;
+    top: 50% !important;
+    left: 50% !important;
+    inset: auto !important;
+    width: min(86vw, 360px) !important;
+    height: min(78vh, 540px) !important;
     aspect-ratio: auto !important;
     grid-column: auto !important;
     grid-row: auto !important;
     z-index: 100 !important;
+    transform: translate(-50%, -50%) !important;
     box-shadow:
       0 30px 80px -20px rgba(0, 0, 0, 0.7),
       0 0 0 1px rgba(176, 192, 216, 0.18) inset;
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
     animation: deckMobileOpenIn 360ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   @keyframes deckMobileOpenIn {
-    from { transform: scale(0.92); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
+    /* Keep the translate(-50%, -50%) so the card stays centred while
+       it scales up from 92% to 100%. Without the translate in both
+       keyframes the card would pop to the top-left corner during the
+       animation. */
+    from { transform: translate(-50%, -50%) scale(0.92); opacity: 0; }
+    to   { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
   }
   .service-deck__card.is-mobile-open .service-deck__flipper {
     transform: rotateY(180deg);

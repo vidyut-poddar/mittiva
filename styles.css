@@ -3242,7 +3242,13 @@ section:has(.service-deck-wrap) {
   /* ── FULLSCREEN OPEN STATE ───────────────────────────────
      Tapped card becomes a fixed-position overlay above the
      deck. The flipper rotates 180° to reveal the front face.
-     Body class adds a backdrop + locks scroll. */
+     Body class adds a backdrop + locks scroll.
+
+     Polish: backdrop is a soft blur instead of a heavy dark
+     wash so the open card doesn't compete with its container.
+     The card itself gets a lifted, slightly-brighter surface
+     (so its content reads cleanly), and a glowing titanium
+     border outlines the focal area. */
   body.deck-mobile-open {
     overflow: hidden;
   }
@@ -3250,12 +3256,14 @@ section:has(.service-deck-wrap) {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(4, 6, 14, 0.84);
+    background: rgba(4, 6, 14, 0.55);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+            backdrop-filter: blur(8px) saturate(120%);
     z-index: 90;
     animation: deckMobileBackdropIn 240ms var(--ease);
   }
   [data-theme="light"] body.deck-mobile-open::before {
-    background: rgba(238, 244, 250, 0.92);
+    background: rgba(238, 244, 250, 0.62);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }
@@ -3264,15 +3272,17 @@ section:has(.service-deck-wrap) {
 
   .service-deck__card.is-mobile-open {
     position: fixed !important;
-    inset: 24px 16px !important;
+    inset: 20px 14px !important;
     width: auto !important;
     height: auto !important;
     aspect-ratio: auto !important;
     grid-column: auto !important;
     grid-row: auto !important;
     z-index: 100 !important;
-    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.75);
-    border-radius: 16px;
+    box-shadow:
+      0 30px 80px -20px rgba(0, 0, 0, 0.7),
+      0 0 0 1px rgba(176, 192, 216, 0.18) inset;
+    border-radius: 18px;
     overflow: hidden;
     animation: deckMobileOpenIn 360ms cubic-bezier(0.32, 0.72, 0, 1);
   }
@@ -3283,6 +3293,37 @@ section:has(.service-deck-wrap) {
   .service-deck__card.is-mobile-open .service-deck__flipper {
     transform: rotateY(180deg);
     transition: transform 480ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  /* Lift the front face — slightly brighter background + remove the
+     tight inset border so the LC widget / pixel grid / kanban have
+     more space to breathe. Front-face corners are decorative noise
+     at fullscreen — hide them. The title block stays as a small
+     anchor at top. */
+  .service-deck__card.is-mobile-open .service-deck__front {
+    background: linear-gradient(180deg, #0e1428 0%, #0a0e1c 100%);
+    padding: 38px 20px 22px;
+  }
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__front {
+    background: linear-gradient(180deg, #f4f8fc 0%, #eef4fa 100%);
+  }
+  .service-deck__card.is-mobile-open .service-deck__front::before {
+    inset: 8px;
+    border-color: rgba(176, 192, 216, 0.10);
+    border-radius: 14px;
+  }
+  .service-deck__card.is-mobile-open .service-deck__front-corner {
+    display: none;
+  }
+  .service-deck__card.is-mobile-open .service-deck__cat {
+    font-size: var(--fs-eyebrow);
+    margin: 4px 0 6px;
+    opacity: 0.85;
+  }
+  .service-deck__card.is-mobile-open .service-deck__title-h {
+    font-size: 22px;
+    margin: 0 0 14px;
+    line-height: 1.1;
   }
 
   /* Close button injected by main.js as a child of the open card */
@@ -3304,6 +3345,10 @@ section:has(.service-deck-wrap) {
     color: var(--text);
     cursor: pointer;
     padding: 0;
+    transition: background 220ms var(--ease);
+  }
+  .service-deck__mobile-close:active {
+    background: rgba(176, 192, 216, 0.32);
   }
   .service-deck__card.is-mobile-open .service-deck__mobile-close {
     display: flex;

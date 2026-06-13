@@ -873,7 +873,8 @@
     const isActive = (el) =>
       el.classList.contains('is-elevated') ||
       el.classList.contains('is-rotated')  ||
-      el.classList.contains('is-flipped');
+      el.classList.contains('is-flipped')  ||
+      el.classList.contains('is-mobile-open');
 
     function findWidget () {
       for (const sel of LC_SELECTORS) {

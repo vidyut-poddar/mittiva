@@ -3382,11 +3382,40 @@ section:has(.service-deck-wrap) {
     background: linear-gradient(180deg, #1E2848 0%, #131A30 100%);
     padding: 38px 20px 22px;
   }
-  [data-theme="light"] .service-deck__card.is-mobile-open {
-    background: #EEF4FA !important;
-  }
+  /* Light mode: keep the card DARK on mobile even when the rest of
+     the page is light. The card's internal content (LC chat widget,
+     pixel-dissolve grid, kanban simulation, type-specimen carousel,
+     all the back-face designs) is built for dark surfaces. Letting
+     the card go pale in light mode would break readability and
+     visual rhythm. So we override every theme-driven colour inside
+     the open card to its dark-mode value. */
+  [data-theme="light"] .service-deck__card.is-mobile-open,
   [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__front {
-    background: linear-gradient(180deg, #f4f8fc 0%, #eef4fa 100%);
+    background: linear-gradient(180deg, #1E2848 0%, #131A30 100%) !important;
+    color: #D8E8F4 !important; /* Ice text, dark-mode primary */
+  }
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__cat,
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__title-h,
+  [data-theme="light"] .service-deck__card.is-mobile-open .pixel-dissolve__foot,
+  [data-theme="light"] .service-deck__card.is-mobile-open .pixel-dissolve__foot strong {
+    color: #D8E8F4 !important;
+  }
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__cta-link {
+    /* Titanium pill CTA — keep its dark-mode look */
+    background: var(--gradient-titanium) !important;
+    color: #04060E !important;
+  }
+  /* Close button on a dark card needs the light text */
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__mobile-close {
+    color: #D8E8F4 !important;
+    background: rgba(20, 28, 48, 0.78) !important;
+    border-color: rgba(176, 192, 216, 0.20) !important;
+  }
+  /* The same dark treatment for the grid (non-open) cards on mobile
+     so the user sees consistent dark cards before tapping too. */
+  [data-theme="light"] .service-deck__card .service-deck__back-mark,
+  [data-theme="light"] .service-deck__card .service-deck__back-corner {
+    color: #8A9AB0 !important;
   }
   .service-deck__card.is-mobile-open .service-deck__front::before {
     inset: 8px;

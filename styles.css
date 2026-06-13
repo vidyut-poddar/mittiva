@@ -3252,20 +3252,16 @@ section:has(.service-deck-wrap) {
   body.deck-mobile-open {
     overflow: hidden;
   }
+  /* Invisible click-catcher backdrop. No dim, no blur — the page
+     stays at full brightness behind the card. The pseudo-element
+     only exists to absorb taps that miss the card and trigger
+     the close-on-backdrop handler in main.js. */
   body.deck-mobile-open::before {
     content: '';
     position: fixed;
     inset: 0;
-    /* Plain dark wash — no backdrop-filter. The filter version
-       was bleeding through and rendering the card content blurred
-       on certain browsers (Chromium iOS Safari, both). A solid
-       semi-transparent overlay does the job cleanly. */
-    background: rgba(4, 6, 14, 0.68);
+    background: transparent;
     z-index: 90;
-    animation: deckMobileBackdropIn 240ms var(--ease);
-  }
-  [data-theme="light"] body.deck-mobile-open::before {
-    background: rgba(238, 244, 250, 0.72);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }

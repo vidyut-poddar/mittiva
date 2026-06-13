@@ -3162,6 +3162,59 @@ section:has(.service-deck-wrap) {
   /* Tap feedback */
   .service-deck__card:active { transform: scale(0.96) !important; }
 
+  /* ── BACK FACE: rework for the small grid cell ─────────────
+     The desktop back face has a playing-card aesthetic — upside-
+     down BR corner, big centered logo, wide letter-spacing on
+     the title. None of that reads at ~110px wide on mobile.
+     Reset to a clean, centered, compact label. */
+  .service-deck__back {
+    padding: 14px 10px;
+  }
+  .service-deck__back-corner {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+  }
+  .service-deck__back-corner--tl {
+    top: 10px;
+    left: 12px;
+  }
+  /* Drop the BR corner entirely on mobile — the upside-down
+     numeral was a playing-card affectation that just confuses on
+     a small mobile card. The TL corner alone is enough to identify. */
+  .service-deck__back-corner--br {
+    display: none;
+  }
+  /* Smaller logo — leaves room for the title to read clearly. */
+  .service-deck__back-logo {
+    width: 30%;
+    max-width: 36px;
+    opacity: 0.5;
+  }
+  /* Center the title, allow it to wrap, drop the wide tracking so
+     long labels like "CONVERSATION AI" or "AI CHANGING ROOM" stay
+     inside the card. */
+  .service-deck__back-mark {
+    position: static;
+    transform: none;
+    margin: 8px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
+    max-width: 100%;
+    opacity: 1;
+    padding: 0 4px;
+  }
+  /* Reorder so the title sits BELOW the logo (flex order works
+     because .back is column flex with logo + mark as children). */
+  .service-deck__back {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+  }
+
   /* Kill the desktop ambient shuffle on mobile entirely */
   .service-deck__card.is-shuffling {
     animation: none !important;

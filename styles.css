@@ -3105,10 +3105,19 @@ section:has(.service-deck-wrap) {
    on the positioning/transform properties that the desktop rules
    set with !important themselves. */
 @media (max-width: 768px) {
-  /* Container ─ flat grid, no perspective, no fixed height */
+  /* Container ─ flat grid, no perspective, no fixed height.
+     CRITICAL: will-change:auto + perspective:none + transform:none.
+     Both perspective AND will-change:transform create a containing
+     block for position:fixed descendants, which would trap the
+     mobile-open card inside the deck section instead of letting it
+     span the viewport. The mitti-on rule below adds will-change:
+     transform globally; we have to undo it on mobile so the open
+     card can use the viewport as its containing block. */
   .service-deck-wrap {
     padding: 24px 0 64px;
     perspective: none;
+    will-change: auto !important;
+    transform: none !important;
   }
   .service-deck {
     display: grid;

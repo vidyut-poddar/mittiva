@@ -1361,6 +1361,27 @@ section { padding: var(--section-y) 0; position: relative; }
   text-align: left;
   border-top: 1px solid var(--border);
   margin-top: 32px;
+  /* Contain the section's stacking. The .stacked-title's per-line
+     reveal animation uses `transform` on each <i>, which promotes
+     those elements to their own composite layers. Without an
+     isolation barrier, those layers can paint above an unrelated
+     fixed-position element (like the mobile open card at z-index
+     9999) on some compositors. position:relative + z-index:0 +
+     isolation:isolate creates a fresh, low-priority stacking
+     context that keeps everything inside the big-closer BELOW any
+     properly-z-indexed sibling. */
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+.big-closer__title,
+.big-closer .stacked-title,
+.big-closer .stacked-title span,
+.big-closer .stacked-title span > i,
+.big-closer .lede,
+.big-closer .btn {
+  position: relative;
+  z-index: 0;
 }
 .big-closer__title {
   font-family: 'Inter Tight', 'Inter', sans-serif;

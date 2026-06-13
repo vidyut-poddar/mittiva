@@ -528,9 +528,14 @@
     const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
     let scrollRaf = null;
-    function scrollCardToCenter () {
+    /* Smooth-scroll the given element's vertical center into the viewport
+       center. Defaults to the whole deck (good for the desktop flow where
+       all cards sit at the same point). Pass a specific card to center
+       just that card — used by the mobile tap-to-fullscreen flow so the
+       page lands centered on the card the user actually tapped. */
+    function scrollCardToCenter (overrideTarget) {
       if (prefersReducedMotion) return;
-      const target = deck || deckWrap;
+      const target = overrideTarget || deck || deckWrap;
       if (!target) return;
       const rect = target.getBoundingClientRect();
       const targetCenter   = rect.top + window.scrollY + rect.height / 2;
@@ -645,6 +650,12 @@
     }
 
     function openMobileCard (card) {
+      // First, scroll the page so the tapped card is centered in the
+      // viewport — this means when the user closes the overlay, they
+      // return to a layout centered on the card they were just on.
+      // The fullscreen open animation runs in parallel; both finish
+      // around the same time and read as a single beat.
+      scrollCardToCenter(card);
       deckCards.forEach((c) => { if (c !== card) c.classList.remove('is-mobile-open'); });
       ensureMobileClose(card);
       card.classList.add('is-mobile-open');

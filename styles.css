@@ -3294,23 +3294,17 @@ section:has(.service-deck-wrap) {
      tricks we apply. We get the focal effect through (a) a darker
      wash + (b) a stronger card shadow instead. Page content behind
      is darkened but stays crisp. */
+  /* Backdrop reduced to a fully transparent click-catcher. The page
+     stays exactly as it is behind the open card — no dim, no blur,
+     no wash, no tint. The card's own shadow halo (defined further
+     down on .service-deck__card.is-mobile-open) provides all the
+     visual separation; nothing composites over the page. */
   body.deck-mobile-open::before {
     content: '';
     position: fixed;
     inset: 0;
-    /* Dark wash in BOTH light and dark mode. The card is always dark
-       (by design), so the backdrop has to be dark too — otherwise a
-       pale light-mode wash composites over the card and washes it
-       gray. Single declaration, no theme branch. */
-    background: rgba(4, 6, 14, 0.72);
-    /* Sit just below the open card but above every page-level element
-       (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
-       guarantee it sits on top of everything else on the page. */
+    background: transparent;
     z-index: 9990;
-    /* Slow, smooth fade-in so the page dims gently rather than
-       slamming dark. ease-out curve so the dim feels like it
-       "settles in" rather than crashing in. */
-    animation: deckMobileBackdropIn 560ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }

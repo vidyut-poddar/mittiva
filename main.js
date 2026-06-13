@@ -625,6 +625,39 @@
     }
     const anyFlipped = () => Array.from(deckCards).some(isCardActive);
 
+    /* ── MOBILE OPEN/CLOSE ─────────────────────────────────────
+       On ≤768px viewports the deck renders as a 3-2-3 grid (CSS).
+       Tapping a card adds .is-mobile-open which CSS uses to lift
+       the card into a fullscreen fixed overlay + flip the flipper.
+       A close button is injected into each card on first open. */
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    function isMobile () { return mobileQuery.matches; }
+
+    function ensureMobileClose (card) {
+      if (card.querySelector('[data-deck-mobile-close]')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'service-deck__mobile-close';
+      btn.setAttribute('data-deck-mobile-close', '');
+      btn.setAttribute('aria-label', 'Close card');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+      card.appendChild(btn);
+    }
+
+    function openMobileCard (card) {
+      deckCards.forEach((c) => { if (c !== card) c.classList.remove('is-mobile-open'); });
+      ensureMobileClose(card);
+      card.classList.add('is-mobile-open');
+      document.body.classList.add('deck-mobile-open');
+    }
+
+    function closeMobileCard (card) {
+      card.classList.remove('is-mobile-open');
+      if (!document.querySelector('.service-deck__card.is-mobile-open')) {
+        document.body.classList.remove('deck-mobile-open');
+      }
+    }
+
     // Click on a card → open it (if not already active). Clicking INSIDE an
     // already-active card does nothing — that lets the user interact with
     // the card's content (e.g. the Voice AI widget's call button) without
@@ -632,6 +665,18 @@
     // the user clicks outside it (handled below).
     deckCards.forEach((card) => {
       card.addEventListener('click', (e) => {
+        // Mobile flow: tap-to-fullscreen
+        if (isMobile()) {
+          if (e.target.closest('[data-deck-mobile-close]')) {
+            closeMobileCard(card);
+            return;
+          }
+          if (e.target.closest('a, button, input, textarea, select')) return;
+          if (card.classList.contains('is-mobile-open')) return;
+          openMobileCard(card);
+          return;
+        }
+        // Desktop flow: 3-phase flip
         if (e.target.closest('a, button, input, textarea, select')) return;
         if (isCardActive(card)) return;     // Already open → ignore inside clicks
         // Close any other active card first
@@ -648,7 +693,11 @@
 
     // Esc closes whatever's open
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key !== 'Escape') return;
+      if (isMobile()) {
+        const open = document.querySelector('.service-deck__card.is-mobile-open');
+        if (open) closeMobileCard(open);
+      } else {
         deckCards.forEach((c) => { if (isCardActive(c)) flipOut(c); });
       }
     });
@@ -657,6 +706,16 @@
     // The Mitti chat panel lives OUTSIDE the deck but is visually paired
     // with card 04 — clicks inside it must NOT collapse the deck.
     document.addEventListener('click', (e) => {
+      // Mobile: tap backdrop to close
+      if (isMobile()) {
+        if (!document.body.classList.contains('deck-mobile-open')) return;
+        if (e.target.closest('.service-deck__card')) return;
+        if (e.target.closest('.mitti-panel')) return;
+        const open = document.querySelector('.service-deck__card.is-mobile-open');
+        if (open) closeMobileCard(open);
+        return;
+      }
+      // Desktop: existing behaviour
       if (!anyFlipped()) return;
       if (e.target.closest('.service-deck__card')) return;
       if (e.target.closest('.mitti-panel')) return;

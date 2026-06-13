@@ -3277,13 +3277,16 @@ section:has(.service-deck-wrap) {
     to   { opacity: 1; }
   }
 
-  /* Open card sits as a centered modal — NOT fullscreen. Sized to
-     match roughly two grid-card widths and a comfortable portrait
-     aspect, anchored to the viewport center via top:50%/left:50%
-     translate. The page behind is fully visible and the card reads
-     as a focal object in the middle of the screen. */
+  /* Open card sits as a centered modal — NOT fullscreen — and is
+     anchored to the DECK SECTION rather than the viewport. That way
+     it visually sits over the top of the grid cards (like a card
+     pulled forward from its slot) instead of dropping to the lower
+     half of the screen where viewport-50% would land on phones with
+     tall URL bars. scrollCardToCenter() in main.js still brings the
+     deck section to viewport center on open, so the card visually
+     lands at screen center for the user. */
   .service-deck__card.is-mobile-open {
-    position: fixed !important;
+    position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     inset: auto !important;

@@ -3345,9 +3345,11 @@ section:has(.service-deck-wrap) {
        firmly opaque. */
     isolation: isolate !important;
     /* Brighter Deep-Space card body so it reads as lit against the
-       dimmed page behind. Slight gradient bias top-to-bottom adds
-       depth. */
-    background: linear-gradient(180deg, #1B2440 0%, #131A30 100%) !important;
+       dimmed page behind. Explicit background-color so nothing can
+       bleed through (any browser-specific compositing of the body
+       backdrop pseudo-element). */
+    background-color: #131A30 !important;
+    background-image: linear-gradient(180deg, #1B2440 0%, #131A30 100%) !important;
     transform: none !important;
     /* Layered shadow: long cast underneath + a soft halo glow around
        the card. The inset titanium ring gives the card a lit edge
@@ -3378,8 +3380,10 @@ section:has(.service-deck-wrap) {
      anchor at top. */
   .service-deck__card.is-mobile-open .service-deck__front {
     /* Match the brighter card body so the front face reads as part
-       of the same lit surface. */
-    background: linear-gradient(180deg, #1E2848 0%, #131A30 100%);
+       of the same lit surface. Explicit bg-color so no compositing
+       can let the body wash through the front face. */
+    background-color: #131A30;
+    background-image: linear-gradient(180deg, #1E2848 0%, #131A30 100%);
     padding: 38px 20px 22px;
   }
   /* Light mode: keep the card DARK on mobile even when the rest of
@@ -3388,10 +3392,17 @@ section:has(.service-deck-wrap) {
      all the back-face designs) is built for dark surfaces. Letting
      the card go pale in light mode would break readability and
      visual rhythm. So we override every theme-driven colour inside
-     the open card to its dark-mode value. */
+     the open card to its dark-mode value.
+
+     CRITICAL: set background-color AND background-image separately
+     (not via the `background:` shorthand). The shorthand resets
+     background-color to transparent if no color portion is given,
+     which lets the light-mode body backdrop wash bleed through and
+     wash the card to gray. */
   [data-theme="light"] .service-deck__card.is-mobile-open,
   [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__front {
-    background: linear-gradient(180deg, #1E2848 0%, #131A30 100%) !important;
+    background-color: #131A30 !important;
+    background-image: linear-gradient(180deg, #1E2848 0%, #131A30 100%) !important;
     color: #D8E8F4 !important; /* Ice text, dark-mode primary */
   }
   [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__cat,

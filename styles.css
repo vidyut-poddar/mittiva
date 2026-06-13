@@ -3298,7 +3298,11 @@ section:has(.service-deck-wrap) {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(4, 6, 14, 0.62);
+    /* Dark wash in BOTH light and dark mode. The card is always dark
+       (by design), so the backdrop has to be dark too — otherwise a
+       pale light-mode wash composites over the card and washes it
+       gray. Single declaration, no theme branch. */
+    background: rgba(4, 6, 14, 0.72);
     /* Sit just below the open card but above every page-level element
        (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
        guarantee it sits on top of everything else on the page. */
@@ -3307,9 +3311,6 @@ section:has(.service-deck-wrap) {
        slamming dark. ease-out curve so the dim feels like it
        "settles in" rather than crashing in. */
     animation: deckMobileBackdropIn 560ms cubic-bezier(0.22, 0.61, 0.36, 1);
-  }
-  [data-theme="light"] body.deck-mobile-open::before {
-    background: rgba(238, 244, 250, 0.72);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }

@@ -3302,6 +3302,13 @@ section:has(.service-deck-wrap) {
        (z-index 75), the big-closer headlines (no z-index but later in
        DOM), nav (80), and any other fixed UI. 9999 wins everything. */
     z-index: 9999 !important;
+    /* Forcing a fresh stacking context AND an opaque background here
+       prevents any reveal-animation transform on the .stacked-title in
+       the next section from compositing through the card. The 3D flipper
+       inside the card preserves preserve-3d, but the card itself is
+       firmly opaque. */
+    isolation: isolate !important;
+    background: #04060E !important;
     transform: none !important;
     box-shadow:
       0 30px 80px -20px rgba(0, 0, 0, 0.7),
@@ -3329,6 +3336,9 @@ section:has(.service-deck-wrap) {
   .service-deck__card.is-mobile-open .service-deck__front {
     background: linear-gradient(180deg, #0e1428 0%, #0a0e1c 100%);
     padding: 38px 20px 22px;
+  }
+  [data-theme="light"] .service-deck__card.is-mobile-open {
+    background: #EEF4FA !important;
   }
   [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__front {
     background: linear-gradient(180deg, #f4f8fc 0%, #eef4fa 100%);

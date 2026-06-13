@@ -3277,27 +3277,26 @@ section:has(.service-deck-wrap) {
     to   { opacity: 1; }
   }
 
-  /* Open card = centered modal anchored to the viewport. Every
-     tapped card lands at exactly the same spot on screen.
-     CRITICAL: inset reset must come BEFORE top/left, not after —
-     `inset: auto` is the shorthand for top/right/bottom/left:auto
-     and declared later it overrides our 50%/50% positioning. We
-     reset each side explicitly (right + bottom = auto) so no other
-     stale rule can creep in. */
+  /* Open card = centered viewport modal. Uses the classic
+     "auto-margin between zero insets" centering pattern — most
+     bulletproof way to center a fixed-position element. No vw/vh
+     math, no translate dependency. The element is stretched to all
+     four viewport edges, then constrained by width+height, then
+     margin:auto centers it both axes. */
   .service-deck__card.is-mobile-open {
     position: fixed !important;
-    right: auto !important;
-    bottom: auto !important;
-    top: 50dvh !important;
-    left: 50vw !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     width: min(86vw, 360px) !important;
     height: min(78dvh, 540px) !important;
+    margin: auto !important;
     aspect-ratio: auto !important;
     grid-column: auto !important;
     grid-row: auto !important;
     z-index: 100 !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
+    transform: none !important;
     box-shadow:
       0 30px 80px -20px rgba(0, 0, 0, 0.7),
       0 0 0 1px rgba(176, 192, 216, 0.18) inset;
@@ -3306,12 +3305,10 @@ section:has(.service-deck-wrap) {
     animation: deckMobileOpenIn 360ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   @keyframes deckMobileOpenIn {
-    /* Keep the translate(-50%, -50%) so the card stays centred while
-       it scales up from 92% to 100%. Without the translate in both
-       keyframes the card would pop to the top-left corner during the
-       animation. */
-    from { transform: translate(-50%, -50%) scale(0.92); opacity: 0; }
-    to   { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+    /* Pure scale + opacity — centering is handled by inset:0 +
+       margin:auto on the card itself, not by transform. */
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
   }
   .service-deck__card.is-mobile-open .service-deck__flipper {
     transform: rotateY(180deg);

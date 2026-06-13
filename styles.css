@@ -3270,7 +3270,10 @@ section:has(.service-deck-wrap) {
     position: fixed;
     inset: 0;
     background: transparent;
-    z-index: 90;
+    /* Sit just below the open card but above every page-level element
+       (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
+       guarantee it sits on top of everything else on the page. */
+    z-index: 9990;
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }
@@ -3295,7 +3298,10 @@ section:has(.service-deck-wrap) {
     aspect-ratio: auto !important;
     grid-column: auto !important;
     grid-row: auto !important;
-    z-index: 100 !important;
+    /* Card sits above the entire page including the sticky mobile-cta
+       (z-index 75), the big-closer headlines (no z-index but later in
+       DOM), nav (80), and any other fixed UI. 9999 wins everything. */
+    z-index: 9999 !important;
     transform: none !important;
     box-shadow:
       0 30px 80px -20px rgba(0, 0, 0, 0.7),

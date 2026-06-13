@@ -3277,16 +3277,19 @@ section:has(.service-deck-wrap) {
     to   { opacity: 1; }
   }
 
-  /* Open card sits as a centered modal — NOT fullscreen — anchored
-     to the VIEWPORT (position:fixed). Every tapped card lands at
-     exactly the same spot on screen regardless of where it was in
-     the grid. Uses dvh (dynamic viewport height) so the centering
-     accounts for URL-bar collapse on iOS/Chromium correctly. */
+  /* Open card = centered modal anchored to the viewport. Every
+     tapped card lands at exactly the same spot on screen.
+     CRITICAL: inset reset must come BEFORE top/left, not after —
+     `inset: auto` is the shorthand for top/right/bottom/left:auto
+     and declared later it overrides our 50%/50% positioning. We
+     reset each side explicitly (right + bottom = auto) so no other
+     stale rule can creep in. */
   .service-deck__card.is-mobile-open {
     position: fixed !important;
+    right: auto !important;
+    bottom: auto !important;
     top: 50dvh !important;
     left: 50vw !important;
-    inset: auto !important;
     width: min(86vw, 360px) !important;
     height: min(78dvh, 540px) !important;
     aspect-ratio: auto !important;
@@ -3294,6 +3297,7 @@ section:has(.service-deck-wrap) {
     grid-row: auto !important;
     z-index: 100 !important;
     transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
     box-shadow:
       0 30px 80px -20px rgba(0, 0, 0, 0.7),
       0 0 0 1px rgba(176, 192, 216, 0.18) inset;

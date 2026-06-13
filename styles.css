@@ -3282,19 +3282,27 @@ section:has(.service-deck-wrap) {
   body.deck-mobile-open {
     overflow: hidden;
   }
-  /* Invisible click-catcher backdrop. No dim, no blur — the page
-     stays at full brightness behind the card. The pseudo-element
-     only exists to absorb taps that miss the card and trigger
-     the close-on-backdrop handler in main.js. */
+  /* Backdrop: soft blur + darker wash so the open card pops as the
+     focal element. The card itself now has `isolation: isolate` and
+     an opaque background, so the backdrop-filter on this pseudo-
+     element no longer bleeds through and blurs the card content
+     (the earlier issue on Chromium/iOS Safari). Also absorbs taps
+     that miss the card and triggers close-on-backdrop in main.js. */
   body.deck-mobile-open::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: transparent;
+    background: rgba(4, 6, 14, 0.48);
+    -webkit-backdrop-filter: blur(6px) saturate(110%);
+            backdrop-filter: blur(6px) saturate(110%);
     /* Sit just below the open card but above every page-level element
        (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
        guarantee it sits on top of everything else on the page. */
     z-index: 9990;
+    animation: deckMobileBackdropIn 240ms var(--ease);
+  }
+  [data-theme="light"] body.deck-mobile-open::before {
+    background: rgba(238, 244, 250, 0.55);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }

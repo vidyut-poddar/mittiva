@@ -3279,7 +3279,12 @@ section:has(.service-deck-wrap) {
      The card itself gets a lifted, slightly-brighter surface
      (so its content reads cleanly), and a glowing titanium
      border outlines the focal area. */
-  body.deck-mobile-open {
+  /* Scroll lock is on a separate body class added AFTER the smooth-
+     scroll completes (so the rAF-driven scrollIntoView isn't aborted
+     by overflow:hidden mid-flight). The backdrop fade-in still uses
+     deck-mobile-open, which is added on tap — so the dim starts
+     immediately alongside the card opening, not after the delay. */
+  body.deck-mobile-lock {
     overflow: hidden;
   }
   /* Backdrop: dark wash ONLY — no backdrop-filter. On iOS Safari and
@@ -3298,7 +3303,10 @@ section:has(.service-deck-wrap) {
        (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
        guarantee it sits on top of everything else on the page. */
     z-index: 9990;
-    animation: deckMobileBackdropIn 240ms var(--ease);
+    /* Slow, smooth fade-in so the page dims gently rather than
+       slamming dark. ease-out curve so the dim feels like it
+       "settles in" rather than crashing in. */
+    animation: deckMobileBackdropIn 560ms cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   [data-theme="light"] body.deck-mobile-open::before {
     background: rgba(238, 244, 250, 0.72);
@@ -3336,16 +3344,18 @@ section:has(.service-deck-wrap) {
        inside the card preserves preserve-3d, but the card itself is
        firmly opaque. */
     isolation: isolate !important;
-    background: #04060E !important;
+    /* Brighter Deep-Space card body so it reads as lit against the
+       dimmed page behind. Slight gradient bias top-to-bottom adds
+       depth. */
+    background: linear-gradient(180deg, #1B2440 0%, #131A30 100%) !important;
     transform: none !important;
-    /* Layered shadow: long cast underneath + a tight glow ring + the
-       titanium inset border. Compensates for the lack of backdrop
-       blur — the card reads as elevated and focal against the
-       dark wash without any filter compositing. */
+    /* Layered shadow: long cast underneath + a soft halo glow around
+       the card. The inset titanium ring gives the card a lit edge
+       so it visually separates from the dark wash. */
     box-shadow:
-      0 0 60px 24px rgba(0, 0, 0, 0.45),
+      0 0 60px 8px rgba(176, 192, 216, 0.10),
       0 36px 100px -24px rgba(0, 0, 0, 0.85),
-      0 0 0 1px rgba(176, 192, 216, 0.22) inset;
+      0 0 0 1px rgba(176, 192, 216, 0.28) inset;
     border-radius: 14px;
     overflow: hidden;
     animation: deckMobileOpenIn 360ms cubic-bezier(0.32, 0.72, 0, 1);
@@ -3367,7 +3377,9 @@ section:has(.service-deck-wrap) {
      at fullscreen — hide them. The title block stays as a small
      anchor at top. */
   .service-deck__card.is-mobile-open .service-deck__front {
-    background: linear-gradient(180deg, #0e1428 0%, #0a0e1c 100%);
+    /* Match the brighter card body so the front face reads as part
+       of the same lit surface. */
+    background: linear-gradient(180deg, #1E2848 0%, #131A30 100%);
     padding: 38px 20px 22px;
   }
   [data-theme="light"] .service-deck__card.is-mobile-open {

@@ -650,32 +650,29 @@
     }
 
     function openMobileCard (card) {
-      // Use native scrollIntoView with block:'center' — more reliable on
-      // mobile browsers than our custom rAF (handles visualViewport,
-      // URL-bar collapse, and momentum correctly). Two-step open
-      // sequence:
-      //   1. Kick off smooth scroll to viewport center.
-      //   2. Delay adding deck-mobile-open by 520ms so the scroll
-      //      animation completes BEFORE overflow:hidden freezes the
-      //      page. Without this delay, some Chromium/Safari builds
-      //      abort the smooth scroll the instant body locks.
-      // The card itself is added to is-mobile-open immediately so the
-      // visual response is instant — the position adjustment happens
-      // behind the fullscreen overlay.
+      // Open sequence (all kicked off in the same beat so it reads as
+      // a single motion, no abrupt dim):
+      //   1. Native scrollIntoView centers the tapped card.
+      //   2. Card immediately gets is-mobile-open → it scales open
+      //      AND the body backdrop starts its 560ms fade-in.
+      //   3. Scroll-lock (overflow:hidden) is applied separately AFTER
+      //      a delay so the smooth scroll has time to complete. The
+      //      backdrop fade does NOT depend on this delay any more —
+      //      it's part of body.deck-mobile-open, set up front.
       try {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch (_) {
-        // Older browsers — fall back to the rAF helper.
         scrollCardToCenter(card);
       }
       deckCards.forEach((c) => { if (c !== card) c.classList.remove('is-mobile-open'); });
       ensureMobileClose(card);
       card.classList.add('is-mobile-open');
+      document.body.classList.add('deck-mobile-open');
+      // Defer overflow:hidden via a secondary class so the smooth-scroll
+      // animation isn't aborted mid-flight on Chromium/iOS Safari.
       setTimeout(() => {
-        // Only lock if the card is still open (user might have tapped
-        // close during the delay).
         if (card.classList.contains('is-mobile-open')) {
-          document.body.classList.add('deck-mobile-open');
+          document.body.classList.add('deck-mobile-lock');
         }
       }, 520);
     }
@@ -684,6 +681,7 @@
       card.classList.remove('is-mobile-open');
       if (!document.querySelector('.service-deck__card.is-mobile-open')) {
         document.body.classList.remove('deck-mobile-open');
+        document.body.classList.remove('deck-mobile-lock');
       }
     }
 

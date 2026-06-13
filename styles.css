@@ -3282,19 +3282,18 @@ section:has(.service-deck-wrap) {
   body.deck-mobile-open {
     overflow: hidden;
   }
-  /* Backdrop: soft blur + darker wash so the open card pops as the
-     focal element. The card itself now has `isolation: isolate` and
-     an opaque background, so the backdrop-filter on this pseudo-
-     element no longer bleeds through and blurs the card content
-     (the earlier issue on Chromium/iOS Safari). Also absorbs taps
-     that miss the card and triggers close-on-backdrop in main.js. */
+  /* Backdrop: dark wash ONLY — no backdrop-filter. On iOS Safari and
+     Chromium mobile, `backdrop-filter: blur()` on a fixed pseudo-
+     element below a fixed card causes the card's own content to
+     render through the blur filter, no matter what stacking-context
+     tricks we apply. We get the focal effect through (a) a darker
+     wash + (b) a stronger card shadow instead. Page content behind
+     is darkened but stays crisp. */
   body.deck-mobile-open::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(4, 6, 14, 0.48);
-    -webkit-backdrop-filter: blur(6px) saturate(110%);
-            backdrop-filter: blur(6px) saturate(110%);
+    background: rgba(4, 6, 14, 0.62);
     /* Sit just below the open card but above every page-level element
        (mobile-cta = 75, nav = 80, etc). Card itself jumps to 9999 to
        guarantee it sits on top of everything else on the page. */
@@ -3302,7 +3301,7 @@ section:has(.service-deck-wrap) {
     animation: deckMobileBackdropIn 240ms var(--ease);
   }
   [data-theme="light"] body.deck-mobile-open::before {
-    background: rgba(238, 244, 250, 0.55);
+    background: rgba(238, 244, 250, 0.72);
   }
   @keyframes deckMobileBackdropIn {
     from { opacity: 0; }
@@ -3339,9 +3338,14 @@ section:has(.service-deck-wrap) {
     isolation: isolate !important;
     background: #04060E !important;
     transform: none !important;
+    /* Layered shadow: long cast underneath + a tight glow ring + the
+       titanium inset border. Compensates for the lack of backdrop
+       blur — the card reads as elevated and focal against the
+       dark wash without any filter compositing. */
     box-shadow:
-      0 30px 80px -20px rgba(0, 0, 0, 0.7),
-      0 0 0 1px rgba(176, 192, 216, 0.18) inset;
+      0 0 60px 24px rgba(0, 0, 0, 0.45),
+      0 36px 100px -24px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(176, 192, 216, 0.22) inset;
     border-radius: 14px;
     overflow: hidden;
     animation: deckMobileOpenIn 360ms cubic-bezier(0.32, 0.72, 0, 1);

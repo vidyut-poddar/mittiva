@@ -3381,10 +3381,43 @@ section:has(.service-deck-wrap) {
   .service-deck__card.is-mobile-open .service-deck__front {
     /* Match the brighter card body so the front face reads as part
        of the same lit surface. Explicit bg-color so no compositing
-       can let the body wash through the front face. */
-    background-color: #131A30;
-    background-image: linear-gradient(180deg, #1E2848 0%, #131A30 100%);
+       can let the body wash through the front face. !important so
+       no theme-driven base rule can take over in light mode. */
+    background-color: #131A30 !important;
+    background-image: linear-gradient(180deg, #1E2848 0%, #131A30 100%) !important;
     padding: 38px 20px 22px;
+  }
+  /* Also lock the BACK face dark in light mode — when the card flips,
+     a hairline of the back can briefly show through (especially on
+     non-retina rendering). Forcing a dark back ensures no light
+     surface ever peeks through. */
+  .service-deck__card.is-mobile-open .service-deck__back {
+    background-color: #0C1020 !important;
+    background-image:
+      radial-gradient(ellipse at center, rgba(176, 192, 216, 0.18) 0%, transparent 65%),
+      linear-gradient(135deg, #0C1020 0%, #04060E 70%, #0C1020 100%) !important;
+  }
+  /* Force the entire card stack to render with the dark colour
+     scheme. This is the nuclear option: tells the browser the
+     element prefers dark rendering, which overrides any system-
+     level compositing that might wash the card based on the
+     surrounding light theme. */
+  .service-deck__card.is-mobile-open,
+  .service-deck__card.is-mobile-open * {
+    color-scheme: dark;
+  }
+  /* Belt-and-suspenders: force the flipper (the 3D container) and
+     both faces to also have explicit dark backgrounds in light mode.
+     Stops any browser-level "auto-tint to match surrounding light
+     scheme" from sneaking in via the rotateY perspective layer. */
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__flipper {
+    background-color: transparent !important;
+  }
+  [data-theme="light"] .service-deck__card.is-mobile-open .service-deck__back {
+    background-color: #0C1020 !important;
+    background-image:
+      radial-gradient(ellipse at center, rgba(176, 192, 216, 0.18) 0%, transparent 65%),
+      linear-gradient(135deg, #0C1020 0%, #04060E 70%, #0C1020 100%) !important;
   }
   /* Light mode: keep the card DARK on mobile even when the rest of
      the page is light. The card's internal content (LC chat widget,

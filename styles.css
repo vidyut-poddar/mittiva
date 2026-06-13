@@ -3323,6 +3323,18 @@ section:has(.service-deck-wrap) {
     margin: 0 0 14px;
     line-height: 1.1;
   }
+  /* Voice AI widget on fullscreen mobile: pushed to the bottom of
+     the card so the title block reads at top and the interactive
+     widget sits where the thumb naturally rests. margin-top: auto
+     consumes the slack the card has below the title. The widget
+     gets a taller frame than the 220px default since there's room. */
+  .service-deck__card.is-mobile-open .voice-widget-host {
+    margin-top: auto;
+    margin-bottom: 8px;
+    height: clamp(320px, 52vh, 460px);
+    width: 100%;
+    max-width: 100%;
+  }
 
   /* Close button injected by main.js as a child of the open card.
      Solid background — no backdrop-filter (same browser bleed-
